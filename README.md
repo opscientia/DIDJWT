@@ -4,6 +4,7 @@ Web Token Forwarding Protocol
 ## Unpublished rough docs (needs access to OpSci Githbook)
 https://app.gitbook.com/s/IfVTwJ7AVeydbhSfhssq/quick-start. These are for functions that are not built yet, mostly intended for documentation driven development
 
+## Summary
 *Goal*:
 Link a public key to an online account with OpenID
 
