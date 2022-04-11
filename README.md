@@ -57,3 +57,7 @@ ORCID: 0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f
 ## testnet addresses of IdentityAggregators
 ### Polygon
 0xe7d38C12EC231414B49F7cB4695ddAc908F3A852
+
+## testnet addresses of WTFBios
+### Polygon
+0x61786552CD82F41ECf9bA160Ac48616064A70aF8
