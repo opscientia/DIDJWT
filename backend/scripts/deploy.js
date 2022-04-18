@@ -7,25 +7,39 @@ const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 // These constants should be shared dependancy with tests so the same code isn't duplicated across them without a shared module
-const orcidKid = '7hdmdswarosg3gjujo8agwtazgkp1ojs'
 const orcidBottomBread = '0x222c22737562223a22'
 const orcidTopBread = '0x222c22617574685f74696d65223a'
 
-const googleKid = '729189450d49028570425266f03e737f45af2932'
 const googleBottomBread = '0x222c22656d61696c223a22'
 const googleTopBread = '0x222c22656d61696c5f7665726966696564223a'
 
-// Converts JWKS RSAkey to e and n:
+newKey = `{
+  "kid": "f1338ca26835863f671408f41738a7b49e740fc0",
+  "n": "vCk1vqT3qTLWsZ0yyO6T5sHBFUMPI9bcjT9yO94cZUfJjttRV_RMxUgvB-c3o-dx7f4WrM3knYoWn5pmGH6_B3vJbvnTzfnjojaBfsqn8Cdof1mI3N6ZKmhFVWz-Sui65ycb9F2MVw-z0DcZxk_DcBEMG6Jxps9I2_hFm7xkCPjiN2Q8T-MLNhJYnoxBe1VtuyCFFEDAtU5VXIyJEdDoz_MXIR7o8TsQTnX1ZpB4SijtShz4oJXaQGeSb8eb9AgwiOuiFKHndiMaemtEfnIkU4EXZ_MXXLdi0Rq-euA7XVFk-j1jVxRtVOhrz0VIMy2B8g6l817zKHqC3ZIv1PbUVQ",
+  "kty": "RSA",
+  "e": "AQAB",
+  "use": "sig",
+  "alg": "RS256"
+}`
+// Converts JWKS RSAkey to e, n, and kid:
 const jwksKeyToPubkey = (jwks) => {
-  let parsed = JSON.parse(jwks)
-  return [
-    ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
-    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url'))
-  ]
+let parsed = JSON.parse(jwks)
+return [
+  ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
+  ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url')),
+  parsed['kid']
+]
 }
 
-const [eOrcid, nOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
-const [eGoogle, nGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
+const [eOrcid, nOrcid, kidOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
+const [eGoogle, nGoogle, kidGoogle] = jwksKeyToPubkey(`{
+  "kid": "f1338ca26835863f671408f41738a7b49e740fc0",
+  "n": "vCk1vqT3qTLWsZ0yyO6T5sHBFUMPI9bcjT9yO94cZUfJjttRV_RMxUgvB-c3o-dx7f4WrM3knYoWn5pmGH6_B3vJbvnTzfnjojaBfsqn8Cdof1mI3N6ZKmhFVWz-Sui65ycb9F2MVw-z0DcZxk_DcBEMG6Jxps9I2_hFm7xkCPjiN2Q8T-MLNhJYnoxBe1VtuyCFFEDAtU5VXIyJEdDoz_MXIR7o8TsQTnX1ZpB4SijtShz4oJXaQGeSb8eb9AgwiOuiFKHndiMaemtEfnIkU4EXZ_MXXLdi0Rq-euA7XVFk-j1jVxRtVOhrz0VIMy2B8g6l817zKHqC3ZIv1PbUVQ",
+  "kty": "RSA",
+  "e": "AQAB",
+  "use": "sig",
+  "alg": "RS256"
+}`)
 
 
 async function main() {
@@ -65,7 +79,7 @@ async function deployIdAggregator() {
 
 async function deployGoogle() {
   let VJWT = await ethers.getContractFactory('VerifyJWT')
-  let google = await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, googleKid, googleBottomBread, googleTopBread], {
+  let google = await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread], {
     initializer: 'initialize',
   });
   console.log('GOOGLE: ' + google.address);
@@ -74,7 +88,7 @@ async function deployGoogle() {
 
 async function deployORCID(){
   let VJWT = await ethers.getContractFactory('VerifyJWT')
-  let orcid = await upgrades.deployProxy(VJWT, [eOrcid, nOrcid, orcidKid, orcidBottomBread, orcidTopBread], {
+  let orcid = await upgrades.deployProxy(VJWT, [eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread], {
     initializer: 'initialize',
   });
   console.log('ORCID: ' + orcid.address);
