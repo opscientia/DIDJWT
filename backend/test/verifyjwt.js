@@ -3,18 +3,21 @@ const { ethers, upgrades } = require('hardhat');
 const search64 = require('../../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
 
 const {
-  orcidKid, orcidBottomBread, orcidTopBread,
-  googleKid, googleBottomBread, googleTopBread,
+  orcidBottomBread, orcidTopBread,
+  googleBottomBread, googleTopBread,
   deployVerifyJWTContract,
   sha256FromString,
   keccak256FromString,
   sandwichIDWithBreadFromContract,
   jwksKeyToPubkey,
+  twitterBottomBread,
+  twitterTopBread,
 } = require('./utils/utils');
 
 
-const [eOrcid, nOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
-const [eGoogle, nGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
+const [eOrcid, nOrcid, kidOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
+const [eGoogle, nGoogle, kidGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
+const [eTwitter, nTwitter, kidTwitter] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"oagYTJtXZclWd8TFevkbI_edfB0YoMsiEHKbEagrB3Ao_6pEUnQtJOuIsRM9w9IVtvwKlJZae8hcksoRhzZm9lyueN7XzOO2f8I8bxf-rapWKpM0p83RWKvwTICVi0I72Ev5fIiWEMKbLA3YXIrDVRvtsLeYEvbVfvstwkA8Rla5uMcsPkcO3fc8ONZgArlpnxUqe-fEqjAHIWmDTUOEbvpitCPtYCSqHR7QmGkZ90RByVp5niOBhoMlUlvTRMqu8M_42peQJZdBzhGvNmY1_NgX7DBAdTXwOgWSVwBdfpq8K8yt_v-4l6I_ydnxaBsI5K69l__UdKlaapUrguNB6w","e":"AQAB","alg":"RS256","kid":"oagY"}`)
 
 
 // describe('Integration test 2', function () {
@@ -52,7 +55,7 @@ const [eGoogle, nGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcw
 describe('slicing of byte array', function (){
   before(async function(){
     [this.owner] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,59, orcidKid, orcidBottomBread, orcidTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,59, kidOrcid, orcidBottomBread, orcidTopBread)
   });
 
   it('slicing raw bytes gives correct result', async function () {
@@ -90,8 +93,8 @@ describe('handleKeyRotation', function (){
 
     const newE = 11;
     const newM = 59;
-    await this.vjwt.handleKeyRotation(newE, newM, orcidKid)
-    expect(await this.vjwt.callStatic.kid()).to.equal(orcidKid)
+    await this.vjwt.handleKeyRotation(newE, newM, kidOrcid)
+    expect(await this.vjwt.callStatic.kid()).to.equal(kidOrcid)
     expect(await this.vjwt.callStatic.e()).to.equal(newE)
     expect(parseInt(await this.vjwt.callStatic.n(), 16)).to.equal(newM)
   });
@@ -100,7 +103,7 @@ describe('handleKeyRotation', function (){
 describe('type conversion and cryptography', function (){
   before(async function(){
     [this.owner] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,59, orcidKid, orcidBottomBread, orcidTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,59, kidOrcid, orcidBottomBread, orcidTopBread)
     this.message = 'Hey'
   });
 
@@ -114,7 +117,7 @@ describe('type conversion and cryptography', function (){
 describe('modExp works', function () {
   it('Test modExp on some simple numbers', async function () {
     const [owner] = await ethers.getSigners();
-    let vjwt = await deployVerifyJWTContract(58,230, orcidKid, orcidBottomBread, orcidTopBread)
+    let vjwt = await deployVerifyJWTContract(58,230, kidOrcid, orcidBottomBread, orcidTopBread)
     await expect(vjwt.modExp(0x004b,1,8001)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x004b');
     await expect(vjwt.modExp(5,5,5)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x00');
     await expect(vjwt.modExp(0,1,6)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x00');
@@ -130,7 +133,7 @@ describe('Verify test RSA signatures', function () {
     let [headerRaw, payloadRaw, signatureRaw] = parsedToJSON['id_token'].split('.');
     let [signature, badSignature] = [Buffer.from(signatureRaw, 'base64url'), Buffer.from(signatureRaw.replace('a','b'), 'base64url')]
 
-    let vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidKid, orcidBottomBread, orcidTopBread);
+    let vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread);
 
     await expect(vjwt['verifyJWT(bytes,string)'](ethers.BigNumber.from(signature), headerRaw + '.' + payloadRaw)).to.emit(vjwt, 'JWTVerification').withArgs(true);
     // make sure it doesn't work with wrong JWT or signature:
@@ -143,7 +146,7 @@ describe('Verify test RSA signatures', function () {
 describe('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,230, orcidKid, orcidBottomBread, orcidTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,230, kidOrcid, orcidBottomBread, orcidTopBread)
     this.message1 = 'Hey'
     this.message2 = 'Hey2'
     // Must use two unique hashing algorithms
@@ -188,7 +191,7 @@ describe('proof of prior knowledge', function () {
 
 describe('Frontend sandwiching', function(){
   it('Test that correct sandwich is given for a specific ID', async function(){
-    let vjwt = await deployVerifyJWTContract(50,100, orcidKid, orcidBottomBread, orcidTopBread);
+    let vjwt = await deployVerifyJWTContract(50,100, kidOrcid, orcidBottomBread, orcidTopBread);
     expect(await sandwichIDWithBreadFromContract('0000-0002-2308-9517', vjwt)).to.equal('222c22737562223a22303030302d303030322d323330382d39353137222c22617574685f74696d65223a');
   });
 });
@@ -199,17 +202,23 @@ for (const params of [
     name : 'orcid',
     idToken: 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiX1RCT2VPZ2VZNzBPVnBHRWNDTi0zUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY0NDgzMDE5MSwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY0NDkxODUzNywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjQ0ODMyMTM3LCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImp0aSI6IjcxM2RjMGZiLTMwZTAtNDM0Mi05ODFjLTNlYjJiMTRiODM0OCJ9.VXNSFbSJSdOiX7n-hWB6Vh30L1IkOLiNs2hBTuUDZ4oDB-cL6AJ8QjX7wj9Nj_lGcq1kjIfFLhowo8Jy_mzMGIFU8KTZvinSA-A-tJkXOUEvjUNjd0OfQJnVVJ63wvp9gSEj419HZ13Lc2ci9CRY7efQCYeelvQOQvpdrZsRLiQ_XndeDw2hDLAmI7YrYrLMy1zQY9rD4uAlBa56RVD7me6t47jEOOJJMAs3PC8UZ6pYyNc0zAjQ8Vapqz7gxeCN-iya91YI1AIE8Ut19hGgVRa9N7l-aUielPAlzss0Qbeyvl0KTRuZWnLUSrOz8y9oGxVBCUmStEOrVrAhmkMS8A',
     correctID : '0000-0002-2308-9517',
-    constructorArgs : [eOrcid, nOrcid, orcidKid, orcidBottomBread, orcidTopBread],
+    constructorArgs : [eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread],
   },
   {
     name : 'google',
     idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjcyOTE4OTQ1MGQ0OTAyODU3MDQyNTI2NmYwM2U3MzdmNDVhZjI5MzIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiMDREZXRTaGNSYUE4OWxlcEQzdWRnUSIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjQ3NjYzNDk4LCJleHAiOjE2NDc2NjcwOTgsImp0aSI6IjE4ZmRmMGQ2M2VhYjI4YjRlYmY0NmFiMDMzZTM5OTU3NmE5MTJlZGUifQ.YqmOub03zNmloAcFvZE0E-4Gt2Y5fr_9XQLUYqXQ24X_GJaJh0HSQXouJeSXjnk8PT6E1FnPd89QAgwDvE_qxAoOvW7VKDycVapOeDtKdTQ-QpAn-ExE0Pvqgx1iaGRZFDS4DWESX1ZsQIBAB_MHK_ZFdAnOjeFzImuMkB1PZLY99przSaM8AEyvWn8wfEgdmkdoJERBXF7xJI2dfA9mTRjlQvhSC4K060bTJbUYug4sQLrvo53CsDjvXRnodnCB81EVWZUbf5B9dG__kebI3AjedKUcPb2wofpX_B7uAyVlD7Au3APEbZP7Asle0Bi76hDNGPQbLvR_nGWLoySfCQ',
     correctID : 'nanaknihal@gmail.com',
-    constructorArgs : [eGoogle, nGoogle, googleKid, googleBottomBread, googleTopBread],
+    constructorArgs : [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread],
+  },
+  {
+    name : 'twitter',
+    idToken: '.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IkJWeTNCd2JIOERiNUxkUHpRRHVpSFdMeTR4U0taRmxCTEJ2cndnNlI5dWMifQ.X_pQnEA0yzB-VN9xRZB5gG_OE9NOCd5qqlvHSQv6cQTqqtWPY8r5QyRr8EZK_OHX7gsP_BpcZZxWlm2l90kO-dP-nGD5Ezamh5U60tMAbpTz4sWjmRIGyQ6lrmeqwMYHAzstuj0p2aJh_SeGs-2Yr4XFFKaTYLnQHIfU_2ItzM076LsNtOI-xBAwLplZkaDexl72SBFLdhgoFrZvTMtGDv4EUhxwwl96ubxYf1m3OtAu4Q-Wl2beNeDQSvq4edZ_9_PuoU8EklWsmj6g3wWFmNdhZHa2IWGTQLOd_y6hsQkwoafHa0qf-jS6yOXJLU3mV4_5BqTcj-K2Q8iaajhZqQ==',
+    correctID : 'ProtocolWtf',
+    constructorArgs : [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread],
   }
 ]){
 
-  describe('Integration tests for after successful proof commit with params ' + params, function () {
+  describe.only('Integration tests for after successful proof commit with params ' + params, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
   
@@ -250,10 +259,14 @@ for (const params of [
     });
   
     it('Wrong indices fail (this could be more comprehensive and more unit-like)', async function () {
+      console.error(this.startIdx, this.endIdx, this.payloadIdx)
+      // Have to use Math.max(i, 0) for the first one to ensure index isn't negative if header doesn't exist!
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx - 1, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx + 1, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx + 1, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
-      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx - 1, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
+      if(this.startIdx > 0){
+        await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx - 1, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
+      }
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx + 1, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx - 1, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
     });
@@ -301,7 +314,7 @@ for (const params of [
 //     // let [header, payload] = [headerRaw, payloadRaw].map(x => JSON.parse(atob(x)));
 //     // let payload = atob(payloadRaw);
 //     this.signature = Buffer.from(signatureRaw, 'base64url')
-//     this.vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidKid, orcidBottomBread, orcidTopBread);
+//     this.vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread);
 //     this.message = sha256FromString(headerRaw + '.' + payloadRaw)
 //     this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
 //     this.sandwich = await sandwichIDWithBreadFromContract('0000-0002-2308-9517', this.vjwt);

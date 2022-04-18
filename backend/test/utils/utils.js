@@ -4,13 +4,14 @@ const search64 = require('../../../../whoisthis.wtf-frontend/src/searchForPlaint
 
 exports.vmExceptionStr = 'VM Exception while processing transaction: reverted with reason string ';
 
-exports.orcidKid = '7hdmdswarosg3gjujo8agwtazgkp1ojs';
-exports.orcidBottomBread = '0x222c22737562223a22';
-exports.orcidTopBread = '0x222c22617574685f74696d65223a';
+exports.orcidBottomBread = '0x222c22737562223a22'
+exports.orcidTopBread = '0x222c22617574685f74696d65223a'
 
-exports.googleKid = '729189450d49028570425266f03e737f45af2932'
 exports.googleBottomBread = '0x222c22656d61696c223a22'
 exports.googleTopBread = '0x222c22656d61696c5f7665726966696564223a'
+
+exports.twitterBottomBread = '0x7b226372656473223a22'
+exports.twitterTopBread = '0x222c22617564223a22676e6f736973222c22'
 
 exports.deployVerifyJWTContract = async (...args) => {
   const VerifyJWT = await ethers.getContractFactory('VerifyJWT')
@@ -48,11 +49,12 @@ exports.sandwichIDWithBreadFromContract = async (id, contract) => {
   return sandwich
 }
 
-// Converts JWKS RSAkey to e and n:
+// Converts JWKS RSAkey to e, n, and kid:
 exports.jwksKeyToPubkey = (jwks) => {
   let parsed = JSON.parse(jwks)
   return [
     ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
-    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url'))
+    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url')),
+    parsed['kid']
   ]
 }
