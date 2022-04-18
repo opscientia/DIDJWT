@@ -13,9 +13,11 @@ contract VerifyJWT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     //   bytes32 hashedJWT;
     // }
 
-    // creds are the identifier / index field in the JWT, e.g. ORCID ID for ORCID JWT or email for gmail JWT(the rest of the JWT has lots of other information)
-    mapping(address => string) public JWTForAddress;
-    mapping(string => address) public addressForJWT;
+    // Creds herein are the identifier / index field in the JWT, e.g. ORCID ID is the cred for ORCID JWT and email is the cred for gmail JWT 
+    
+    // Hashes are used to make sure nobody can re-use someone's old JWT without storing the whole JWT to check for uniqueness. The old JWT is still public (it was in the mempool) but it's not wasting gas by being on-chain.
+    // mapping(address => bytes32) public JWTHashForAddress;
+    mapping(bytes32 => bool) private JWTHashUsed;
 
     mapping(address => bytes) public credsForAddress;
     mapping(bytes => address) public addressForCreds;
@@ -342,8 +344,12 @@ contract VerifyJWT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     bytes memory creds = sliceBytesMemory(proposedIDSandwich, bottomBread.length, proposedIDSandwich.length - topBread.length);
 
     // make sure there is no previous entry for this JWT - it should only be usable once!
-    require(addressForJWT[jwt] == address(0), "JWT can only be used on-chain once");
+    bytes32 jwtHash = keccak256(stringToBytes(jwt));
+
+    require(JWTHashUsed[jwtHash] == false, "JWT can only be used on-chain once");
+    JWTHashUsed[jwtHash] = true;
     
+
     // update list of registered address and credentials (to keep track of who's registered), iff the address is not already registered
     if(keccak256(credsForAddress[msg.sender]) == emptyBytesHash){
       registeredAddresses.push(msg.sender);
@@ -354,10 +360,9 @@ contract VerifyJWT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     
 
     // update hashmaps of addresses, credentials, and JWTs themselves
-    addressForJWT[jwt] = msg.sender;
     addressForCreds[creds] = msg.sender;
-    JWTForAddress[msg.sender] = jwt;
     credsForAddress[msg.sender] = creds;
+    // JWTForAddress[msg.sender] = jwt;
 
   }
 
