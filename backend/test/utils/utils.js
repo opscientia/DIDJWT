@@ -13,6 +13,9 @@ exports.googleTopBread = '0x222c22656d61696c5f7665726966696564223a'
 exports.twitterBottomBread = '0x7b226372656473223a22'
 exports.twitterTopBread = '0x222c22617564223a22676e6f736973222c22'
 
+exports.githubBottomBread = '0x7b226372656473223a22'
+exports.githubTopBread = '0x222c22617564223a22676e6f736973222c22'
+
 exports.deployVerifyJWTContract = async (...args) => {
   const VerifyJWT = await ethers.getContractFactory('VerifyJWT')
   const vjwt = await upgrades.deployProxy(VerifyJWT, args, {

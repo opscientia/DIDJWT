@@ -5,6 +5,8 @@ const search64 = require('../../../whoisthis.wtf-frontend/src/searchForPlaintext
 const {
   orcidBottomBread, orcidTopBread,
   googleBottomBread, googleTopBread,
+  githubBottomBread,
+  githubTopBread,
   deployVerifyJWTContract,
   sha256FromString,
   keccak256FromString,
@@ -18,6 +20,7 @@ const {
 const [eOrcid, nOrcid, kidOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
 const [eGoogle, nGoogle, kidGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
 const [eTwitter, nTwitter, kidTwitter] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"oagYTJtXZclWd8TFevkbI_edfB0YoMsiEHKbEagrB3Ao_6pEUnQtJOuIsRM9w9IVtvwKlJZae8hcksoRhzZm9lyueN7XzOO2f8I8bxf-rapWKpM0p83RWKvwTICVi0I72Ev5fIiWEMKbLA3YXIrDVRvtsLeYEvbVfvstwkA8Rla5uMcsPkcO3fc8ONZgArlpnxUqe-fEqjAHIWmDTUOEbvpitCPtYCSqHR7QmGkZ90RByVp5niOBhoMlUlvTRMqu8M_42peQJZdBzhGvNmY1_NgX7DBAdTXwOgWSVwBdfpq8K8yt_v-4l6I_ydnxaBsI5K69l__UdKlaapUrguNB6w","e":"AQAB","alg":"RS256","kid":"oagY"}`)
+const [eGithub, nGithub, kidGithub] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"q7wWK3dvPtQpzoS1zDFzVgWf08tZH814Bfx50dJuUzQpE-7D-nxXTbSgKw73K6UWSou_jBdnNtushkhxXI5UpTGBSygI59KyjNIC8dh0n8RoqtXZVR1FWX468CEqfXjUnKEoDx-EzWsJTCabHCmgvU7JefiNfb-430J5T_3jxNyeIk8YozsM-Ib0RlIF_Kv2P6e_jVXflaclW2dUa4eVyWCVc-2REavdQD19fkQ-tIYMjbgMz7LUtFJnWvoH-M5U3y3Q8yWsueGDB1n9BrPII9qcHJm8DqrdzmOf00Ywz7-bpvaMpRnHV622tACcvimLxCG1E_9Hfi2jO0orqCCpUw","e":"AQAB","alg":"RS256","kid":"q7wW"}`)
 
 
 // describe('Integration test 2', function () {
@@ -215,10 +218,16 @@ for (const params of [
     idToken: 'eyJraWQiOiJvYWdZIn0.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IjVQNnc1S1FJWVdsalRPNG5rY2pLWDQ4Rld5eWk3UjBwakZ2d29wUmJVVVEifQ.DCaq7MhsFpTDim0hevcGLr9TZKGCpnu2bBJe3lRO1oFhFnGHbgW2IyKpnKyyDQUllyN5LEPOt_vDH7PHdUiyw1tNapzYTh0-e4DAhq8rzlPQ6BHRW_iko9Fa1JbrqTA_M2uFBku0EHfaH730OAJdZvmhnnNSxruvmLPZeZ6SJWUaPj2wIRoxCrLCt888GF3vQacBf2_2RZFWbWdTKYyXyKI6f224PIJo6C5sQu48_po-x4r8M4MpIUBIbN5i-qukn70rfJQ-ZQPnErnUlLoMkRIJK5u3tXegBqUEmQhcxYE25MXcS3FNf9JktkZ1fDr9X1JwyRLT2oe0gl53jtDL8w==',
     correctID : 'ProtocolWtf',
     constructorArgs : [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread],
+  },
+  {
+    name : 'github',
+    idToken: 'eyJraWQiOiJxN3dXIn0.eyJjcmVkcyI6Im5hbmFrbmloYWwiLCJhdWQiOiJnbm9zaXMiLCJyYW5kIjoiOE9YMzhaa1NCaTd5MmpKeW1MNm8zaklJSmN4bmJkSnJBTVR3ME9QYXNnNCJ9.Cuzsl3fOsk0ZypPAzgnWl5xQ0jm0kDVFWu4jL7hRbe0ptaSw4eVL5dLRHJtOVTusJHVz7GF0zrAkyTFFk4T8iQ4Wcl66YyKGuMo_BMCM0O7oy4wBMQ9Ur23zPAxG2FF0iaMnh8HHqooilq5HdmTN9WWvUyqBsvrr3MOeQz7OSZj3206eSmC9BR4NDBhzT-12DPt8fG0be_621xDhFv9_EcOUhEfht-qz-mJtRcKCnJRKnDWPVdaQey_yOZSxiWZMZa34TrGuhPLxCd7TRJEGgRJi7eTQ2roZkT-z3gZdCnK0qNdJIWwagVwPc0_ILIKloI3bQjp67f8LSiFoJu_N0Q==',
+    correctID : 'nanaknihal',
+    constructorArgs : [eGithub, nGithub, kidGithub, githubBottomBread, githubTopBread],
   }
 ]){
 
-  describe('Integration tests for after successful proof commit with params ' + params, function () {
+  describe.only('Integration tests for after successful proof commit with params ' + params.name, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
   
