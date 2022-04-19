@@ -212,13 +212,13 @@ for (const params of [
   },
   {
     name : 'twitter',
-    idToken: '.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IkJWeTNCd2JIOERiNUxkUHpRRHVpSFdMeTR4U0taRmxCTEJ2cndnNlI5dWMifQ.X_pQnEA0yzB-VN9xRZB5gG_OE9NOCd5qqlvHSQv6cQTqqtWPY8r5QyRr8EZK_OHX7gsP_BpcZZxWlm2l90kO-dP-nGD5Ezamh5U60tMAbpTz4sWjmRIGyQ6lrmeqwMYHAzstuj0p2aJh_SeGs-2Yr4XFFKaTYLnQHIfU_2ItzM076LsNtOI-xBAwLplZkaDexl72SBFLdhgoFrZvTMtGDv4EUhxwwl96ubxYf1m3OtAu4Q-Wl2beNeDQSvq4edZ_9_PuoU8EklWsmj6g3wWFmNdhZHa2IWGTQLOd_y6hsQkwoafHa0qf-jS6yOXJLU3mV4_5BqTcj-K2Q8iaajhZqQ==',
+    idToken: 'eyJraWQiOiJvYWdZIn0.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IjVQNnc1S1FJWVdsalRPNG5rY2pLWDQ4Rld5eWk3UjBwakZ2d29wUmJVVVEifQ.DCaq7MhsFpTDim0hevcGLr9TZKGCpnu2bBJe3lRO1oFhFnGHbgW2IyKpnKyyDQUllyN5LEPOt_vDH7PHdUiyw1tNapzYTh0-e4DAhq8rzlPQ6BHRW_iko9Fa1JbrqTA_M2uFBku0EHfaH730OAJdZvmhnnNSxruvmLPZeZ6SJWUaPj2wIRoxCrLCt888GF3vQacBf2_2RZFWbWdTKYyXyKI6f224PIJo6C5sQu48_po-x4r8M4MpIUBIbN5i-qukn70rfJQ-ZQPnErnUlLoMkRIJK5u3tXegBqUEmQhcxYE25MXcS3FNf9JktkZ1fDr9X1JwyRLT2oe0gl53jtDL8w==',
     correctID : 'ProtocolWtf',
     constructorArgs : [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread],
   }
 ]){
 
-  describe.only('Integration tests for after successful proof commit with params ' + params, function () {
+  describe('Integration tests for after successful proof commit with params ' + params, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
   
