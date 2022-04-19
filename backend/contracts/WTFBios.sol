@@ -27,6 +27,7 @@ contract WTFBios  {
         bioForAddress[msg.sender] = bio;
         if (addressForAddress[msg.sender] == address(0)) {
             registeredAddresses.push(msg.sender);
+            addressForAddress[msg.sender] = msg.sender;
         }
         emit SetUserNameAndBio(msg.sender);
     }
