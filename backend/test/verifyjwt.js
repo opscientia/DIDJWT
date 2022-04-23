@@ -227,7 +227,7 @@ for (const params of [
   }
 ]){
 
-  describe.only('Integration tests for after successful proof commit with params ' + params.name, function () {
+  describe('Integration tests for after successful proof commit with params ' + params.name, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
   
@@ -248,8 +248,7 @@ for (const params of [
       // let secretHashedMessage = sha256FromString(this.message)
       let hashedMessage = sha256FromString(this.message)
       let proof = ethers.utils.sha256(await this.vjwt.XOR(hashedMessage, this.owner.address))
-      console.log('XOR of hashed message and address is', await this.vjwt.XOR(hashedMessage, this.owner.address))
-      console.log('proof is ', proof)
+
       
       await this.vjwt.commitJWTProof(proof)
       await ethers.provider.send('evm_mine')
@@ -268,7 +267,6 @@ for (const params of [
     });
   
     it('Wrong indices fail (this could be more comprehensive and more unit-like)', async function () {
-      console.error(this.startIdx, this.endIdx, this.payloadIdx)
       // Have to use Math.max(i, 0) for the first one to ensure index isn't negative if header doesn't exist!
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx - 1, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx + 1, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
