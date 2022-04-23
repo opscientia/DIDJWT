@@ -16,14 +16,14 @@ let newKey = `{
     "n": "pnvsf_d6daVCXm6NoBHxpIhkk345edh7GaiXl25XR4_q2ATkiZMBF8foXaa_LTyr8W5dmvqIE71p_T9ygVLMoP7YumjOimrbwB3gEV1ekI-d2rkRbCFg56bzifkAi8gdQW3pj4j-bouOSNkEAUeVSDsHst1f-sFmckZmb1Pe1bWLI-k6TXirXQpGDEZKeh1AWxillo9AWqmDXalurQt46W6rd1y2RCj5Y5zXQheNF6Il0Izc4K5RDBKkanyZ7Dq_ZFuTpVJkxPgCjN6G8cfzM0JKujWX4Zit2xCmZhVfr7hDodnNEPo1IppWNrjcfZOtA_Jh6yBlB7T8DWd1l1PvUQ"
   }
   `
-newKey = `{
-    "kid": "f1338ca26835863f671408f41738a7b49e740fc0",
-    "n": "vCk1vqT3qTLWsZ0yyO6T5sHBFUMPI9bcjT9yO94cZUfJjttRV_RMxUgvB-c3o-dx7f4WrM3knYoWn5pmGH6_B3vJbvnTzfnjojaBfsqn8Cdof1mI3N6ZKmhFVWz-Sui65ycb9F2MVw-z0DcZxk_DcBEMG6Jxps9I2_hFm7xkCPjiN2Q8T-MLNhJYnoxBe1VtuyCFFEDAtU5VXIyJEdDoz_MXIR7o8TsQTnX1ZpB4SijtShz4oJXaQGeSb8eb9AgwiOuiFKHndiMaemtEfnIkU4EXZ_MXXLdi0Rq-euA7XVFk-j1jVxRtVOhrz0VIMy2B8g6l817zKHqC3ZIv1PbUVQ",
-    "kty": "RSA",
-    "e": "AQAB",
-    "use": "sig",
-    "alg": "RS256"
-  }`
+// newKey = `{
+//     "kid": "f1338ca26835863f671408f41738a7b49e740fc0",
+//     "n": "vCk1vqT3qTLWsZ0yyO6T5sHBFUMPI9bcjT9yO94cZUfJjttRV_RMxUgvB-c3o-dx7f4WrM3knYoWn5pmGH6_B3vJbvnTzfnjojaBfsqn8Cdof1mI3N6ZKmhFVWz-Sui65ycb9F2MVw-z0DcZxk_DcBEMG6Jxps9I2_hFm7xkCPjiN2Q8T-MLNhJYnoxBe1VtuyCFFEDAtU5VXIyJEdDoz_MXIR7o8TsQTnX1ZpB4SijtShz4oJXaQGeSb8eb9AgwiOuiFKHndiMaemtEfnIkU4EXZ_MXXLdi0Rq-euA7XVFk-j1jVxRtVOhrz0VIMy2B8g6l817zKHqC3ZIv1PbUVQ",
+//     "kty": "RSA",
+//     "e": "AQAB",
+//     "use": "sig",
+//     "alg": "RS256"
+//   }`
 // Converts JWKS RSAkey to e, n, and kid:
 const jwksKeyToPubkey = (jwks) => {
   let parsed = JSON.parse(jwks)
@@ -36,7 +36,7 @@ const jwksKeyToPubkey = (jwks) => {
 
 async function main() {
     const [e, n, kid] = jwksKeyToPubkey(newKey)
-    await rotate('0x50E3d48f04eD1AF12476637F1A99ecdC8347f632', e, n, kid)
+    await rotate('0xC334b3465790bC77299D42635B25D77E3e46A78b', e, n, kid)
     console.log('Key rotation should have been successfully completed!')
 }
 
