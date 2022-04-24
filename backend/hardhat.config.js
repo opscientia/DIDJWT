@@ -35,12 +35,14 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      // forking: {
-      //   url: "https://speedy-nodes-nyc.moralis.io/a1167200f0a0e81dd757304e/polygon/mumbai"
-      // }
+      from : "0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388", // Send transactions from this address by default
+      accounts : [{privateKey: process.env.PRIVATE_KEY, balance: "2110000000000000000000000"}], // Private key for the above address
+      forking: {
+        url: "https://rpc.gnosischain.com"
+      }
     },
     matic: {
-      url: "https://rpc-mumbai.maticvigil.com",
+      url: "https://speedy-nodes-nyc.moralis.io/a1167200f0a0e81dd757304e/polygon/mumbai",
       accounts: [process.env.PRIVATE_KEY],
       gas: 2100000,
       gasPrice: 2000000000
@@ -69,5 +71,15 @@ module.exports = {
       url: "https://rpc.testnet.fantom.network",
       accounts: [process.env.PRIVATE_KEY],
     },
+    gnosis: {
+      url: "https://rpc.gnosischain.com",
+      accounts: [process.env.PRIVATE_KEY],
+      gas: 2100000,
+      gasPrice: 2000000000
+    },
+    arbitrumOne : {   
+      url: "https://arb1.arbitrum.io/rpc",
+      accounts: [process.env.PRIVATE_KEY]
+    }
   }
 };
