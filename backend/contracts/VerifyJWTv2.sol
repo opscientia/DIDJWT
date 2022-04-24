@@ -8,11 +8,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
-    // struct JWTProof {
-    //   uint256 blockNumber;
-    //   bytes32 hashedJWT;
-    // }
-
     // Creds herein are the identifier / index field in the JWT, e.g. ORCID ID is the cred for ORCID JWT and email is the cred for gmail JWT 
     
     // Hashes are used to make sure nobody can re-use someone's old JWT without storing the whole JWT to check for uniqueness. The old JWT is still public (it was in the mempool) but it's not wasting gas by being on-chain.
@@ -61,14 +56,34 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     bytes emptyBytes;
     bytes32 emptyBytesHash;
 
+
+    /* New variables after contract upgrade: to check the timestamps of the JWT and make sure expired JWTs can't be used */
+    struct Timestamps {
+      uint256 submittedAt; // When the JWT was submitted to the blockchain
+      uint256 JWTExpClaim; // Value of the JWT exp claim
+    }
+
+    // Represents a sandwich that *supposedly* starts at idxStart in a string and ends at idxEnd in a string. These values should *not* be assumed to be correct unless later validated.
+    struct ProposedSandwichAt {
+      uint idxStart;
+      uint idxEnd;
+      bytes sandwichValue;
+    }
+
+    mapping(address => Timestamps) public timestampsForCreds; //JWT expiration and time of on-chain submission
+    bytes public expTopBread;
+    bytes public expBottomBread;
+
     // Initializer rather than constructor so it can be used for proxy pattern
     // exponent and modulus comrpise the RSA public key of the web2 authenticator which signed the JWT. 
-    function initialize(uint256 exponent_, bytes memory modulus_, string memory kid_, bytes memory bottomBread_, bytes memory topBread_) initializer public {
+    function initialize(uint256 exponent_, bytes memory modulus_, string memory kid_, bytes memory bottomBread_, bytes memory topBread_, bytes memory expBottomBread_, bytes memory expTopBread_) initializer public {
       e = exponent_;
       n = modulus_;
       kid = kid_;
       topBread = topBread_; 
       bottomBread = bottomBread_;
+      expTopBread = expTopBread_; 
+      expBottomBread = expBottomBread_;
 
       emptyBytesHash = keccak256(emptyBytes);
       // initialze parent classes (part of upgradeable proxy design pattern) 
@@ -84,11 +99,12 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         kid = newKid;
     }
 
-    // Why am i putting test functions here haha
-    function testAddressByteConversion(address a) public pure returns (bool) {
-      return bytesToAddress(addressToBytes(a)) == a;
+    function changeSandwich(bytes memory newBottomBread, bytes memory newTopBread, bytes memory newExpBottomBread, bytes memory newExpTopBread) public onlyOwner {
+        bottomBread = newBottomBread;
+        topBread = newTopBread;
+        expBottomBread = newExpBottomBread;
+        expTopBread = newExpTopBread;
     }
-
 
     // https://ethereum.stackexchange.com/questions/8346/convert-address-to-string
     function bytesToAddress(bytes memory b_) private pure returns (address addr) {
@@ -291,8 +307,8 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return true;
   }
 
-  // This is the endpoint a frontend should call. It takes a signature, JWT, IDSandwich (see comments), and start/end index of where the IDSandwhich can be found. It also takes a payload index start, as it must know the payload to decode the Base64 JWT
-  function verifyMe(bytes memory signature, string memory jwt, uint payloadIdxStart, uint idxStart, uint idxEnd, bytes memory proposedIDSandwich) public { //also add  to verify that proposedId exists at jwt[idxStart:idxEnd]. If so, also verify that it starts with &id= and ends with &. So that we know it's a whole field and was actually the ID given
+  // This is the endpoint a frontend should call. It takes a signature, JWT, sandwich (see comments), which has start/end index of where the sandwich can be found. It also takes a payload index start, as it must know the where the payload is to decode the Base64 JWT
+  function verifyMe(bytes memory signature, string memory jwt, uint payloadIdxStart, ProposedSandwichAt calldata proposedIDSandwich, ProposedSandwichAt calldata proposedExpSandwich) public { //also add  to verify that proposedId exists at jwt[idxStart:idxEnd]. If so, also verify that it starts with &id= and ends with &. So that we know it's a whole field and was actually the ID given
     bytes memory jwtBytes = stringToBytes(jwt);
 
     require(_verify(msg.sender, signature, jwt), "JWT Verification failed");
@@ -308,29 +324,17 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
       payload = bytes.concat(payload, padByte);
     }
     bytes memory b64decoded = Base64.decodeFromBytes(payload);
- 
-    require(bytesAreEqual(
-                          sliceBytesMemory(proposedIDSandwich, 0, bottomBread.length),
-                          bottomBread
-            ),
-            "Failed to find correct bottom bread in sandwich"
-    );
+  
+    require(bytesIncludeSandwichAt(b64decoded, proposedIDSandwich, bottomBread, topBread), 
+            "Failed to find correct ID sandwich in JWT");
 
-    require(bytesAreEqual(
-                          sliceBytesMemory(proposedIDSandwich, proposedIDSandwich.length-topBread.length, proposedIDSandwich.length),
-                          topBread
-            ),
-            "Failed to find correct top bread in sandwich"
-    );
+    bytes memory creds = sliceBytesMemory(proposedIDSandwich.sandwichValue, bottomBread.length, proposedIDSandwich.sandwichValue.length - topBread.length);
+    
+    require(bytesIncludeSandwichAt(b64decoded, proposedExpSandwich, expBottomBread, expTopBread), 
+            "Failed to find correct expiration sandwich in JWT");     
 
-    // make sure proposed id is found in the original jwt
-    require(bytesAreEqual(
-                          sliceBytesMemory(b64decoded, idxStart, idxEnd),
-                          proposedIDSandwich
-            ),
-           "proposedIDSandwich not found in JWT"
-    );
-    bytes memory creds = sliceBytesMemory(proposedIDSandwich, bottomBread.length, proposedIDSandwich.length - topBread.length);
+    bytes memory expBytes = sliceBytesMemory(proposedExpSandwich.sandwichValue, expBottomBread.length, proposedExpSandwich.sandwichValue.length - expTopBread.length);
+    uint256 exp = parseInt(expBytes);
 
     // make sure there is no previous entry for this JWT - it should only be usable once!
     bytes32 jwtHash = keccak256(stringToBytes(jwt));
@@ -351,8 +355,35 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // update hashmaps of addresses, credentials, and JWTs themselves
     addressForCreds[creds] = msg.sender;
     credsForAddress[msg.sender] = creds;
+    timestampsForCreds[msg.sender] = Timestamps(block.timestamp, exp);
     // JWTForAddress[msg.sender] = jwt;
 
+  }
+
+
+  function bytesIncludeSandwichAt(bytes memory string_, ProposedSandwichAt calldata proposedSandwich_, bytes memory bottomBread_, bytes memory topBread_) public view returns (bool validString) {
+    require(bytesAreEqual(
+                          sliceBytesMemory(proposedSandwich_.sandwichValue, 0, bottomBread_.length),
+                          bottomBread_
+            ),
+            "Failed to find correct bottom bread in sandwich"
+    );
+
+    require(bytesAreEqual(
+                          sliceBytesMemory(proposedSandwich_.sandwichValue, proposedSandwich_.sandwichValue.length-topBread_.length, proposedSandwich_.sandwichValue.length),
+                          topBread_
+            ),
+            "Failed to find correct top bread in sandwich"
+    );
+
+    // make sure proposed id is found in the original jwt
+    require(bytesAreEqual(
+                          sliceBytesMemory(string_, proposedSandwich_.idxStart, proposedSandwich_.idxEnd),
+                          proposedSandwich_.sandwichValue
+            ),
+           "proposed sandwich not found in JWT"
+    );
+    return true;
   }
 
   // User can just submit hash of the header and payload, so they do not reveal any sensitive data! But they still prove their ownership of the JWT
@@ -367,14 +398,14 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
   }
 
-  // For accessing gating private credentials on the Lit Protocol
-  function setAccess(address viewer, bool value) public {
-    privateJWTAllowances[msg.sender][viewer] = value;
-  }
-  // For accessing private credentials on the Lit Protocol
-  function hasAccess(address owner, address viewer) public view returns (bool result) {
-    return privateJWTAllowances[owner][viewer];
-  }
+  // // For accessing gating private credentials on the Lit Protocol
+  // function setAccess(address viewer, bool value) public {
+  //   privateJWTAllowances[msg.sender][viewer] = value;
+  // }
+  // // For accessing private credentials on the Lit Protocol
+  // function hasAccess(address owner, address viewer) public view returns (bool result) {
+  //   return privateJWTAllowances[owner][viewer];
+  // }
 
 
   function getRegisteredCreds() external view returns (bytes[] memory) {
@@ -385,32 +416,51 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return registeredAddresses;
   }
 
-  // This function is used for testing purposes and can be deleted later. It's better not to call it from the frontend for security reasons, as the data being XORed is often private. Calling it from the frontend leaks this data to your node provider
-  function XOR(uint256 x, uint256 y) public pure returns (uint256) {
-    return x ^ y;
-  }
+  // // This function is used for testing purposes and can be deleted later. It's better not to call it from the frontend for security reasons, as the data being XORed is often private. Calling it from the frontend leaks this data to your node provider
+  // function XOR(uint256 x, uint256 y) public pure returns (uint256) {
+  //   return x ^ y;
+  // }
   
-  // Testing function, remove later; this seems to give a different result than ethers.js sha256, perhaps because of byte conversion?
-  function testSHA256OnJWT(string memory jwt) public pure returns (bytes32){
-    return sha256(stringToBytes(jwt));
-  }
+  // // Testing function, remove later; this seems to give a different result than ethers.js sha256, perhaps because of byte conversion?
+  // function testSHA256OnJWT(string memory jwt) public pure returns (bytes32){
+  //   return sha256(stringToBytes(jwt));
+  // }
   
   function abc() public pure returns (string memory) {
       return 'def';
     }
 
     // from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
+    // /**
+    // * Parse Int
+    // * 
+    // * Converts an ASCII string value into an uint as long as the string 
+    // * its self is a valid unsigned integer
+    // * 
+    // * @param _value The ASCII string to be converted to an unsigned integer
+    // * @return _ret The unsigned value of the ASCII string
+    // */
+    // function parseInt(string memory _value) public view returns (uint256 _ret) {
+    //     bytes memory _bytesValue = bytes(_value);
+    //     uint256 j = 1;
+    //     uint256 i = _bytesValue.length-1;
+    //     while(i >= 0) {
+    //         assert(uint8(_bytesValue[i]) >= 48 && uint8(_bytesValue[i]) <= 57);
+    //         _ret += (uint8(_bytesValue[i]) - 48)*j;
+    //         j*=10;
+    //         if(i > 0){i--;}else{break;}
+    //     }
+    // }
+
+    
+    // modified from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
     /**
     * Parse Int
-    * 
-    * Converts an ASCII string value into an uint as long as the string 
-    * its self is a valid unsigned integer
-    * 
-    * @param _value The ASCII string to be converted to an unsigned integer
+    * Bytes instead of string parseInt override
+    * @param _bytesValue The bytes to be converted to an unsigned integer. *this is a bytes representation of a string*
     * @return _ret The unsigned value of the ASCII string
     */
-    function parseInt(string memory _value) public view returns (uint256 _ret) {
-        bytes memory _bytesValue = bytes(_value);
+    function parseInt(bytes memory _bytesValue) public view returns (uint256 _ret) {
         uint256 j = 1;
         uint256 i = _bytesValue.length-1;
         while(i >= 0) {
@@ -422,10 +472,11 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
 
   // Also can be deleted, just to test assumptions about comparing times as strings because Solidity can't easily convert timestamp strings to integers
-  function testTimeAssumptions() public {
-    string memory timestamp = '1647667098';
-    require(block.timestamp > parseInt('1647667098'));
-    require(block.timestamp < parseInt('1657667098'));
-  }
+  // function testTimeAssumptions() public {
+  //   string memory timestamp = '1647667098';
+  //   string memory anotherTimestamp = '1657667098';
+  //   require(block.timestamp > parseInt(timestamp));
+  //   require(block.timestamp < parseInt(anotherTimestamp));
+  // }
 
 }

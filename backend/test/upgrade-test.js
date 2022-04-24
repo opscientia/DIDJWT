@@ -36,6 +36,6 @@ describe.only('New functions with old data work', function(){
     })
     it('New abc test function works', async function (){
         expect(await this.contract.abc()).to.equal('def')
-        await this.contract.testTimeAssumptions()
+        // await this.contract.testTimeAssumptions()
     })    
 })

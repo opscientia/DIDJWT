@@ -284,9 +284,9 @@
         "0x0e06fb51b13DA0e37C37097af2B444707bd55c88"
       ]
     },
-    "8681c2c9ea7f7855a936542f628698c3f5b13c45bc7e98fe562e9ba488aa2ea3": {
+    "91575dfce7152acae3ccad6486691101835c66bb3dcf5920f319fd474128e3b3": {
       "address": "0xD3D856C4aB871d784D4b3056725e39D5F8d4cfeA",
-      "txHash": "0x7222d64dd445ba0f8f083cd8afe0e9fe84968c0ec45972e45b1da5350805d6ca",
+      "txHash": "0x47fbff29e2e19dece3b6305c5fda0c770496aa6180a350cf2889ab1800ec5e32",
       "layout": {
         "storage": [
           {
@@ -351,7 +351,7 @@
             "slot": "201",
             "type": "t_mapping(t_bytes32,t_bool)",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:20"
+            "src": "contracts/VerifyJWTv2.sol:15"
           },
           {
             "label": "credsForAddress",
@@ -359,7 +359,7 @@
             "slot": "202",
             "type": "t_mapping(t_address,t_bytes_storage)",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:22"
+            "src": "contracts/VerifyJWTv2.sol:17"
           },
           {
             "label": "addressForCreds",
@@ -367,7 +367,7 @@
             "slot": "203",
             "type": "t_mapping(t_bytes_memory_ptr,t_address)",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:23"
+            "src": "contracts/VerifyJWTv2.sol:18"
           },
           {
             "label": "privateJWTForAddress",
@@ -375,7 +375,7 @@
             "slot": "204",
             "type": "t_mapping(t_address,t_bytes32)",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:25"
+            "src": "contracts/VerifyJWTv2.sol:20"
           },
           {
             "label": "privateJWTAllowances",
@@ -383,7 +383,7 @@
             "slot": "205",
             "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:26"
+            "src": "contracts/VerifyJWTv2.sol:21"
           },
           {
             "label": "registeredAddresses",
@@ -391,7 +391,7 @@
             "slot": "206",
             "type": "t_array(t_address)dyn_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:28"
+            "src": "contracts/VerifyJWTv2.sol:23"
           },
           {
             "label": "registeredCreds",
@@ -399,7 +399,7 @@
             "slot": "207",
             "type": "t_array(t_bytes_storage)dyn_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:29"
+            "src": "contracts/VerifyJWTv2.sol:24"
           },
           {
             "label": "proofToBlock",
@@ -407,7 +407,7 @@
             "slot": "208",
             "type": "t_mapping(t_bytes32,t_uint256)",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:31"
+            "src": "contracts/VerifyJWTv2.sol:26"
           },
           {
             "label": "e",
@@ -415,7 +415,7 @@
             "slot": "209",
             "type": "t_uint256",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:34"
+            "src": "contracts/VerifyJWTv2.sol:29"
           },
           {
             "label": "n",
@@ -423,7 +423,7 @@
             "slot": "210",
             "type": "t_bytes_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:35"
+            "src": "contracts/VerifyJWTv2.sol:30"
           },
           {
             "label": "kid",
@@ -431,7 +431,7 @@
             "slot": "211",
             "type": "t_string_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:39"
+            "src": "contracts/VerifyJWTv2.sol:34"
           },
           {
             "label": "topBread",
@@ -439,7 +439,7 @@
             "slot": "212",
             "type": "t_bytes_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:49"
+            "src": "contracts/VerifyJWTv2.sol:44"
           },
           {
             "label": "bottomBread",
@@ -447,7 +447,7 @@
             "slot": "213",
             "type": "t_bytes_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:50"
+            "src": "contracts/VerifyJWTv2.sol:45"
           },
           {
             "label": "verifiedUsers",
@@ -455,7 +455,7 @@
             "slot": "214",
             "type": "t_array(t_bytes32)dyn_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:55"
+            "src": "contracts/VerifyJWTv2.sol:50"
           },
           {
             "label": "emptyBytes",
@@ -463,7 +463,7 @@
             "slot": "215",
             "type": "t_bytes_storage",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:61"
+            "src": "contracts/VerifyJWTv2.sol:56"
           },
           {
             "label": "emptyBytesHash",
@@ -471,7 +471,31 @@
             "slot": "216",
             "type": "t_bytes32",
             "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:62"
+            "src": "contracts/VerifyJWTv2.sol:57"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_address,t_struct(Timestamps)1269_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:73"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
           }
         ],
         "types": {
@@ -531,6 +555,10 @@
             "label": "mapping(address => mapping(address => bool))",
             "numberOfBytes": "32"
           },
+          "t_mapping(t_address,t_struct(Timestamps)1269_storage)": {
+            "label": "mapping(address => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
           "t_mapping(t_bytes32,t_bool)": {
             "label": "mapping(bytes32 => bool)",
             "numberOfBytes": "32"
@@ -546,6 +574,24 @@
           "t_string_storage": {
             "label": "string",
             "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1269_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
           },
           "t_uint256": {
             "label": "uint256",
