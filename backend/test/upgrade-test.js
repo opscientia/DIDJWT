@@ -16,17 +16,26 @@ const upgradeVJWT = async (address) => {
 describe.only('Old functions with old data work', function(){
     before(async function(){
         // Upgrade the contract
-        console.log(contractAddresses.VerifyJWT.gnosis.google)
         let contract = await (await ethers.getContractFactory('VerifyJWT')).attach(contractAddresses.VerifyJWT.gnosis.google)
-        await upgradeVJWT(contract.address)
+        this.contract = await upgradeVJWT(contract.address)
     })
-    it('Lookup by old email still works', async function (){
-        // expect(await this.contract.addressForCreds(Buffer.from('wtfprotocol@gmail.com'))).to.equal('0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388')
-        // expect(await this.contract.credsForAddress('0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388')).to.equal('wtfprotoco@gmail.com')
+    it('Lookup by old credential system still works', async function (){
+        const email = Buffer.from('shady@opscientia.com')
+        const address = '0xD638F5c8D434EBf6Ba3a2527bA76B08813b4598e'
+        expect(await this.contract.addressForCreds(email)).to.equal(address)
+        expect(await this.contract.credsForAddress(address)).to.equal('0x'+email.toString('hex'))
     })
-    // Should be new describe:
-    it('New abc test function works', async function (){
-        // expect(await this.contract.abc()).to.equal('def')
-    })
+    
 })
 
+describe.only('New functions with old data work', function(){
+    before(async function(){
+        // Upgrade the contract
+        let contract = await (await ethers.getContractFactory('VerifyJWT')).attach(contractAddresses.VerifyJWT.gnosis.google)
+        this.contract = await upgradeVJWT(contract.address)
+    })
+    it('New abc test function works', async function (){
+        expect(await this.contract.abc()).to.equal('def')
+        await this.contract.testTimeAssumptions()
+    })    
+})

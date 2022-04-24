@@ -89,6 +89,7 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
       return bytesToAddress(addressToBytes(a)) == a;
     }
 
+
     // https://ethereum.stackexchange.com/questions/8346/convert-address-to-string
     function bytesToAddress(bytes memory b_) private pure returns (address addr) {
       assembly {
@@ -397,5 +398,34 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   function abc() public pure returns (string memory) {
       return 'def';
     }
+
+    // from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
+    /**
+    * Parse Int
+    * 
+    * Converts an ASCII string value into an uint as long as the string 
+    * its self is a valid unsigned integer
+    * 
+    * @param _value The ASCII string to be converted to an unsigned integer
+    * @return _ret The unsigned value of the ASCII string
+    */
+    function parseInt(string memory _value) public view returns (uint256 _ret) {
+        bytes memory _bytesValue = bytes(_value);
+        uint256 j = 1;
+        uint256 i = _bytesValue.length-1;
+        while(i >= 0) {
+            assert(uint8(_bytesValue[i]) >= 48 && uint8(_bytesValue[i]) <= 57);
+            _ret += (uint8(_bytesValue[i]) - 48)*j;
+            j*=10;
+            if(i > 0){i--;}else{break;}
+        }
+    }
+
+  // Also can be deleted, just to test assumptions about comparing times as strings because Solidity can't easily convert timestamp strings to integers
+  function testTimeAssumptions() public {
+    string memory timestamp = '1647667098';
+    require(block.timestamp > parseInt('1647667098'));
+    require(block.timestamp < parseInt('1657667098'));
+  }
 
 }
