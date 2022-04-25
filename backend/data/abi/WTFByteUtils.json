@@ -1,0 +1,11 @@
+[
+  "function addressToBytes(address) pure returns (bytes)",
+  "function bytes32ToBytes(bytes32) pure returns (bytes)",
+  "function bytes32ToUInt256(bytes32) pure returns (uint256)",
+  "function bytesAreEqual(bytes,bytes) pure returns (bool)",
+  "function bytesToFirst32BytesAsBytes32Type(bytes) pure returns (bytes32)",
+  "function bytesToLast32BytesAsBytes32Type(bytes) pure returns (bytes32)",
+  "function destructivelySliceBytesMemory(bytes,uint256,uint256) pure returns (bytes)",
+  "function sliceBytesMemory(bytes,uint256,uint256) view returns (bytes)",
+  "function stringToBytes(string) pure returns (bytes)"
+]

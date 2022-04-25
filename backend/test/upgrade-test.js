@@ -7,7 +7,9 @@ let contractAddresses = wtf.getContractAddresses()
 
 const upgradeVJWT = async (address) => {
     let VJWT = await ethers.getContractFactory('VerifyJWT')
-    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2')
+    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2', {
+        libraries: {'WTFByteUtils' : '0x0e06fb51b13DA0e37C37097af2B444707bd55c88'}
+    }) //I also made a library for many functions to increase modularity and to reduce contract's size
     // Import the implementation if it's not already loaded:
     await upgrades.forceImport(address, VJWT, {kind : 'uups'})
     let vjwt = await upgrades.upgradeProxy(address, NewVJWT)
