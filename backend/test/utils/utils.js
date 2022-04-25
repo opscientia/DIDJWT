@@ -1,4 +1,5 @@
 const { ethers, upgrades } = require('hardhat');
+const wtf = require('wtf-lib');
 
 const search64 = require('../../../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
 
@@ -15,6 +16,20 @@ exports.twitterTopBread = '0x222c22617564223a22676e6f736973222c22'
 
 exports.githubBottomBread = '0x7b226372656473223a22'
 exports.githubTopBread = '0x222c22617564223a22676e6f736973222c22'
+
+
+
+let contractAddresses = wtf.getContractAddresses()
+
+exports.upgradeVerifyJWTContract = async (service) => {
+    let address = contractAddresses.VerifyJWT.gnosis[service]
+    let VJWT = await ethers.getContractFactory('VerifyJWT')
+    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2')
+    // Import the implementation if it's not already loaded:
+    await upgrades.forceImport(address, VJWT, {kind : 'uups'})
+    let vjwt = await upgrades.upgradeProxy(address, NewVJWT)
+    return vjwt
+}
 
 exports.deployVerifyJWTContract = async (...args) => {
   const VerifyJWT = await ethers.getContractFactory('VerifyJWT')

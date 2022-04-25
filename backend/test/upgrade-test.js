@@ -13,7 +13,7 @@ const upgradeVJWT = async (address) => {
     let vjwt = await upgrades.upgradeProxy(address, NewVJWT)
     return vjwt
 }
-describe.only('Old functions with old data work', function(){
+describe('Old functions with old data work', function(){
     before(async function(){
         // Upgrade the contract
         let contract = await (await ethers.getContractFactory('VerifyJWT')).attach(contractAddresses.VerifyJWT.gnosis.google)
@@ -28,7 +28,7 @@ describe.only('Old functions with old data work', function(){
     
 })
 
-describe.only('New functions with old data work', function(){
+describe('New functions with old data work', function(){
     before(async function(){
         // Upgrade the contract
         let contract = await (await ethers.getContractFactory('VerifyJWT')).attach(contractAddresses.VerifyJWT.gnosis.google)
