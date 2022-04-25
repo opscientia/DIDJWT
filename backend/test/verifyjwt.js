@@ -229,19 +229,28 @@ for (const params of [
     name : 'google',
     idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjcyOTE4OTQ1MGQ0OTAyODU3MDQyNTI2NmYwM2U3MzdmNDVhZjI5MzIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiMDREZXRTaGNSYUE4OWxlcEQzdWRnUSIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjQ3NjYzNDk4LCJleHAiOjE2NDc2NjcwOTgsImp0aSI6IjE4ZmRmMGQ2M2VhYjI4YjRlYmY0NmFiMDMzZTM5OTU3NmE5MTJlZGUifQ.YqmOub03zNmloAcFvZE0E-4Gt2Y5fr_9XQLUYqXQ24X_GJaJh0HSQXouJeSXjnk8PT6E1FnPd89QAgwDvE_qxAoOvW7VKDycVapOeDtKdTQ-QpAn-ExE0Pvqgx1iaGRZFDS4DWESX1ZsQIBAB_MHK_ZFdAnOjeFzImuMkB1PZLY99przSaM8AEyvWn8wfEgdmkdoJERBXF7xJI2dfA9mTRjlQvhSC4K060bTJbUYug4sQLrvo53CsDjvXRnodnCB81EVWZUbf5B9dG__kebI3AjedKUcPb2wofpX_B7uAyVlD7Au3APEbZP7Asle0Bi76hDNGPQbLvR_nGWLoySfCQ',
     correctID : 'nanaknihal@gmail.com',
-    constructorArgs : [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread],
+    createContract : upgradeMode ?
+                       async() => await upgradeVerifyJWTContract('google')
+                       :
+                       async() => await deployVerifyJWTContract(eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread)
   },
   {
     name : 'twitter',
     idToken: 'eyJraWQiOiJvYWdZIn0.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IjVQNnc1S1FJWVdsalRPNG5rY2pLWDQ4Rld5eWk3UjBwakZ2d29wUmJVVVEifQ.DCaq7MhsFpTDim0hevcGLr9TZKGCpnu2bBJe3lRO1oFhFnGHbgW2IyKpnKyyDQUllyN5LEPOt_vDH7PHdUiyw1tNapzYTh0-e4DAhq8rzlPQ6BHRW_iko9Fa1JbrqTA_M2uFBku0EHfaH730OAJdZvmhnnNSxruvmLPZeZ6SJWUaPj2wIRoxCrLCt888GF3vQacBf2_2RZFWbWdTKYyXyKI6f224PIJo6C5sQu48_po-x4r8M4MpIUBIbN5i-qukn70rfJQ-ZQPnErnUlLoMkRIJK5u3tXegBqUEmQhcxYE25MXcS3FNf9JktkZ1fDr9X1JwyRLT2oe0gl53jtDL8w==',
     correctID : 'ProtocolWtf',
-    constructorArgs : [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread],
+    createContract : upgradeMode ?
+                       async() => await upgradeVerifyJWTContract('twitter')
+                       :
+                       async() => await deployVerifyJWTContract(eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread)
   },
   {
     name : 'github',
     idToken: 'eyJraWQiOiJxN3dXIn0.eyJjcmVkcyI6Im5hbmFrbmloYWwiLCJhdWQiOiJnbm9zaXMiLCJyYW5kIjoiOE9YMzhaa1NCaTd5MmpKeW1MNm8zaklJSmN4bmJkSnJBTVR3ME9QYXNnNCJ9.Cuzsl3fOsk0ZypPAzgnWl5xQ0jm0kDVFWu4jL7hRbe0ptaSw4eVL5dLRHJtOVTusJHVz7GF0zrAkyTFFk4T8iQ4Wcl66YyKGuMo_BMCM0O7oy4wBMQ9Ur23zPAxG2FF0iaMnh8HHqooilq5HdmTN9WWvUyqBsvrr3MOeQz7OSZj3206eSmC9BR4NDBhzT-12DPt8fG0be_621xDhFv9_EcOUhEfht-qz-mJtRcKCnJRKnDWPVdaQey_yOZSxiWZMZa34TrGuhPLxCd7TRJEGgRJi7eTQ2roZkT-z3gZdCnK0qNdJIWwagVwPc0_ILIKloI3bQjp67f8LSiFoJu_N0Q==',
     correctID : 'nanaknihal',
-    constructorArgs : [eGithub, nGithub, kidGithub, githubBottomBread, githubTopBread],
+    createContract : upgradeMode ?
+                       async() => await upgradeVerifyJWTContract('github')
+                       :
+                       async() => await deployVerifyJWTContract(eGithub, nGithub, kidGithub, githubBottomBread, githubTopBread)
   }
 ]){
 
