@@ -18,6 +18,9 @@ const {
   twitterTopBread,
 } = require('./utils/utils');
 
+const xor = require('wtfprotocol-helpers').fixedBufferXOR;
+
+
 // Check whether --upgrade argument was given. If so, test upgrading VerifyJWT contracts instread of just deploying old ones
 const upgradeMode = (process.argv.length > 3) && (process.argv[3] == '--upgrade')
 
@@ -150,7 +153,7 @@ describe('Verify test RSA signatures', function () {
   });
 })
 
-describe('proof of prior knowledge', function () {
+describe.only('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
     this.vjwt = await deployVerifyJWTContract(11,230, kidOrcid, orcidBottomBread, orcidTopBread)
@@ -167,8 +170,14 @@ describe('proof of prior knowledge', function () {
     let hashedMessage1 = sha256FromString(this.message1)
     let hashedMessage2 = sha256FromString(this.message1)
     
-    this.proof1 = ethers.utils.sha256(await this.vjwt.XOR(hashedMessage1, this.owner.address))
-    this.proof2 = ethers.utils.sha256(await this.vjwt.XOR(hashedMessage2, this.owner.address))
+    console.log('parameeeeees', hashedMessage1, this.owner.address)
+    console.log('parameeeeees', hashedMessage2, this.owner.address)
+
+    this.proof1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage1.replace('0x', ''), 'hex'),
+                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
+    this.proof2 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage2.replace('0x', ''), 'hex'),
+                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))    
+    
     
   })
   it('Can prove prior knowledge of message (not JWT but can be)', async function () {
@@ -256,7 +265,7 @@ for (const params of [
       // let publicHashedMessage = keccak256FromString(this.message)
       // let secretHashedMessage = sha256FromString(this.message)
       let hashedMessage = sha256FromString(this.message)
-      let proof = ethers.utils.sha256(await this.vjwt.XOR(hashedMessage, this.owner.address))
+      let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage), Buffer.from(this.owner.address)))
 
       
       await this.vjwt.commitJWTProof(proof)
@@ -341,8 +350,8 @@ for (const params of [
 //     // let publicHashedMessage = keccak256FromString(this.message)
 //     // let secretHashedMessage = sha256FromString(this.message)
 //     let hashedMessage = sha256FromString(this.message)
-//     let proof = ethers.utils.sha256(await this.vjwt.XOR(hashedMessage, this.owner.address))
-//     console.log('proof is ', await this.vjwt.XOR(hashedMessage, this.owner.address), proof)
+//     let proof = ethers.utils.sha256(await xor(hashedMessage, this.owner.address))
+//     console.log('proof is ', await xor(hashedMessage, this.owner.address), proof)
 //     await this.vjwt.commitJWTProof(proof)
 //     await ethers.provider.send('evm_mine')
 //   });

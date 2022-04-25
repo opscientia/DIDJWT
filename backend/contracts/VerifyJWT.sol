@@ -273,7 +273,6 @@ contract VerifyJWT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     bytes32 bytes32Pubkey = bytesToFirst32BytesAsBytes32Type(addressToBytes(a));
     bytes memory keyXORJWTHash = bytes32ToBytes(bytes32Pubkey ^ jwtHash);
     bytes32 k = sha256(keyXORJWTHash);
-
     require(proofToBlock[k] < block.number, "You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun");
     require(proofToBlock[k] > 0 , "Proof not found; it needs to have been submitted to commitJWTProof in a previous block");
     // require(jp.hashedJWT == keccak256(stringToBytes(jwt)), "JWT does not match JWT in proof");
@@ -300,9 +299,6 @@ contract VerifyJWT is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     
     bytes memory payload = sliceBytesMemory(jwtBytes, payloadIdxStart, jwtBytes.length);
     bytes memory padByte = bytes('=');
-    // console.log('PAYLOAD CONC');
-    // console.log(payload.length);
-    // console.log(bytes.concat(payload, padByte).length);
     while(payload.length % 4 != 0){
       payload = bytes.concat(payload, padByte);
     }

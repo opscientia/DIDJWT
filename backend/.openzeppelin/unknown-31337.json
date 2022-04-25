@@ -126,6 +126,26 @@
       "kind": "uups"
     },
     {
+      "address": "0x0D76f58F1525683B56DeB3DE67cDb1fb57e159F7",
+      "txHash": "0xfeea3aab6091208b375e036a8d6f408953948b605ab0154883401b428005cc93",
+      "kind": "uups"
+    },
+    {
+      "address": "0x1a4337490F3A027381F921A3bC287d60Aa55dB90",
+      "txHash": "0xe524e0d4ddd03bc48d52dfcc23f638b0abf6fc58ac28fb07a8ee20fd0ded8b5e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8B55CA8EB689e68F9Fcb9eAb1094Ff58584c8B6c",
+      "txHash": "0x77853d3c8e5df3f22c58bcf77d424613385cd421da077b798cc646d079e667c2",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3776b66A2faBBD85d2fa6a5e252A099023C056f1",
+      "txHash": "0x015a008e44d37a0680378d6940c866364e98ad7984a73d45d469d549e92164a3",
+      "kind": "uups"
+    },
+    {
       "address": "0x72C23D650a67f2f08829EC35Ab807A4c1B0b852b",
       "txHash": "0x23902710ad61599df5373d61aa968791dfaaa22cf55e9c770f71e8a1fcc2733b",
       "kind": "uups"
@@ -175,23 +195,8 @@
       "kind": "uups"
     },
     {
-      "address": "0x0D76f58F1525683B56DeB3DE67cDb1fb57e159F7",
-      "txHash": "0xfeea3aab6091208b375e036a8d6f408953948b605ab0154883401b428005cc93",
-      "kind": "uups"
-    },
-    {
-      "address": "0x1a4337490F3A027381F921A3bC287d60Aa55dB90",
-      "txHash": "0xe524e0d4ddd03bc48d52dfcc23f638b0abf6fc58ac28fb07a8ee20fd0ded8b5e",
-      "kind": "uups"
-    },
-    {
-      "address": "0x8B55CA8EB689e68F9Fcb9eAb1094Ff58584c8B6c",
-      "txHash": "0x77853d3c8e5df3f22c58bcf77d424613385cd421da077b798cc646d079e667c2",
-      "kind": "uups"
-    },
-    {
-      "address": "0x3776b66A2faBBD85d2fa6a5e252A099023C056f1",
-      "txHash": "0x015a008e44d37a0680378d6940c866364e98ad7984a73d45d469d549e92164a3",
+      "address": "0x79fF9075736A29D6F6B4892b88Cb85d632c6b55e",
+      "txHash": "0x7a26d5549435bbe84ec468771b24b207de23fba3fd15f58ec23af5f6c77ea73f",
       "kind": "uups"
     },
     {
@@ -305,128 +310,128 @@
             "offset": 0,
             "slot": "201",
             "type": "t_mapping(t_bytes32,t_bool)",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:20"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:20"
           },
           {
             "label": "credsForAddress",
             "offset": 0,
             "slot": "202",
             "type": "t_mapping(t_address,t_bytes_storage)",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:22"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:22"
           },
           {
             "label": "addressForCreds",
             "offset": 0,
             "slot": "203",
             "type": "t_mapping(t_bytes_memory_ptr,t_address)",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:23"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:23"
           },
           {
             "label": "privateJWTForAddress",
             "offset": 0,
             "slot": "204",
             "type": "t_mapping(t_address,t_bytes32)",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:25"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:25"
           },
           {
             "label": "privateJWTAllowances",
             "offset": 0,
             "slot": "205",
             "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:26"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:26"
           },
           {
             "label": "registeredAddresses",
             "offset": 0,
             "slot": "206",
             "type": "t_array(t_address)dyn_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:28"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:28"
           },
           {
             "label": "registeredCreds",
             "offset": 0,
             "slot": "207",
             "type": "t_array(t_bytes_storage)dyn_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:29"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:29"
           },
           {
             "label": "proofToBlock",
             "offset": 0,
             "slot": "208",
             "type": "t_mapping(t_bytes32,t_uint256)",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:31"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:31"
           },
           {
             "label": "e",
             "offset": 0,
             "slot": "209",
             "type": "t_uint256",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:34"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:34"
           },
           {
             "label": "n",
             "offset": 0,
             "slot": "210",
             "type": "t_bytes_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:35"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:35"
           },
           {
             "label": "kid",
             "offset": 0,
             "slot": "211",
             "type": "t_string_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:39"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:39"
           },
           {
             "label": "topBread",
             "offset": 0,
             "slot": "212",
             "type": "t_bytes_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:49"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:49"
           },
           {
             "label": "bottomBread",
             "offset": 0,
             "slot": "213",
             "type": "t_bytes_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:50"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:50"
           },
           {
             "label": "verifiedUsers",
             "offset": 0,
             "slot": "214",
             "type": "t_array(t_bytes32)dyn_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:55"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:55"
           },
           {
             "label": "emptyBytes",
             "offset": 0,
             "slot": "215",
             "type": "t_bytes_storage",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:61"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:61"
           },
           {
             "label": "emptyBytesHash",
             "offset": 0,
             "slot": "216",
             "type": "t_bytes32",
-            "contract": "VerifyJWTv2",
-            "src": "contracts/VerifyJWTv2.sol:62"
+            "contract": "VerifyJWT",
+            "src": "contracts/VerifyJWT.sol:62"
           }
         ],
         "types": {
@@ -1141,9 +1146,9 @@
         }
       }
     },
-    "c1841276cb229cdaa8be1c9d73e270a5119c2c5e2f2fa974b1006b64ee277755": {
+    "a3b9943cba52cba0d461354abf878f0aa6457a664e99cd38af80cf98086afd7f": {
       "address": "0x901280B591cAEe7DB1c923E5Ae6f4021805fC53e",
-      "txHash": "0x5c0901e3efac3ea9fdcae5cc076b609c581ddd422ca14bfa25e120ef24380795",
+      "txHash": "0xd30c4328b9526fc2a3792b35b2e157b9c456e109da943bba51c7150706974489",
       "layout": {
         "storage": [
           {
