@@ -153,7 +153,7 @@ describe('Verify test RSA signatures', function () {
   });
 })
 
-describe.only('proof of prior knowledge', function () {
+describe('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
     this.vjwt = await deployVerifyJWTContract(11,230, kidOrcid, orcidBottomBread, orcidTopBread)
@@ -220,9 +220,9 @@ for (const params of [
     idToken: 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiX1RCT2VPZ2VZNzBPVnBHRWNDTi0zUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY0NDgzMDE5MSwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY0NDkxODUzNywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjQ0ODMyMTM3LCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImp0aSI6IjcxM2RjMGZiLTMwZTAtNDM0Mi05ODFjLTNlYjJiMTRiODM0OCJ9.VXNSFbSJSdOiX7n-hWB6Vh30L1IkOLiNs2hBTuUDZ4oDB-cL6AJ8QjX7wj9Nj_lGcq1kjIfFLhowo8Jy_mzMGIFU8KTZvinSA-A-tJkXOUEvjUNjd0OfQJnVVJ63wvp9gSEj419HZ13Lc2ci9CRY7efQCYeelvQOQvpdrZsRLiQ_XndeDw2hDLAmI7YrYrLMy1zQY9rD4uAlBa56RVD7me6t47jEOOJJMAs3PC8UZ6pYyNc0zAjQ8Vapqz7gxeCN-iya91YI1AIE8Ut19hGgVRa9N7l-aUielPAlzss0Qbeyvl0KTRuZWnLUSrOz8y9oGxVBCUmStEOrVrAhmkMS8A',
     correctID : '0000-0002-2308-9517',
     createContract : upgradeMode ?
-                       async() => await deployVerifyJWTContract([eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread])
-                       :
                        async() => await upgradeVerifyJWTContract('orcid')
+                       :
+                       async() => await deployVerifyJWTContract(eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread)
                        
   },
   {
@@ -245,7 +245,7 @@ for (const params of [
   }
 ]){
 
-  describe('Integration tests for after successful proof commit with params ' + params.name, function () {
+  describe.only('Integration tests for after successful proof commit with params ' + params.name, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
   
@@ -253,7 +253,6 @@ for (const params of [
       // let [header, payload] = [headerRaw, payloadRaw].map(x => JSON.parse(atob(x)));
       // let payload = atob(payloadRaw);
       this.signature = Buffer.from(signatureRaw, 'base64url')
-  
       this.vjwt = await params.createContract();
       this.message = headerRaw + '.' + payloadRaw
       this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
@@ -265,7 +264,8 @@ for (const params of [
       // let publicHashedMessage = keccak256FromString(this.message)
       // let secretHashedMessage = sha256FromString(this.message)
       let hashedMessage = sha256FromString(this.message)
-      let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage), Buffer.from(this.owner.address)))
+      let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
+                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
 
       
       await this.vjwt.commitJWTProof(proof)
