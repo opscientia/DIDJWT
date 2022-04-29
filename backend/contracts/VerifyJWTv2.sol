@@ -1,8 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
-
+import { WTFUtils } from "contracts/WTFUtils.sol";
 import "hardhat/console.sol";
-import "contracts/Base64.sol"; 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -50,7 +49,6 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     bytes32[] public verifiedUsers;
 
     event modExpEventForTesting(bytes result_);
-    event JWTVerification(bool result_);
     event KeyAuthorization(bool result_);
 
 
@@ -90,6 +88,7 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
       emptyBytesHash = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470; //keccak256(emptyBytes)
       // initialze parent classes (part of upgradeable proxy design pattern) 
       __Ownable_init();
+      // console.log(owner()); MAKE SURE THE OWNER IS SET UPON INITIALIZATION!!! OTHERWISE MAYBE ANYONE CAN SET OWNER
     }
 
     // For UUPS upgradeable proxy
@@ -107,169 +106,9 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         expBottomBread = newExpBottomBread;
         expTopBread = newExpTopBread;
     }
-
-    // https://ethereum.stackexchange.com/questions/8346/convert-address-to-string
-    function bytesToAddress(bytes memory b_) private pure returns (address addr) {
-      assembly {
-        addr := mload(add(b_,20))
-      } 
-    }
-
-    function bytes32ToAddress(bytes32 b_) private pure returns (address addr) {
-      assembly {
-        addr := mload(add(b_,20)) //shouldn't it be 0x20 or is that equivalent
-      } 
-    }
-
-    function bytes32ToUInt256(bytes32 b_) public pure returns (uint256 u_) {
-      assembly {
-        u_ := mload(add(b_,20)) //shouldn't it be 0x20 or is that equivalent
-      } 
-    }
-
-    function bytesToFirst32BytesAsBytes32Type(bytes memory input_) public pure returns (bytes32 b_) {
-      assembly {
-        // there is probably an easier way to do this
-        let unshifted := mload(add(input_,32))
-        b_ := shr(96, unshifted)
-      } 
-    }
-
-    // We need to take the last 32 bytes to obtain the sha256 hash from the the PKCS1-v1_5 padding
-    function bytesToLast32BytesAsBytes32Type(bytes memory input_) public pure returns (bytes32 b_) {
-      assembly {
-        // there is probably an easier way to do this
-        let len := mload(input_)
-        let end := add(input_, len)
-        b_ := mload(end)
-      }
-    }
-    
-    function addressToBytes(address a) public pure returns (bytes memory) {
-      return abi.encodePacked(a);
-    }
-    
-    function bytes32ToBytes(bytes32 b_) public pure returns (bytes memory){
-      return abi.encodePacked(b_);
-    }
-    // function addressToBytes32(address a) public pure returns (bytes32) {
-    //   return abi.encodePacked(a);
-    // }
-
-    function stringToBytes(string memory s) public pure returns (bytes memory) {
-      return abi.encodePacked(s);
-    }
-
-    function bytesAreEqual(bytes memory  a_, bytes memory b_) public pure returns (bool) {
-      return (a_.length == b_.length) && (keccak256(a_) == keccak256(b_));
-    }
-
-    // // Can't figure out why this isn't working right now, so using less efficient version instead:
-    // function sliceBytesMemory(bytes memory input_, uint256 start_, uint256 end_) public view returns (bytes memory r) {
-    //   require(start_ < end_, "index start must be less than inded end");
-    //   uint256 sliceLength = end_ - start_;
-    //   bytes memory r = new bytes(sliceLength);
-    //   console.log('HERE');
-    //   console.logBytes(r);
-    //   assembly {
-    //     let offset := add(start_, 0x20)
-    //     if iszero(staticcall(not(0), add(input_, offset), sliceLength, add(r, 0x20), sliceLength)) {
-    //         revert(0, 0)
-    //     }
-    //   }
-    //  
-    //
-    // }
-
-    // This could be more efficient by not copying the whole thing -- just the parts that matter
-    function sliceBytesMemory(bytes memory input_, uint256 start_, uint256 end_) public view returns (bytes memory r) {
-      uint256 len_ = input_.length;
-      bytes memory r = new bytes(len_);
-      
-      assembly {
-          // Use identity to copy data
-          if iszero(staticcall(not(0), 0x04, add(input_, 0x20), len_, add(r, 0x20), len_)) {
-              revert(0, 0)
-          }
-      }
-      return destructivelySliceBytesMemory(r, start_, end_);
-    }
-    
-    function destructivelySliceBytesMemory(bytes memory m, uint256 start, uint256 end) public view returns (bytes memory r) {
-      console.log('start&end');
-      console.log(start);
-      console.log(end);
-      require(start < end, "index start must be less than inded end");
-      assembly {
-        let offset := add(start, 0x20) //first 0x20 bytes of bytes type is length (no. of bytes)
-        r := add(m, start)
-        mstore(r, sub(end, start))
-      }
-    }
-
-    // BIG thanks to dankrad for this function: https://github.com/dankrad/rsa-bounty/blob/master/contract/rsa_bounty.sol
-    // Expmod for bignum operands (encoded as bytes, only base and modulus)
-    function modExp(bytes memory base, uint exponent, bytes memory modulus) public returns (bytes memory o) {
-        assembly {
-            // Get free memory pointer
-            let p := mload(0x40)
-
-            // Get base length in bytes
-            let bl := mload(base)
-            // Get modulus length in bytes
-            let ml := mload(modulus)
-
-            // Store parameters for the Expmod (0x05) precompile
-            mstore(p, bl)               // Length of Base
-            mstore(add(p, 0x20), 0x20)  // Length of Exponent
-            mstore(add(p, 0x40), ml)    // Length of Modulus
-            // Use Identity (0x04) precompile to memcpy the base
-            if iszero(staticcall(10000, 0x04, add(base, 0x20), bl, add(p, 0x60), bl)) {
-                revert(0, 0)
-            }
-            mstore(add(p, add(0x60, bl)), exponent) // Exponent
-            // Use Identity (0x04) precompile to memcpy the modulus
-            if iszero(staticcall(10000, 0x04, add(modulus, 0x20), ml, add(add(p, 0x80), bl), ml)) {
-                revert(0, 0)
-            }
-            
-            // Call 0x05 (EXPMOD) precompile
-            if iszero(staticcall(not(0), 0x05, p, add(add(0x80, bl), ml), add(p, 0x20), ml)) {
-                revert(0, 0)
-            }
-
-            // Update free memory pointer
-            mstore(0x40, add(add(p, ml), 0x20))
-
-            // Store correct bytelength at p. This means that with the output
-            // of the Expmod precompile (which is stored as p + 0x20)
-            // there is now a bytes array at location p
-            mstore(p, ml)
-
-            // Return p
-            o := p
-        }
-        
-        emit modExpEventForTesting(o);
-    }
-    
-    // returns whether JWT is signed by public key e_, n_, and emits an event with verification result
-    function _verifyJWT(uint256 e_, bytes memory n_, bytes memory signature_, bytes memory message_) private returns (bool) {
-      bytes32 hashed = hashFromSignature(e_, n_, signature_);
-      bool verified = hashed == sha256(message_);
-      emit JWTVerification(verified);
-      return verified;
-    }
-
-    // Get the hash of the JWT from the signature
-    function hashFromSignature(uint256 e_, bytes memory n_, bytes memory signature_) public returns (bytes32) {
-      bytes memory encrypted = modExp(signature_, e_, n_);
-      bytes32 unpadded = bytesToLast32BytesAsBytes32Type(encrypted);
-      return unpadded;
-    }
     
     function verifyJWT(bytes memory signature, string memory headerAndPayload) public returns (bool) {
-      return _verifyJWT(e, n, signature, stringToBytes(headerAndPayload));
+      return WTFUtils._verifyJWT(e, n, signature, WTFUtils.stringToBytes(headerAndPayload));
     }
 
 
@@ -279,30 +118,30 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
   // perhaps make private, but need it to be public to test
   function checkJWTProof(address a, string memory jwt) public view returns (bool) {
-    // bytes32 bytes32Pubkey = bytesToFirst32BytesAsBytes32Type(addressToBytes(a));
-    // bytes memory keyXORJWTHash = bytes32ToBytes(bytes32Pubkey ^ sha256(stringToBytes(jwt)));
+    // bytes32 bytes32Pubkey = WTFUtils.bytesToFirst32BytesAsBytes32Type(WTFUtils.addressToBytes(a));
+    // bytes memory keyXORJWTHash = WTFUtils.bytes32ToBytes(bytes32Pubkey ^ sha256(WTFUtils.stringToBytes(jwt)));
     // bytes32 k = sha256(keyXORJWTHash);
     // require(proofToBlock[k] < block.number, "You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun");
     // require(proofToBlock[k] > 0 , "Proof not found; it needs to have been submitted to commitJWTProof in a previous block");
-    // // require(jp.hashedJWT == keccak256(stringToBytes(jwt)), "JWT does not match JWT in proof");
+    // // require(jp.hashedJWT == keccak256(WTFUtils.stringToBytes(jwt)), "JWT does not match JWT in proof");
     // return true;
-    return checkJWTProof(a, sha256(stringToBytes(jwt)));
+    return checkJWTProof(a, sha256(WTFUtils.stringToBytes(jwt)));
   }
 
   // Same as checkJWTProof but for private (hashed) JWTs.
   function checkJWTProof(address a, bytes32 jwtHash) public view returns (bool) {
-    bytes32 bytes32Pubkey = bytesToFirst32BytesAsBytes32Type(addressToBytes(a));
-    bytes memory keyXORJWTHash = bytes32ToBytes(bytes32Pubkey ^ jwtHash);
+    bytes32 bytes32Pubkey = WTFUtils.bytesToFirst32BytesAsBytes32Type(WTFUtils.addressToBytes(a));
+    bytes memory keyXORJWTHash = WTFUtils.bytes32ToBytes(bytes32Pubkey ^ jwtHash);
     bytes32 k = sha256(keyXORJWTHash);
     // debugging console.logs
     require(proofToBlock[k] < block.number, "You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun");
     require(proofToBlock[k] > 0 , "Proof not found; it needs to have been submitted to commitJWTProof in a previous block");
-    // require(jp.hashedJWT == keccak256(stringToBytes(jwt)), "JWT does not match JWT in proof");
+    // require(jp.hashedJWT == keccak256(WTFUtils.stringToBytes(jwt)), "JWT does not match JWT in proof");
     return true;
   }
 
   function _verify(address addr, bytes memory signature, string memory jwt) private returns (bool) { 
-    bytes32 jwtHash = sha256(stringToBytes(jwt));
+    bytes32 jwtHash = sha256(WTFUtils.stringToBytes(jwt));
     // check whether JWT is valid 
     require(verifyJWT(signature, jwt),"Verification of JWT failed");
     // check whether sender has already proved knowledge of the jwt
@@ -313,13 +152,13 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
   // This is the endpoint a frontend should call. It takes a signature, JWT, sandwich (see comments), which has start/end index of where the sandwich can be found. It also takes a payload index start, as it must know the where the payload is to decode the Base64 JWT
   function verifyMe(bytes memory signature, string memory jwt, uint payloadIdxStart, ProposedSandwichAt calldata proposedIDSandwich, ProposedSandwichAt calldata proposedExpSandwich) public { //also add  to verify that proposedId exists at jwt[idxStart:idxEnd]. If so, also verify that it starts with &id= and ends with &. So that we know it's a whole field and was actually the ID given
-    bytes memory jwtBytes = stringToBytes(jwt);
+    bytes memory jwtBytes = WTFUtils.stringToBytes(jwt);
 
     require(_verify(msg.sender, signature, jwt), "JWT Verification failed");
 
     // there seems to be no advantage in lying about where the payload starts, but it may be more secure to implemenent a check here that the payload starts after a period
     
-    bytes memory payload = sliceBytesMemory(jwtBytes, payloadIdxStart, jwtBytes.length);
+    bytes memory payload = WTFUtils.sliceBytesMemory(jwtBytes, payloadIdxStart, jwtBytes.length);
     bytes memory padByte = bytes('=');
     // console.log('PAYLOAD CONC');
     // console.log(payload.length);
@@ -327,17 +166,17 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     while(payload.length % 4 != 0){
       payload = bytes.concat(payload, padByte);
     }
-    bytes memory b64decoded = Base64.decodeFromBytes(payload);
+    bytes memory b64decoded = WTFUtils.decodeFromBytes(payload);
   
     require(bytesIncludeSandwichAt(b64decoded, proposedIDSandwich, bottomBread, topBread), 
             "Failed to find correct ID sandwich in JWT");
 
-    bytes memory creds = sliceBytesMemory(proposedIDSandwich.sandwichValue, bottomBread.length, proposedIDSandwich.sandwichValue.length - topBread.length);
+    bytes memory creds = WTFUtils.sliceBytesMemory(proposedIDSandwich.sandwichValue, bottomBread.length, proposedIDSandwich.sandwichValue.length - topBread.length);
     
     require(bytesIncludeSandwichAt(b64decoded, proposedExpSandwich, expBottomBread, expTopBread), 
             "Failed to find correct expiration sandwich in JWT");     
 
-    bytes memory expBytes = sliceBytesMemory(proposedExpSandwich.sandwichValue, expBottomBread.length, proposedExpSandwich.sandwichValue.length - expTopBread.length);
+    bytes memory expBytes = WTFUtils.sliceBytesMemory(proposedExpSandwich.sandwichValue, expBottomBread.length, proposedExpSandwich.sandwichValue.length - expTopBread.length);
     
     uint256 exp = parseInt(expBytes);
     require(exp > block.timestamp, "JWT is expired");
@@ -348,7 +187,7 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // ^^ commented out because JWTHashUsed prevents this concern
 
     // make sure there is no previous entry for this JWT - it should only be usable once!
-    bytes32 jwtHash = keccak256(stringToBytes(jwt));
+    bytes32 jwtHash = keccak256(WTFUtils.stringToBytes(jwt));
 
     require(JWTHashUsed[jwtHash] == false, "JWT can only be used on-chain once");
     JWTHashUsed[jwtHash] = true;
@@ -373,23 +212,23 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
 
   function bytesIncludeSandwichAt(bytes memory string_, ProposedSandwichAt calldata proposedSandwich_, bytes memory bottomBread_, bytes memory topBread_) public view returns (bool validString) {
-    require(bytesAreEqual(
-                          sliceBytesMemory(proposedSandwich_.sandwichValue, 0, bottomBread_.length),
+    require(WTFUtils.bytesAreEqual(
+                          WTFUtils.sliceBytesMemory(proposedSandwich_.sandwichValue, 0, bottomBread_.length),
                           bottomBread_
             ),
             "Failed to find correct bottom bread in sandwich"
     );
 
-    require(bytesAreEqual(
-                          sliceBytesMemory(proposedSandwich_.sandwichValue, proposedSandwich_.sandwichValue.length-topBread_.length, proposedSandwich_.sandwichValue.length),
+    require(WTFUtils.bytesAreEqual(
+                          WTFUtils.sliceBytesMemory(proposedSandwich_.sandwichValue, proposedSandwich_.sandwichValue.length-topBread_.length, proposedSandwich_.sandwichValue.length),
                           topBread_
             ),
             "Failed to find correct top bread in sandwich"
     );
 
     // make sure proposed id is found in the original jwt
-    require(bytesAreEqual(
-                          sliceBytesMemory(string_, proposedSandwich_.idxStart, proposedSandwich_.idxEnd),
+    require(WTFUtils.bytesAreEqual(
+                          WTFUtils.sliceBytesMemory(string_, proposedSandwich_.idxStart, proposedSandwich_.idxEnd),
                           proposedSandwich_.sandwichValue
             ),
            "proposed sandwich not found in JWT"
@@ -402,7 +241,7 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   // there is no way to check thath a hash is of a valid JWT. That would violate the purpose of a cryptographic hash function.
   function linkPrivateJWT(bytes memory signature, bytes32 headerAndPayloadHash) public { 
     require(checkJWTProof(msg.sender, headerAndPayloadHash));
-    bytes32 hashed = hashFromSignature(e, n, signature);
+    bytes32 hashed = WTFUtils.hashFromSignature(e, n, signature);
     require(hashed == headerAndPayloadHash, 'headerAndPayloadHash does not match the hash you proved knowledge of');
     // update hashmaps of addresses, credentials, and JWTs themselves
     privateJWTForAddress[msg.sender] = hashed;
@@ -434,7 +273,7 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   
   // // Testing function, remove later; this seems to give a different result than ethers.js sha256, perhaps because of byte conversion?
   // function testSHA256OnJWT(string memory jwt) public pure returns (bytes32){
-  //   return sha256(stringToBytes(jwt));
+  //   return sha256(WTFUtils.stringToBytes(jwt));
   // }
 
     // from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol

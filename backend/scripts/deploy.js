@@ -68,15 +68,15 @@ async function main() {
   // await idAgg.addVerifyJWTContract('github', github.address)
   // await idAgg.addVerifyJWTContract('discord', discord.address)
   // await deployFacebook();
-  await deployWTFByteUtils();
+  await deployWTFUtils();
 }
 
-async function deployWTFByteUtils() {
-  const WTFByteUtils = await ethers.getContractFactory('WTFBios')
-  const wbus = await WTFByteUtils.deploy();
-  await wbus.deployed();
-  console.log('WTFByteUtils: ', wbus.address);
-  return wbus
+async function deployWTFUtils() {
+  const WTFUtils = await ethers.getContractFactory('WTFUtils')
+  const wu = await WTFUtils.deploy();
+  await wu.deployed();
+  console.log('WTFUtils: ', wu.address);
+  return wu
 }
 
 async function deployWTFBios() {

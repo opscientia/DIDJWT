@@ -24,19 +24,35 @@ let contractAddresses = wtf.getContractAddresses()
 exports.upgradeVerifyJWTContract = async (service) => {
     let address = contractAddresses.VerifyJWT.gnosis[service]
     let VJWT = await ethers.getContractFactory('VerifyJWT')
-    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2')
+    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2', {
+      libraries : {
+        WTFUtils : '0xbE420Cb7430b5162EF078F8F9ee37Cd59e1e506d' //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
+      }, 
+    })
+
     // Import the implementation if it's not already loaded:
-    await upgrades.forceImport(address, VJWT, {kind : 'uups'})
-    let vjwt = await upgrades.upgradeProxy(address, NewVJWT)
+    await upgrades.forceImport(
+      address,
+      VJWT, 
+      {kind : 'uups'}, 
+    )
+
+    let vjwt = await upgrades.upgradeProxy(address, NewVJWT, { unsafeAllow: ['external-library-linking'] }) //WARNING: ALLOWING LIBRARIES (but this should be fine as long as lib can't call selfdestruct) https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-external-libraries
     return vjwt
 }
 
 exports.deployVerifyJWTContract = async (...args) => {
-  const VerifyJWT = await ethers.getContractFactory('VerifyJWT')
+  const VerifyJWT = await ethers.getContractFactory('VerifyJWTv2', {
+    libraries : {
+      WTFUtils : '0xbE420Cb7430b5162EF078F8F9ee37Cd59e1e506d' //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
+    }
+  })
   const vjwt = await upgrades.deployProxy(VerifyJWT, args, {
     kind: 'uups',
-    initializer: 'initialize',
-  });
+    initializer: 'initialize', 
+  },
+    unsafeAllowLinkedLibraries=true //WARNING: ALLOWING LIBRARIES (but this should be fine as long as lib can't call selfdestruct) https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-external-libraries
+  );
   await vjwt.deployed();
   return vjwt;
 }

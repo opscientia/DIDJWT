@@ -266,6 +266,7 @@ for (const params of [
       // let payload = atob(payloadRaw);
       this.signature = Buffer.from(signatureRaw, 'base64url')
       this.vjwt = await params.createContract();
+
       this.message = headerRaw + '.' + payloadRaw
       this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
       // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
