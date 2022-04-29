@@ -146,10 +146,6 @@
       "kind": "uups"
     },
     {
-      "address": "0xC334b3465790bC77299D42635B25D77E3e46A78b",
-      "kind": "uups"
-    },
-    {
       "address": "0xb316940b687DAa87392157e2ECfeC1b9e182423d",
       "txHash": "0x7281a28f80d36b761b6a92614e3b2a8451ef7e5aa731d462f6bb23d1c97e7cc7",
       "kind": "uups"
@@ -202,10 +198,6 @@
     {
       "address": "0xAd7C2C3B9487e87A0699385C9a617eAb488e95BF",
       "txHash": "0xb1503aa13730ac7ed75bacf1cfa58440ad9885f345c6edd77deaf251d3545ecd",
-      "kind": "uups"
-    },
-    {
-      "address": "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
       "kind": "uups"
     },
     {
@@ -326,6 +318,22 @@
     {
       "address": "0xFc2c2A5709f4A2E50DB70A5bf6cCe9BCFE97532A",
       "txHash": "0xec632cc134b4933add9231250c64e731e9c129fac979ea892c21950f7e8bc442",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
+      "kind": "uups"
+    },
+    {
+      "address": "0xC334b3465790bC77299D42635B25D77E3e46A78b",
+      "kind": "uups"
+    },
+    {
+      "address": "0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB",
+      "kind": "uups"
+    },
+    {
+      "address": "0x6029BD948942c7b355149087c47462c66Ea147ba",
       "kind": "uups"
     }
   ],
@@ -600,11 +608,7 @@
       },
       "allAddresses": [
         "0x6A78dF871291627C5470F7a768745C3ff05741F2",
-        "0xf594d8249A4E4FEcd04e7499E394A82140915fe5",
-        "0x72C23D650a67f2f08829EC35Ab807A4c1B0b852b",
-        "0x57CF9EF2ebc7CBFaDAD632909617F6F443fd6a05",
-        "0xb229409aE8AF6eD5eac77DC1044c0241D25594BD",
-        "0x901280B591cAEe7DB1c923E5Ae6f4021805fC53e"
+        "0xC0bEb66b8A6318Fa46C45eFE95B936606C547AD1"
       ]
     },
     "91575dfce7152acae3ccad6486691101835c66bb3dcf5920f319fd474128e3b3": {
@@ -924,8 +928,8 @@
       }
     },
     "3f3f6b75a1e99affc9212c606f62168caa06a8dbeac0067925e6abebaaada043": {
-      "address": "0xAd7C2C3B9487e87A0699385C9a617eAb488e95BF",
-      "txHash": "0x6e89e60cc5c7988336f7f99ea469d72e05bc205a8ccfeda88023184ac94de06a",
+      "address": "0xC564324fe35848F725e2E406Ad746E130863eDA8",
+      "txHash": "0xe3cdcdec8087b983cb131f5027e32ae4845a53611f8761440b67c63f33ee8c0a",
       "layout": {
         "storage": [
           {

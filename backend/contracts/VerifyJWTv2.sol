@@ -195,8 +195,10 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
       return destructivelySliceBytesMemory(r, start_, end_);
     }
     
-    function destructivelySliceBytesMemory(bytes memory m, uint256 start, uint256 end) public pure returns (bytes memory r) {
-
+    function destructivelySliceBytesMemory(bytes memory m, uint256 start, uint256 end) public view returns (bytes memory r) {
+      console.log('start&end');
+      console.log(start);
+      console.log(end);
       require(start < end, "index start must be less than inded end");
       assembly {
         let offset := add(start, 0x20) //first 0x20 bytes of bytes type is length (no. of bytes)
