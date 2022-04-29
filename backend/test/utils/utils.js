@@ -60,9 +60,21 @@ exports.sha256FromString = x => ethers.utils.sha256(ethers.utils.toUtf8Bytes(x))
 // input: x (string); output: sha256 of string
 exports.keccak256FromString = x => ethers.utils.keccak256(ethers.utils.toUtf8Bytes(x))
 
-// Make sure it does bottomBread + id + topBread and does not allow any other text in between. If Google changes their JWT format so that the sandwich now contains other fields between bottomBread and topBread, this should fail until the contract is updated. 
-exports.sandwichIDWithBreadFromContract = async (id, contract) => {
-  let sandwich = (await contract.bottomBread()) + Buffer.from(id).toString('hex') + (await contract.topBread());
+// Sandwiches data between contract.bottomBread() and contract.topBread(). By default does ID with id bread. If type='exp' is specified, it will sandwich with the expiration bread
+exports.sandwichDataWithBreadFromContract = async (data, contract, type='id') => {
+  let bottomBread; 
+  let topBread;
+  if(type == 'id') {
+    bottomBread = await contract.bottomBread()
+    topBread = await contract.topBread()
+  } else if(type == 'exp') {
+    bottomBread = await contract.expBottomBread()
+    topBread = await contract.expTopBread()
+  } else {
+    throw new Error(`type "${type}" not recognized`)
+  }
+
+  let sandwich = bottomBread + Buffer.from(data).toString('hex') + topBread;
   sandwich = sandwich.replaceAll('0x', '');
   return sandwich
 }
