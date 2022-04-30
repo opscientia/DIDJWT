@@ -5,16 +5,18 @@
 // Runtime Environment's members available in the global scope.
 const { ethers } = require("hardhat");
 const hre = require("hardhat");
+const wtf = require("wtf-lib");
 
+const contractAddresses = wtf.getContractAddresses();
 // New key to upgrade to
 let newKey = `{
-    "kty": "RSA",
-    "use": "sig",
-    "e": "AQAB",
-    "alg": "RS256",
-    "kid": "d332ab545cc189df133efddb3a6c402ebf489ac2",
-    "n": "pnvsf_d6daVCXm6NoBHxpIhkk345edh7GaiXl25XR4_q2ATkiZMBF8foXaa_LTyr8W5dmvqIE71p_T9ygVLMoP7YumjOimrbwB3gEV1ekI-d2rkRbCFg56bzifkAi8gdQW3pj4j-bouOSNkEAUeVSDsHst1f-sFmckZmb1Pe1bWLI-k6TXirXQpGDEZKeh1AWxillo9AWqmDXalurQt46W6rd1y2RCj5Y5zXQheNF6Il0Izc4K5RDBKkanyZ7Dq_ZFuTpVJkxPgCjN6G8cfzM0JKujWX4Zit2xCmZhVfr7hDodnNEPo1IppWNrjcfZOtA_Jh6yBlB7T8DWd1l1PvUQ"
-  }
+  "n": "qR7fa5Gb2rhy-RJCJwSFn7J2KiKs_WgMXVR-23Z6OfX89_utHGkM-Qk27abDGPXa0u9OKzwOU2JZx7yNye7LH4kKX1PEAEz0p9XGbfF3yFyiD5JkziOfQyYj9ERKWfxKatpk-oi9D_p2leQKzTfEZWIfLVZkgNXFkUdhzCG68j5kFhZ1Ys9bRRDo3Q1BkLXmP_Y6PW1g74_rvAYCiQ6hJVvyyXYnqHcoawedgO6_MQihaSeAW25AhY8MXVo4-MdNvboahOlJg280YuxkCZiRqxyQEqd5HKCPzP49TDQbdAxDa900ewCQK9gkbHiNKFbOBv_b94YfMh93NUoEa-jCnw",
+  "use": "sig",
+  "e": "AQAB",
+  "kty": "RSA",
+  "alg": "RS256",
+  "kid": "861649e450315383f6b9d510b7cd4e9226c3cd88"
+}
   `
 // newKey = `{
 //     "kid": "f1338ca26835863f671408f41738a7b49e740fc0",
@@ -36,7 +38,7 @@ const jwksKeyToPubkey = (jwks) => {
 
 async function main() {
     const [e, n, kid] = jwksKeyToPubkey(newKey)
-    await rotate('0xC334b3465790bC77299D42635B25D77E3e46A78b', e, n, kid)
+    await rotate(contractAddresses.VerifyJWT.gnosis.google, e, n, kid)
     console.log('Key rotation should have been successfully completed!')
 }
 

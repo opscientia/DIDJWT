@@ -39,7 +39,7 @@ module.exports = {
       accounts : [{privateKey: process.env.PRIVATE_KEY, balance: "2110000000000000000000000"}], // Private key for the above address
       forking: {
         url: "https://xdai-archive.blockscout.com/", 
-        blockNumber: 21707689
+        blockNumber: 21908151
       }
     },
     matic: {
