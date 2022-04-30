@@ -211,10 +211,7 @@ for (const params of [
     newToken: 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw',
     id : '0000-0002-2308-9517',
     expTime : '1651375833',
-    createContract : upgradeMode ?
-                       async() => await upgradeVerifyJWTContract('orcid')
-                       :
-                       async() => await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    createContract : async() => await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
                        
   },
   // {
@@ -265,6 +262,7 @@ for (const params of [
       let idSandwichValue = await sandwichDataWithBreadFromContract(params.id, this.vjwt, type='id');
       let wrongIDSandwichValue = await sandwichDataWithBreadFromContract('0200-0002-2308-9517', this.vjwt, type='id');
       let expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, this.vjwt, type='exp');
+      let wrongExpSandwichValue = await sandwichDataWithBreadFromContract('1651375834', this.vjwt, type='exp');
 
       // find indices of sandwich in raw payload:
       let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
@@ -273,6 +271,7 @@ for (const params of [
       this.proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
       this.wrongProposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(wrongIDSandwichValue, 'hex')}   
       this.proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
+      this.wrongProposedExpSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(wrongExpSandwichValue, 'hex')}   
 
       // this.startIdxID = startIdxID; this.endIdxID = endIdxID
       // let publicHashedMessage = keccak256FromString(this.message)
@@ -294,21 +293,75 @@ for (const params of [
     //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.emit(this.vjwt, 'JWTVerification').withArgs(true);
     // });
 
-    it('JWT works once but cannot be used twice (and emits JWTVerification event, which does NOT mean everything was successful -- it is just a testing event)', async function () {
+    it('Valid JWT works once but cannot be used twice (and emits JWTVerification event, which does NOT mean everything was successful -- it is just a testing event)', async function () {
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.not.be.reverted
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.be.revertedWith('JWT can only be used on-chain once')
     });
-    /* UNCOMMENT ALL TESTS BELOW
-    // it('JWT emits KeyAuthorization event, another testing event which does NOT mean everything was successsful -- just that some intermediary stages were successful', async function () {
-    //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.emit(this.vjwt, 'KeyAuthorization').withArgs(true); 
-    //   });
+
+    it('Wrong message fails', async function () {
+      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message.replace('a', 'b'), this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.be.revertedWith('Verification of JWT failed');
+    });
+
+    it('Wrong sandwich fails', async function () {
+      await expect(this.vjwt.verifyMe(
+        ethers.BigNumber.from(this.signature), 
+        this.message, 
+        this.payloadIdx, 
+        {...this.proposedIDSandwich, sandwichValue: Buffer.from(this.proposedIDSandwich.sandwichValue+0xabc)}, 
+        this.proposedExpSandwich))
+      .to.be.revertedWith('Failed to find correct top bread in sandwich');
+
+      // Yes, this could be more comprehensive but testing for top bread in ID sandwich and bottom bread in exp sandwich is enough IMO...for now.
+      await expect(this.vjwt.verifyMe(
+        ethers.BigNumber.from(this.signature), 
+        this.message, 
+        this.payloadIdx, 
+        this.proposedExpSandwich, 
+        {...this.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.proposedExpSandwich.sandwichValue)}))
+      .to.be.revertedWith('Failed to find correct bottom bread in sandwich');
+
+      await expect(this.vjwt.verifyMe(
+        ethers.BigNumber.from(this.signature), 
+        this.message, 
+        this.payloadIdx, 
+        this.wrongProposedIDSandwich, 
+        this.proposedExpSandwich))
+      .to.be.revertedWith('Proposed sandwich not found');
+      
+      await expect(this.vjwt.verifyMe(
+        ethers.BigNumber.from(this.signature), 
+        this.message, 
+        this.payloadIdx, 
+        this.proposedIDSandwich, 
+        this.wrongProposedExpSandwich))
+      .to.be.revertedWith('Proposed sandwich not found');
+      
+    });
+
+    it('Creds lookup works', async function () {
+      let registeredAddresses, registeredCreds;
   
-    // it('Wrong message fails', async function () {
-    //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message.replace('a', 'b'), this.payloadIdx, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('Verification of JWT failed');
-    // });
+      [registeredAddresses, registeredCreds] = [await this.vjwt.getRegisteredAddresses(), await this.vjwt.getRegisteredCreds()];
+      console.log('lennn', registeredAddresses, registeredCreds)
+      expect(registeredAddresses.length).to.equal(0);
+      expect(registeredCreds.length).to.equal(0);
+      expect(await this.vjwt.addressForCreds(Buffer.from('0000-0002-2308-9517'))).to.equal(ethers.constants.AddressZero);
   
-    // it('Wrong indices fail (this could be more comprehensive and more unit-like)', async function () {
-    //   // Have to use Math.max(i, 0) for the first one to ensure index isn't negative if header doesn't exist!
+      await this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich);
+      
+      [registeredAddresses, registeredCreds] = [await this.vjwt.getRegisteredAddresses(), await this.vjwt.getRegisteredCreds()];
+      expect(registeredAddresses.length).to.equal(1);
+      expect(registeredCreds.length).to.equal(1);
+      expect(await this.vjwt.addressForCreds(Buffer.from(params.id))).to.include(this.owner.address);
+      
+      expect(registeredAddresses[0] === this.owner.address).to.equal(true);
+    });
+
+    // This is not too important to test and is now quite tedious to rewrite so i commented it
+    // it('Wrong indices fail', async function () {
+    //   let [badIdSandwich0, badIdSandwich1] = [this.proposedIDSandwich, this.proposedIDSandwich]
+    //   let [badExpSandwich0, badExpSandwich1] = [this.proposedExpSandwich, this.proposedExpSandwich]
+    //   badIdSandwich0
     //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx - 1, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
     //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx + 1, this.startIdx, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
     //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx + 1, this.endIdx, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
@@ -318,31 +371,7 @@ for (const params of [
     //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx + 1, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
     //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx - 1, '0x'+this.sandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
     // });
-  
-    // it('Wrong sandwich fails', async function () {
-    //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx, '0x'+this.sandwich+'e6')).to.be.revertedWith('Failed to find correct top bread in sandwich');
-    //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx, '0xb5'+this.sandwich)).to.be.revertedWith('Failed to find correct bottom bread in sandwich');
-    //   await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx, '0x'+this.wrongSandwich)).to.be.revertedWith('proposedIDSandwich not found in JWT');
-    // });
-  
-    // it('Creds lookup works', async function () {
-    //   let registeredAddresses, registeredCreds;
-  
-    //   [registeredAddresses, registeredCreds] = [await this.vjwt.getRegisteredAddresses(), await this.vjwt.getRegisteredCreds()];
-    //   expect(registeredAddresses.length).to.equal(0);
-    //   expect(registeredCreds.length).to.equal(0);
-    //   expect(await this.vjwt.addressForCreds(Buffer.from('0000-0002-2308-9517'))).to.equal(ethers.constants.AddressZero);
-  
-    //   await this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.startIdx, this.endIdx, '0x'+this.sandwich);
-      
-    //   [registeredAddresses, registeredCreds] = [await this.vjwt.getRegisteredAddresses(), await this.vjwt.getRegisteredCreds()];
-    //   expect(registeredAddresses.length).to.equal(1);
-    //   expect(registeredCreds.length).to.equal(1);
-    //   expect(await this.vjwt.addressForCreds(Buffer.from(params.id))).to.equal(this.owner.address);
-      
-    //   expect(registeredAddresses[0] === this.owner.address).to.equal(true);
-    // });
-     UNCOMMENT ALL TESTS ABOVE */
+
     
       // TODO: add tests for address => creds,  address => JWT,  JWT => address
   

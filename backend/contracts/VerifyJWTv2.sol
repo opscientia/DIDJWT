@@ -225,12 +225,11 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
             "Failed to find correct top bread in sandwich"
     );
 
-    // make sure proposed id is found in the original jwt
     require(WTFUtils.bytesAreEqual(
                           WTFUtils.sliceBytesMemory(string_, proposedSandwich_.idxStart, proposedSandwich_.idxEnd),
                           proposedSandwich_.sandwichValue
             ),
-           "proposed sandwich not found in JWT"
+           "Proposed sandwich not found"
     );
     return true;
   }
