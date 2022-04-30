@@ -43,20 +43,20 @@ exports.twitterParams = {
   e : eTwitter,
   n : nTwitter,
   kid : kidTwitter,
-  idBottomBread : '0x7b226372656473223a22',
-  topBread : '0x222c22617564223a22676e6f736973222c22',
-  expBottomBread : 'tbd',
-  expTopBread : 'tbd'
+  idBottomBread : '0x226372656473223a22',
+  idTopBread : '0x222c22617564223a22676e6f736973222c22',
+  expBottomBread : '0x222c22657870223a22',
+  expTopBread : '0x227d'
 }
 
 exports.githubParams = {
   e : eGithub,
   n : nGithub,
   kid : kidGithub,
-  idBottomBread : '0x7b226372656473223a22',
+  idBottomBread : '0x226372656473223a22',
   idTopBread : '0x222c22617564223a22676e6f736973222c22',
-  expBottomBread : 'tbd',
-  expTopBread : 'tbd'
+  expBottomBread : '0x222c22657870223a22',
+  expTopBread : '0x227d'
 }
 
 let contractAddresses = wtf.getContractAddresses()
