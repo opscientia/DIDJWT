@@ -159,9 +159,6 @@ describe('proof of prior knowledge', function () {
 
     let hashedMessage1 = sha256FromString(this.message1)
     let hashedMessage2 = sha256FromString(this.message1)
-    
-    console.log('parameeeeees', hashedMessage1, this.owner.address)
-    console.log('parameeeeees', hashedMessage2, this.owner.address)
 
     this.proof1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage1.replace('0x', ''), 'hex'),
                                                 Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
@@ -178,7 +175,6 @@ describe('proof of prior knowledge', function () {
 
   it('Cannot prove prior knowledge of message (not JWT but can be) in one block', async function () {
     await this.vjwt.commitJWTProof(this.proof1)
-    console.log(this.vjwt['checkJWTProof(address,string)'], this.owner.address, this.message1)
     await expect(this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message1)).to.be.revertedWith("VM Exception while processing transaction: reverted with reason string 'You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun'");
   });
 
@@ -271,13 +267,9 @@ for (const params of [
       let expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, this.vjwt, type='exp');
 
       // find indices of sandwich in raw payload:
-      console.log('runnn', payloadRaw, Buffer.from(idSandwichValue, 'hex').toString(), Buffer.from(expSandwichValue, 'hex').toString())
-      console.log('gittie')
-      console.log(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
-      console.log(searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw))
       let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
       let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
-      console.log('nur')
+
       this.proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
       this.wrongProposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(wrongIDSandwichValue, 'hex')}   
       this.proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
@@ -303,7 +295,7 @@ for (const params of [
     // });
 
     it('JWT works once but cannot be used twice (and emits JWTVerification event, which does NOT mean everything was successful -- it is just a testing event)', async function () {
-      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich))
+      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.not.be.reverted
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.be.revertedWith('JWT can only be used on-chain once')
     });
     /* UNCOMMENT ALL TESTS BELOW

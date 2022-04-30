@@ -146,7 +146,6 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     require(verifyJWT(signature, jwt),"Verification of JWT failed");
     // check whether sender has already proved knowledge of the jwt
     require(checkJWTProof(addr, jwtHash), "Proof of previous knowlege of JWT unsuccessful");
-    emit KeyAuthorization(true);
     return true;
   }
 

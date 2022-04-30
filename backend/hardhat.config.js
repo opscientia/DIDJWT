@@ -38,7 +38,8 @@ module.exports = {
       from : "0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388", // Send transactions from this address by default
       accounts : [{privateKey: process.env.PRIVATE_KEY, balance: "2110000000000000000000000"}], // Private key for the above address
       forking: {
-        url: "https://rpc.gnosischain.com"
+        url: "https://rpc.gnosischain.com", 
+        blockNumber: 21896858
       }
     },
     matic: {
