@@ -2,22 +2,63 @@ const { ethers, upgrades } = require('hardhat');
 const wtf = require('wtf-lib');
 
 const search64 = require('../../../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
+// Converts JWKS RSAkey to e, n, and kid:
+const jwksKeyToPubkey = (jwks) => {
+  let parsed = JSON.parse(jwks)
+  return [
+    ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
+    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url')),
+    parsed['kid']
+  ]
+}
+exports.jwksKeyToPubkey = jwksKeyToPubkey;
+const [eOrcid, nOrcid, kidOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
+const [eGoogle, nGoogle, kidGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
+const [eTwitter, nTwitter, kidTwitter] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"oagYTJtXZclWd8TFevkbI_edfB0YoMsiEHKbEagrB3Ao_6pEUnQtJOuIsRM9w9IVtvwKlJZae8hcksoRhzZm9lyueN7XzOO2f8I8bxf-rapWKpM0p83RWKvwTICVi0I72Ev5fIiWEMKbLA3YXIrDVRvtsLeYEvbVfvstwkA8Rla5uMcsPkcO3fc8ONZgArlpnxUqe-fEqjAHIWmDTUOEbvpitCPtYCSqHR7QmGkZ90RByVp5niOBhoMlUlvTRMqu8M_42peQJZdBzhGvNmY1_NgX7DBAdTXwOgWSVwBdfpq8K8yt_v-4l6I_ydnxaBsI5K69l__UdKlaapUrguNB6w","e":"AQAB","alg":"RS256","kid":"oagY"}`)
+const [eGithub, nGithub, kidGithub] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"q7wWK3dvPtQpzoS1zDFzVgWf08tZH814Bfx50dJuUzQpE-7D-nxXTbSgKw73K6UWSou_jBdnNtushkhxXI5UpTGBSygI59KyjNIC8dh0n8RoqtXZVR1FWX468CEqfXjUnKEoDx-EzWsJTCabHCmgvU7JefiNfb-430J5T_3jxNyeIk8YozsM-Ib0RlIF_Kv2P6e_jVXflaclW2dUa4eVyWCVc-2REavdQD19fkQ-tIYMjbgMz7LUtFJnWvoH-M5U3y3Q8yWsueGDB1n9BrPII9qcHJm8DqrdzmOf00Ywz7-bpvaMpRnHV622tACcvimLxCG1E_9Hfi2jO0orqCCpUw","e":"AQAB","alg":"RS256","kid":"q7wW"}`)
+
 
 exports.vmExceptionStr = 'VM Exception while processing transaction: reverted with reason string ';
 
-exports.orcidBottomBread = '0x222c22737562223a22'
-exports.orcidTopBread = '0x222c22617574685f74696d65223a'
+exports.orcidParams = {
+  e : eOrcid,
+  n : nOrcid,
+  kid : kidOrcid,
+  idBottomBread : '0x222c22737562223a22',
+  idTopBread : '0x222c22617574685f74696d65223a',
+  expBottomBread : '0x222c22657870223a',
+  expTopBread : '0x2c22676976656e5f6e616d65223a'
+}
 
-exports.googleBottomBread = '0x222c22656d61696c223a22'
-exports.googleTopBread = '0x222c22656d61696c5f7665726966696564223a'
+exports.googleParams = {
+  e : eGoogle,
+  n : nGoogle,
+  kid : kidGoogle,
+  idBottomBread : '0x222c22656d61696c223a22',
+  idTopBread : '0x222c22656d61696c5f7665726966696564223a',
+  expBottomBread : 'tbd',
+  expTopBread : 'tbd'
+}
 
-exports.twitterBottomBread = '0x7b226372656473223a22'
-exports.twitterTopBread = '0x222c22617564223a22676e6f736973222c22'
+exports.twitterParams = {
+  e : eTwitter,
+  n : nTwitter,
+  kid : kidTwitter,
+  idBottomBread : '0x7b226372656473223a22',
+  topBread : '0x222c22617564223a22676e6f736973222c22',
+  expBottomBread : 'tbd',
+  expTopBread : 'tbd'
+}
 
-exports.githubBottomBread = '0x7b226372656473223a22'
-exports.githubTopBread = '0x222c22617564223a22676e6f736973222c22'
-
-
+exports.githubParams = {
+  e : eGithub,
+  n : nGithub,
+  kid : kidGithub,
+  idBottomBread : '0x7b226372656473223a22',
+  idTopBread : '0x222c22617564223a22676e6f736973222c22',
+  expBottomBread : 'tbd',
+  expTopBread : 'tbd'
+}
 
 let contractAddresses = wtf.getContractAddresses()
 
@@ -38,6 +79,7 @@ exports.upgradeVerifyJWTContract = async (service) => {
     )
 
     let vjwt = await upgrades.upgradeProxy(address, NewVJWT, { unsafeAllow: ['external-library-linking'] }) //WARNING: ALLOWING LIBRARIES (but this should be fine as long as lib can't call selfdestruct) https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-external-libraries
+    // Note: owner still needs to set the bottombread and topbread for exp if going from v1 to v2
     return vjwt
 }
 
@@ -95,12 +137,3 @@ exports.sandwichDataWithBreadFromContract = async (data, contract, type='id') =>
   return sandwich
 }
 
-// Converts JWKS RSAkey to e, n, and kid:
-exports.jwksKeyToPubkey = (jwks) => {
-  let parsed = JSON.parse(jwks)
-  return [
-    ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
-    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url')),
-    parsed['kid']
-  ]
-}
