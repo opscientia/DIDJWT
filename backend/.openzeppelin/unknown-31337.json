@@ -41,18 +41,8 @@
       "kind": "uups"
     },
     {
-      "address": "0x8492dB46f723B20bb36Bbc76454FBff4c17EA410",
-      "txHash": "0x0859c25031f1e45830a02fe15b7ea18273fc464e764e9f762a36b84941559bb6",
-      "kind": "uups"
-    },
-    {
       "address": "0xDfE7f6d19c886DeC10d2cD0d3258B4E2EA4B7Db6",
       "txHash": "0xc51302466b6cae5c3039b723090fa4bbe3c506eef6f87cc760ad2c722ce6be50",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0EDF68eD983C4E3c3fb317c96FF7De0B765a821C",
-      "txHash": "0x424dcf88f36e96d68b865853db6993af4ff000fd97592442cd33d8cf845e11c7",
       "kind": "uups"
     },
     {
@@ -156,11 +146,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x0D76f58F1525683B56DeB3DE67cDb1fb57e159F7",
-      "txHash": "0xfeea3aab6091208b375e036a8d6f408953948b605ab0154883401b428005cc93",
-      "kind": "uups"
-    },
-    {
       "address": "0x8B55CA8EB689e68F9Fcb9eAb1094Ff58584c8B6c",
       "txHash": "0x77853d3c8e5df3f22c58bcf77d424613385cd421da077b798cc646d079e667c2",
       "kind": "uups"
@@ -236,11 +221,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x3776b66A2faBBD85d2fa6a5e252A099023C056f1",
-      "txHash": "0xbed799072778261c1067fa73653891418bdcb48ef50e25831cd4f32b2396b299",
-      "kind": "uups"
-    },
-    {
       "address": "0x5B9E36EEF6712B3a664dC1f942162771ed202d2C",
       "txHash": "0xaedbfa3cd56479a74614c8bbcd71da0654bdf4cd2f7c9b9034e9291bac4ca328",
       "kind": "uups"
@@ -271,11 +251,6 @@
       "kind": "uups"
     },
     {
-      "address": "0xA0004a7655D4B8c1949eDd83E741C96e4726d65b",
-      "txHash": "0x96611940d08704441b8cf0228a346790186ea1bfa7049e14a95eea03e584c9f7",
-      "kind": "uups"
-    },
-    {
       "address": "0x4a47CE2706df2a1c9e2083765fF75fFF26083F4e",
       "txHash": "0x4b1f6ea68e3134de2cdd25de43d15a3bc7ee8adfcd97cfdd85750a7c4bffa741",
       "kind": "uups"
@@ -283,11 +258,6 @@
     {
       "address": "0x68B873D9c07D781764D79E12b3d24c6F9b52558e",
       "txHash": "0x3f0688a5359ca830734b499b2ac0ce772eb16d10b90a5f936fa1b5c79c6e2dde",
-      "kind": "uups"
-    },
-    {
-      "address": "0xFc2c2A5709f4A2E50DB70A5bf6cCe9BCFE97532A",
-      "txHash": "0xec632cc134b4933add9231250c64e731e9c129fac979ea892c21950f7e8bc442",
       "kind": "uups"
     },
     {
@@ -367,11 +337,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x805ec5599712D92AE3F513574E41062045374625",
-      "txHash": "0x391431acfc01d759b42e51271e7299f149962c74ba56f13debb23432c3956c38",
-      "kind": "uups"
-    },
-    {
       "address": "0x79fF9075736A29D6F6B4892b88Cb85d632c6b55e",
       "txHash": "0x4f1a89e13c551fc84f36d77dec486f25ed85169414a10e477ab42bdea78981ea",
       "kind": "uups"
@@ -408,22 +373,82 @@
     },
     {
       "address": "0xAd7C2C3B9487e87A0699385C9a617eAb488e95BF",
-      "txHash": "0x649614339248f472d19afe9815a741e1f0e2e819395f893d487116bc428d212e",
+      "txHash": "0x0a596ee31ed519ac07a2492fde916acd9166f4e85585b8d427b9e018de87cdd2",
       "kind": "uups"
     },
     {
       "address": "0x810183c240632c93fc25E56Fe42c65b723A3B883",
-      "txHash": "0xbd68bbe1109e95ffb45042d2696d8f464e3ee5d67b3c03ab39dc60ff6041582e",
+      "txHash": "0x6ad7ddff3aa9e230d1d4bd9481cce2e719381280b42f1ed298512318ca69bd23",
       "kind": "uups"
     },
     {
       "address": "0xe2999cA380364B1f283082feC1fc2B81036a2171",
-      "txHash": "0xd3fb339505374f344502d02d8f8d2cdd71c9bdffe168fb85e1492d411ab65574",
+      "txHash": "0x5b77ad3169dd34622c1a5a158f441653e1b9003d7c02643fb4511e420c7bac1c",
       "kind": "uups"
     },
     {
       "address": "0xdD748977BAb5782625AF1466F4C5F02Eb92Fce31",
-      "txHash": "0xfd9a4630a7b4446392abd1ac521ffeaac8736829d3573d18d77420bc95c98e44",
+      "txHash": "0xf7699768f347cc18888592048a0894d056d0bba2433fcff453f582b5478cb6b7",
+      "kind": "uups"
+    },
+    {
+      "address": "0x805ec5599712D92AE3F513574E41062045374625",
+      "txHash": "0xbb00f61d02b131471d42f34c0d4df3d8b654382ee0b8f75af5f81157d538ad54",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0D76f58F1525683B56DeB3DE67cDb1fb57e159F7",
+      "txHash": "0xa3feab45be722837ef0d354e5b82cb0fbbc742425fe4f64cd31eae64f779b56c",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3776b66A2faBBD85d2fa6a5e252A099023C056f1",
+      "txHash": "0x120de57d709d8b854254eeddc7f62eaccee6e2398ffca8b20079c67cc3f913af",
+      "kind": "uups"
+    },
+    {
+      "address": "0xfF18e159e543753ccd3123c9d4a293006143a7c7",
+      "txHash": "0x830594a752d0d94ae96dd7d92fba9a6b24ffaead8ada0da599f7e1f571c0401e",
+      "kind": "uups"
+    },
+    {
+      "address": "0xcC6Fc202831Df3B39f8b92C019C037c5A1F66D29",
+      "txHash": "0x632b42e46728692cddad3e89649155925259921087459ea6f75d0c857e12993e",
+      "kind": "uups"
+    },
+    {
+      "address": "0xAfCbE3a55C0364f7e6C82F483e9B3876CCfcC614",
+      "txHash": "0x13d3eefbe5a6b87df81100ae1625b003f6dc5d1569ac449e4899282313585050",
+      "kind": "uups"
+    },
+    {
+      "address": "0xA0004a7655D4B8c1949eDd83E741C96e4726d65b",
+      "txHash": "0xee1ce3c75d759def5512af8821fc7c062c67ddb8878a2a565d52b0c3277754bf",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8492dB46f723B20bb36Bbc76454FBff4c17EA410",
+      "txHash": "0xe6f70ce25fcffaed2f710647c6d9e5a3f28ecc31c5097b2ac26a46785f7ca823",
+      "kind": "uups"
+    },
+    {
+      "address": "0xFc2c2A5709f4A2E50DB70A5bf6cCe9BCFE97532A",
+      "txHash": "0x6dda4df3233b04d047a1d8e5e2bed4b6f1fde353946f0475c90de0844969ce3f",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0EDF68eD983C4E3c3fb317c96FF7De0B765a821C",
+      "txHash": "0x8b8146f99800608636a10b7ffa376eb212ad6f89ca651133402c28e0ce0b1314",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4fa602f2162A558f68C3439EF586a1aDcb97DA3e",
+      "txHash": "0x7564d31b56e68f99cad26118e26778e326c04ee12d103d4214648b52384d6c06",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0162c1aB662dd397F20C35E83ecDD8c12Fe88811",
+      "txHash": "0xba4fa5bfc55007202b09711abec294d0e278d5d48be9a522a5ab5a812eccb430",
       "kind": "uups"
     }
   ],
@@ -8916,6 +8941,3482 @@
     "6da229b2d83951a143685474b25c8cbf023ebb24842fd1cdfcdb254eefb48437": {
       "address": "0xb316940b687DAa87392157e2ECfeC1b9e182423d",
       "txHash": "0x8b0cd29cbe1ac0fbe992abd1ba304fd50fedfd52c348c66a3ddad97aa469104d",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "39c525d3b20a6d4a88e8a196ae38b95fc7aeeeec56d02987d46d8c843ae1717f": {
+      "address": "0x79fF9075736A29D6F6B4892b88Cb85d632c6b55e",
+      "txHash": "0xf78d9f6c338fe003af70d94908e39f61830ab9e507be401e2cc5da91a350614f",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "e75a3b6e95b02557e14de0ac78d97741adfcc2ee362f6b6192a1e0ede86ca482": {
+      "address": "0x1392F49b5a9Fec6fB23F87eF581174A118667D19",
+      "txHash": "0x3925bd5dddd55abb7f2d92fd736cbaceac5838691f3d1b72f4016b66b79aff44",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "52cfec36a838deef41a6e2766f53856f768b7e96a36d3af60ece7772b63dd318": {
+      "address": "0x1FB68A3d9DE321d24A1334A568418806409515E8",
+      "txHash": "0x7b0e8cb76cb879d56df3d20afd3c2b1c574094e01a4c16983f420a2fd16c805a",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "738a4ecf4962a84d645045f0608e6d0f1cf007053b9aaa075df51a0afa149e6a": {
+      "address": "0x9C7Bdf9Ec637a999eF957d2e2cC9ADEA3BaD0E8b",
+      "txHash": "0xebd9a0d15c1276ad193fd64f4d481258f15a70b8182ec66bf2a5df8ea36f3bee",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "a872e46ea70615fe32b3769b7889c88b6ea52ade4931907166953a102251817e": {
+      "address": "0xa938E71529b437FAE7317204f3D49300d226ec77",
+      "txHash": "0x9ce57b343f3f3895b8446ca9e41c774eb68dae787ab62867f3a3e9420b1094b0",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "bb5579f3c4cea6e298f342a6fddc6ef3e8ee435eac1f86cd08133f38e1cc0816": {
+      "address": "0x386d74B34479c9b07dEf0411ab582282cB89959D",
+      "txHash": "0x0f36128cc4766c9c6a1e13c83e81c6b0328d128c5dfc019aadd9e0286130c4dc",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "de4d51c5f207d72fd2d383be7adf6e2be06a551231ab847d638d1c762267078c": {
+      "address": "0x34B33620aAe5eBCeeDd099082032cFC851b6D493",
+      "txHash": "0x7df61c4a6c66b38c534b01d6d92b962cddbac3d2d97d9c8ea1f74a516a2e0974",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "512af0992ed677de944cb34157252fe2daca9b2803826016237d3911d8dfeebf": {
+      "address": "0x9f4069566e7eeE92D3CAC2DE980295A32fC88a13",
+      "txHash": "0xc9b3efb907f14a69e7fdc65d4d367bf30f182053c52dbe7158e9e0b0f470b136",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "4aaf6f18ca5df4d6816e4a488ac477f231a869140acad1fc99971f44221e27a1": {
+      "address": "0x3FBA8Ea2bf0C87B305558371F4aB8e66a74dc1a3",
+      "txHash": "0x6fc732554058b373529831f2fe3a51ba9acdd283fd584b0fc307970d6baab765",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "c9e3af0d7311f8dfb611037df237c770820da91d2260bca709e9b85ea69fc1b0": {
+      "address": "0xb3DACd4B13027F90C0A9ba8c109deC9B4acE396B",
+      "txHash": "0x1e2a13a80ea11fd4f093b2099b6ebbd965c2cc98b1031ffdbf2fe2de5873e6dd",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "JWTHashUsed",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_mapping(t_bytes32,t_bool)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:14"
+          },
+          {
+            "label": "credsForAddress",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_bytes_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:16"
+          },
+          {
+            "label": "addressForCreds",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_bytes_memory_ptr,t_address)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:17"
+          },
+          {
+            "label": "privateJWTForAddress",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_mapping(t_address,t_bytes32)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:19"
+          },
+          {
+            "label": "privateJWTAllowances",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:20"
+          },
+          {
+            "label": "registeredAddresses",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:22"
+          },
+          {
+            "label": "registeredCreds",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_bytes_storage)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:23"
+          },
+          {
+            "label": "proofToBlock",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:25"
+          },
+          {
+            "label": "e",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:28"
+          },
+          {
+            "label": "n",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:29"
+          },
+          {
+            "label": "kid",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_string_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:33"
+          },
+          {
+            "label": "topBread",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:43"
+          },
+          {
+            "label": "bottomBread",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:44"
+          },
+          {
+            "label": "verifiedUsers",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_bytes32)dyn_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:49"
+          },
+          {
+            "label": "emptyBytes",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:55"
+          },
+          {
+            "label": "emptyBytesHash",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_bytes32",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:56"
+          },
+          {
+            "label": "timestampsForCreds",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:72"
+          },
+          {
+            "label": "expTopBread",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:74"
+          },
+          {
+            "label": "expBottomBread",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_bytes_storage",
+            "contract": "VerifyJWTv2",
+            "src": "contracts/VerifyJWTv2.sol:75"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes_storage)dyn_storage": {
+            "label": "bytes[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes32)": {
+            "label": "mapping(address => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bytes_storage)": {
+            "label": "mapping(address => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bool)": {
+            "label": "mapping(bytes32 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_address)": {
+            "label": "mapping(bytes => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_struct(Timestamps)1266_storage)": {
+            "label": "mapping(bytes => struct VerifyJWTv2.Timestamps)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Timestamps)1266_storage": {
+            "label": "struct VerifyJWTv2.Timestamps",
+            "members": [
+              {
+                "label": "submittedAt",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "JWTExpClaim",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "09f970e457ae021338934c06df45681909eb8a8c792219de3f6dd54481b5a34d": {
+      "address": "0x6FBd3c30BB0886F6FE1301c158cF3316994E1126",
+      "txHash": "0xf98582a2e9b20db269a0edc31745e096c7131748dc36b059fc78f338070d4939",
       "layout": {
         "storage": [
           {
