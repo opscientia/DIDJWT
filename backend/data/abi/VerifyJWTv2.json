@@ -24,7 +24,6 @@
   "function linkPrivateJWT(bytes,bytes32)",
   "function n() view returns (bytes)",
   "function owner() view returns (address)",
-  "function parseInt(bytes) view returns (uint256)",
   "function privateJWTAllowances(address,address) view returns (bool)",
   "function privateJWTForAddress(address) view returns (bytes32)",
   "function proofToBlock(bytes32) view returns (uint256)",

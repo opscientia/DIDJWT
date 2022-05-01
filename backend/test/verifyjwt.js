@@ -75,30 +75,20 @@ describe('handleKeyRotation', function (){
   });
 });
 
-describe('type conversion and cryptography', function (){
-  before(async function(){
-    [this.owner] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,59, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
-    this.message = 'Hey'
-  });
+// Does not really need to be tested (meaning i removed that function to reduce contract size lol so it can't be tested):
+// describe('type conversion and cryptography', function (){
+//   before(async function(){
+//     [this.owner] = await ethers.getSigners();
+//     this.vjwt = await deployVerifyJWTContract(11,59, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+//     this.message = 'Hey'
+//   });
 
-  it('sha256 hashing gives the same result on chain and frontend', async function () {
-    const publicHashedMessage = keccak256FromString(this.message)
-    const secretHashedMessage = sha256FromString(this.message)  
-    expect(await this.vjwt.testSHA256OnJWT(this.message)).to.equal(secretHashedMessage)
-  });
-});
-
-describe('modExp works', function () {
-  it('Test modExp on some simple numbers', async function () {
-    const [owner] = await ethers.getSigners();
-    let vjwt = await deployVerifyJWTContract(58,230, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
-    await expect(vjwt.modExp(0x004b,1,8001)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x004b');
-    await expect(vjwt.modExp(5,5,5)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x00');
-    await expect(vjwt.modExp(0,1,6)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x00');
-    await expect(vjwt.modExp(5,2,23)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x02');
-  });
-});
+//   it('sha256 hashing gives the same result on chain and frontend', async function () {
+//     const publicHashedMessage = keccak256FromString(this.message)
+//     const secretHashedMessage = sha256FromString(this.message)  
+//     expect(await this.vjwt.testSHA256OnJWT(this.message)).to.equal(secretHashedMessage)
+//   });
+// });
 
 describe('Verify test RSA signatures', function () {
   it('Verify with a real JWT', async function () {

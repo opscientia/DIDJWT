@@ -8,58 +8,58 @@ library WTFUtils {
 
     // https://ethereum.stackexchange.com/questions/8346/convert-address-to-string
     function bytesToAddress(bytes memory b_) private pure returns (address addr) {
-    assembly {
-        addr := mload(add(b_,20))
-    } 
+        assembly {
+            addr := mload(add(b_,20))
+        } 
     }
 
     function bytes32ToAddress(bytes32 b_) private pure returns (address addr) {
-    assembly {
-        addr := mload(add(b_,20)) //shouldn't it be 0x20 or is that equivalent
-    } 
+        assembly {
+            addr := mload(add(b_,20)) //shouldn't it be 0x20 or is that equivalent
+        } 
     }
 
     function bytes32ToUInt256(bytes32 b_) public pure returns (uint256 u_) {
-    assembly {
-        u_ := mload(add(b_,20)) //shouldn't it be 0x20 or is that equivalent
-    } 
+        assembly {
+            u_ := mload(add(b_,20)) //shouldn't it be 0x20 or is that equivalent
+        } 
     }
 
     function bytesToFirst32BytesAsBytes32Type(bytes memory input_) public pure returns (bytes32 b_) {
-    assembly {
-        // there is probably an easier way to do this
-        let unshifted := mload(add(input_,32))
-        b_ := shr(96, unshifted)
-    } 
+        assembly {
+            // there is probably an easier way to do this
+            let unshifted := mload(add(input_,32))
+            b_ := shr(96, unshifted)
+        } 
     }
 
     // We need to take the last 32 bytes to obtain the sha256 hash from the the PKCS1-v1_5 padding
     function bytesToLast32BytesAsBytes32Type(bytes memory input_) public pure returns (bytes32 b_) {
-    assembly {
-        // there is probably an easier way to do this
-        let len := mload(input_)
-        let end := add(input_, len)
-        b_ := mload(end)
-    }
+        assembly {
+            // there is probably an easier way to do this
+            let len := mload(input_)
+            let end := add(input_, len)
+            b_ := mload(end)
+        }
     }
     
     function addressToBytes(address a) public pure returns (bytes memory) {
-    return abi.encodePacked(a);
+        return abi.encodePacked(a);
     }
     
     function bytes32ToBytes(bytes32 b_) public pure returns (bytes memory){
-    return abi.encodePacked(b_);
+        return abi.encodePacked(b_);
     }
     // function addressToBytes32(address a) public pure returns (bytes32) {
     //   return abi.encodePacked(a);
     // }
 
     function stringToBytes(string memory s) public pure returns (bytes memory) {
-    return abi.encodePacked(s);
+        return abi.encodePacked(s);
     }
 
     function bytesAreEqual(bytes memory  a_, bytes memory b_) public pure returns (bool) {
-    return (a_.length == b_.length) && (keccak256(a_) == keccak256(b_));
+        return (a_.length == b_.length) && (keccak256(a_) == keccak256(b_));
     }
 
     // // Can't figure out why this isn't working right now, so using less efficient version instead:
@@ -81,30 +81,30 @@ library WTFUtils {
 
     // This could be more efficient by not copying the whole thing -- just the parts that matter
     function sliceBytesMemory(bytes memory input_, uint256 start_, uint256 end_) public view returns (bytes memory r) {
-    uint256 len_ = input_.length;
-    bytes memory r = new bytes(len_);
-    
-    assembly {
-        // Use identity to copy data
-        if iszero(staticcall(not(0), 0x04, add(input_, 0x20), len_, add(r, 0x20), len_)) {
-            revert(0, 0)
+        uint256 len_ = input_.length;
+        r = new bytes(len_);
+        
+        assembly {
+            // Use identity to copy data
+            if iszero(staticcall(not(0), 0x04, add(input_, 0x20), len_, add(r, 0x20), len_)) {
+                revert(0, 0)
+            }
         }
-    }
-    return destructivelySliceBytesMemory(r, start_, end_);
+        return destructivelySliceBytesMemory(r, start_, end_);
     }
     
-    function destructivelySliceBytesMemory(bytes memory m, uint256 start, uint256 end) public view returns (bytes memory r) {
-    require(start < end, "index start must be less than inded end");
-    assembly {
-        let offset := add(start, 0x20) //first 0x20 bytes of bytes type is length (no. of bytes)
-        r := add(m, start)
-        mstore(r, sub(end, start))
-    }
+    function destructivelySliceBytesMemory(bytes memory m, uint256 start, uint256 end) public pure returns (bytes memory r) {
+        require(start < end, "index start must be less than inded end");
+        assembly {
+            let offset := add(start, 0x20) //first 0x20 bytes of bytes type is length (no. of bytes)
+            r := add(m, start)
+            mstore(r, sub(end, start))
+        }
     }
 
     // BIG thanks to dankrad for this function: https://github.com/dankrad/rsa-bounty/blob/master/contract/rsa_bounty.sol
     // Expmod for bignum operands (encoded as bytes, only base and modulus)
-    function modExp(bytes memory base, uint exponent, bytes memory modulus) public returns (bytes memory o) {
+    function modExp(bytes memory base, uint exponent, bytes memory modulus) public view returns (bytes memory o) {
         assembly {
             // Get free memory pointer
             let p := mload(0x40)
@@ -155,7 +155,7 @@ library WTFUtils {
     }
 
     // Get the hash of the JWT from the signature
-    function hashFromSignature(uint256 e_, bytes memory n_, bytes memory signature_) public returns (bytes32) {
+    function hashFromSignature(uint256 e_, bytes memory n_, bytes memory signature_) public view returns (bytes32) {
         bytes memory encrypted = modExp(signature_, e_, n_);
         bytes32 unpadded = bytesToLast32BytesAsBytes32Type(encrypted);
         return unpadded;
@@ -164,9 +164,49 @@ library WTFUtils {
 
     // Base64 Library modified from https://github.com/Brechtpd/base64/blob/main/base64.sol
  
-    function decodeFromBytes(bytes memory input) public returns (bytes memory output) {
+    function decodeFromBytes(bytes memory input) public pure returns (bytes memory output) {
         return Base64.decodeFromBytes(input);
     }
     
+    // from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
+    // /**
+    // * Parse Int
+    // * 
+    // * Converts an ASCII string value into an uint as long as the string 
+    // * its self is a valid unsigned integer
+    // * 
+    // * @param _value The ASCII string to be converted to an unsigned integer
+    // * @return _ret The unsigned value of the ASCII string
+    // */
+    // function parseInt(string memory _value) public view returns (uint256 _ret) {
+    //     bytes memory _bytesValue = bytes(_value);
+    //     uint256 j = 1;
+    //     uint256 i = _bytesValue.length-1;
+    //     while(i >= 0) {
+    //         assert(uint8(_bytesValue[i]) >= 48 && uint8(_bytesValue[i]) <= 57);
+    //         _ret += (uint8(_bytesValue[i]) - 48)*j;
+    //         j*=10;
+    //         if(i > 0){i--;}else{break;}
+    //     }
+    // }
+
+    
+    // modified from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
+    /**
+    * Parse Int
+    * Bytes instead of string parseInt override
+    * @param _bytesValue The bytes to be converted to an unsigned integer. *this is a bytes representation of a string*
+    * @return _ret The unsigned value of the ASCII string
+    */
+    function parseInt(bytes memory _bytesValue) public pure returns (uint256 _ret) {
+        uint256 j = 1;
+        uint256 i = _bytesValue.length-1;
+        while(i >= 0) {
+            assert(uint8(_bytesValue[i]) >= 48 && uint8(_bytesValue[i]) <= 57);
+            _ret += (uint8(_bytesValue[i]) - 48)*j;
+            j*=10;
+            if(i > 0){i--;}else{break;}
+        }
+    }
 
 }

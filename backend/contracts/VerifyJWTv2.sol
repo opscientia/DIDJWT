@@ -174,7 +174,7 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
     bytes memory expBytes = WTFUtils.sliceBytesMemory(proposedExpSandwich.sandwichValue, expBottomBread.length, proposedExpSandwich.sandwichValue.length - expTopBread.length);
     
-    uint256 exp = parseInt(expBytes);
+    uint256 exp = WTFUtils.parseInt(expBytes);
     require(exp > block.timestamp, "JWT is expired");
     
     // Can ignore:
@@ -270,47 +270,6 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   // function testSHA256OnJWT(string memory jwt) public pure returns (bytes32){
   //   return sha256(WTFUtils.stringToBytes(jwt));
   // }
-
-    // from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
-    // /**
-    // * Parse Int
-    // * 
-    // * Converts an ASCII string value into an uint as long as the string 
-    // * its self is a valid unsigned integer
-    // * 
-    // * @param _value The ASCII string to be converted to an unsigned integer
-    // * @return _ret The unsigned value of the ASCII string
-    // */
-    // function parseInt(string memory _value) public view returns (uint256 _ret) {
-    //     bytes memory _bytesValue = bytes(_value);
-    //     uint256 j = 1;
-    //     uint256 i = _bytesValue.length-1;
-    //     while(i >= 0) {
-    //         assert(uint8(_bytesValue[i]) >= 48 && uint8(_bytesValue[i]) <= 57);
-    //         _ret += (uint8(_bytesValue[i]) - 48)*j;
-    //         j*=10;
-    //         if(i > 0){i--;}else{break;}
-    //     }
-    // }
-
-    
-    // modified from willitscale: https://github.com/willitscale/solidity-util/blob/master/lib/Integers.sol
-    /**
-    * Parse Int
-    * Bytes instead of string parseInt override
-    * @param _bytesValue The bytes to be converted to an unsigned integer. *this is a bytes representation of a string*
-    * @return _ret The unsigned value of the ASCII string
-    */
-    function parseInt(bytes memory _bytesValue) public view returns (uint256 _ret) {
-        uint256 j = 1;
-        uint256 i = _bytesValue.length-1;
-        while(i >= 0) {
-            assert(uint8(_bytesValue[i]) >= 48 && uint8(_bytesValue[i]) <= 57);
-            _ret += (uint8(_bytesValue[i]) - 48)*j;
-            j*=10;
-            if(i > 0){i--;}else{break;}
-        }
-    }
 
   // Also can be deleted, just to test assumptions about comparing times as strings because Solidity can't easily convert timestamp strings to integers
   // function testTimeAssumptions() public {

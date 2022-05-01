@@ -6,7 +6,11 @@
   "function bytesAreEqual(bytes,bytes) pure returns (bool)",
   "function bytesToFirst32BytesAsBytes32Type(bytes) pure returns (bytes32)",
   "function bytesToLast32BytesAsBytes32Type(bytes) pure returns (bytes32)",
-  "function destructivelySliceBytesMemory(bytes,uint256,uint256) view returns (bytes)",
+  "function decodeFromBytes(bytes) pure returns (bytes)",
+  "function destructivelySliceBytesMemory(bytes,uint256,uint256) pure returns (bytes)",
+  "function hashFromSignature(uint256,bytes,bytes) view returns (bytes32)",
+  "function modExp(bytes,uint256,bytes) view returns (bytes)",
+  "function parseInt(bytes) pure returns (uint256)",
   "function sliceBytesMemory(bytes,uint256,uint256) view returns (bytes)",
   "function stringToBytes(string) pure returns (bytes)"
 ]
