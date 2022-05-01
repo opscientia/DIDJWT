@@ -7,7 +7,7 @@ upgradeVerifyJWTContract,
   } = require('./utils/utils');
 
 
-describe.only('upgrade-specific tests from v1 to v2', function(){
+describe('upgrade-specific tests from v1 to v2', function(){
     before(async function(){
         this.contract = await upgradeVerifyJWTContract('google')
     });
