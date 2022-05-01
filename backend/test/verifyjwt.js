@@ -125,7 +125,7 @@ describe.only('JWT Expiration', function (){
       let proofAddr1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
                                                 Buffer.from(this.addr1.address.replace('0x', ''), 'hex')))
       await this.vjwt.commitJWTProof(proofOwner)
-      // await this.vjwt.connect(this.addr1).commitJWTProof(proofAddr1)
+      await this.vjwt.connect(this.addr1).commitJWTProof(proofAddr1)
       await ethers.provider.send('evm_mine')
   });
 
@@ -169,8 +169,8 @@ describe.only('JWT Expiration', function (){
     await ethers.provider.send('evm_mine')
 
     // ----- Now, fail the next verification due to timestamp being too early----- 
-    expect(
-        await this.vjwt.verifyMe(
+    await expect(
+        this.vjwt.verifyMe(
         ethers.BigNumber.from(signature), 
         message, 
         payloadIdx, 
