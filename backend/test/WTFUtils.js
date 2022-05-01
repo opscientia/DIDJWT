@@ -27,14 +27,13 @@ describe('slicing of byte array', function (){
     });
   });
 
-describe.only('modExp works', function () {
+describe('modExp works', function () {
     it('Test modExp on some simple numbers', async function () {
         const [owner] = await ethers.getSigners();
-        wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
-        console.log(wu)
-        await expect(wu.modExp(0x004b,1,8001)).to.emit(wu, 'modExpEventForTesting').withArgs('0x004b');
-        await expect(wu.modExp(5,5,5)).to.emit(wu, 'modExpEventForTesting').withArgs('0x00');
-        await expect(wu.modExp(0,1,6)).to.emit(wu, 'modExpEventForTesting').withArgs('0x00');
-        await expect(wu.modExp(5,2,23)).to.emit(wu, 'modExpEventForTesting').withArgs('0x02');
+        const wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
+        expect(await wu.modExp(0x004b,1,8001)).to.equal('0x004b')
+        expect(await wu.modExp(5,5,5)).to.equal('0x00');
+        expect(await wu.modExp(0,1,6)).to.equal('0x00');
+        expect(await wu.modExp(5,2,23)).to.equal('0x02');
     });
 });
