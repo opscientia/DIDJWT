@@ -6,8 +6,6 @@ const {
 upgradeVerifyJWTContract,
   } = require('./utils/utils');
 
-let contractAddresses = wtf.getContractAddresses()
-
 describe('Old functions with old data work', function(){
     before(async function(){
         this.contract = await upgradeVerifyJWTContract('google')
