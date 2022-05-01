@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe.only('slicing of byte array', function (){
+describe('slicing of byte array', function (){
     before(async function(){
       [this.owner] = await ethers.getSigners();
       this.wu = await (await ethers.getContractFactory('WTFUtils')).deploy()

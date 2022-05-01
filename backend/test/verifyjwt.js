@@ -58,7 +58,7 @@ describe('handleKeyRotation', function (){
     this.initialExponent = 9
     this.initialModulus = 37
     this.initialKid = 'someKeyId'
-    this.vjwt = await deployVerifyJWTContract(this.initialExponent, this.initialModulus, this.initialKid, orcidParams.idBottomBread, orcidParams.idTopBread)
+    this.vjwt = await deployVerifyJWTContract(this.initialExponent, this.initialModulus, this.initialKid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
   });
 
   it('Should update kid, e, and n', async function () {
@@ -78,7 +78,7 @@ describe('handleKeyRotation', function (){
 describe('type conversion and cryptography', function (){
   before(async function(){
     [this.owner] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,59, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,59, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
     this.message = 'Hey'
   });
 
@@ -92,7 +92,7 @@ describe('type conversion and cryptography', function (){
 describe('modExp works', function () {
   it('Test modExp on some simple numbers', async function () {
     const [owner] = await ethers.getSigners();
-    let vjwt = await deployVerifyJWTContract(58,230, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread)
+    let vjwt = await deployVerifyJWTContract(58,230, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
     await expect(vjwt.modExp(0x004b,1,8001)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x004b');
     await expect(vjwt.modExp(5,5,5)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x00');
     await expect(vjwt.modExp(0,1,6)).to.emit(vjwt, 'modExpEventForTesting').withArgs('0x00');
@@ -108,7 +108,7 @@ describe('Verify test RSA signatures', function () {
     let [headerRaw, payloadRaw, signatureRaw] = parsedToJSON['id_token'].split('.');
     let [signature, badSignature] = [Buffer.from(signatureRaw, 'base64url'), Buffer.from(signatureRaw.replace('a','b'), 'base64url')]
 
-    let vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread);
+    let vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
 
     await expect(vjwt['verifyJWT(bytes,string)'](ethers.BigNumber.from(signature), headerRaw + '.' + payloadRaw)).to.emit(vjwt, 'JWTVerification').withArgs(true);
     // make sure it doesn't work with wrong JWT or signature:
@@ -121,7 +121,7 @@ describe('Verify test RSA signatures', function () {
 describe('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,230, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,230, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
     this.message1 = 'Hey'
     this.message2 = 'Hey2'
     // Must use two unique hashing algorithms
@@ -169,7 +169,7 @@ describe('proof of prior knowledge', function () {
 
 describe('Frontend sandwiching', function(){
   it('Test that correct sandwich is given for a specific ID', async function(){
-    let vjwt = await deployVerifyJWTContract(50,100, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread);
+    let vjwt = await deployVerifyJWTContract(50,100, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
     expect(await sandwichDataWithBreadFromContract('0000-0002-2308-9517', vjwt, type='id')).to.equal('222c22737562223a22303030302d303030322d323330382d39353137222c22617574685f74696d65223a');
   });
 });
@@ -358,7 +358,7 @@ for (const params of [
 //     // let [header, payload] = [headerRaw, payloadRaw].map(x => JSON.parse(atob(x)));
 //     // let payload = atob(payloadRaw);
 //     this.signature = Buffer.from(signatureRaw, 'base64url')
-//     this.vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread);
+//     this.vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
 //     this.message = sha256FromString(headerRaw + '.' + payloadRaw)
 //     this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
 //     this.sandwich = await sandwichIDWithBreadFromContract('0000-0002-2308-9517', this.vjwt);
