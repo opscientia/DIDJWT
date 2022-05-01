@@ -241,7 +241,7 @@ for (const params of [
   }
 ]){
 
-  describe.only('Integration tests for after successful proof commit with params ' + params.name, function () {
+  describe('Integration tests for after successful proof commit with params ' + params.name, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
       let [headerRaw, payloadRaw, signatureRaw] = params.newToken.split('.');
