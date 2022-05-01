@@ -93,7 +93,7 @@ describe('handleKeyRotation', function (){
 
 
 
-describe.only('Verify test RSA signatures', function () {
+describe('Verify test RSA signatures', function () {
   // Helper function for these tests -- checks whether the transaction causes a JWTVerification event from *any* contract
   const emitsJWTVerificationEventWithValue = async (tx, value) => 
   {
@@ -137,7 +137,7 @@ describe.only('Verify test RSA signatures', function () {
 describe('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,230, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,230, 'example kid :) :) :)', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
     this.message1 = 'Hey'
     this.message2 = 'Hey2'
     // Must use two unique hashing algorithms
@@ -147,29 +147,29 @@ describe('proof of prior knowledge', function () {
     
     // this.publicHashedMessage2 = keccak256FromString(this.message2)
     // this.secretHashedMessage2 = sha256FromString(this.message2)
-
+    console.log('a2')
     let hashedMessage1 = sha256FromString(this.message1)
     let hashedMessage2 = sha256FromString(this.message1)
-
+    console.log('a3')
     this.proof1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage1.replace('0x', ''), 'hex'),
                                                 Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
     this.proof2 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage2.replace('0x', ''), 'hex'),
                                                 Buffer.from(this.owner.address.replace('0x', ''), 'hex')))    
     
-    
+    console.log('a4')
   })
-  it('Can prove prior knowledge of message (not JWT but can be)', async function () {
+  it('Can prove prior knowledge of message', async function () {
     await this.vjwt.commitJWTProof(this.proof1)
     await ethers.provider.send('evm_mine')
     expect(await this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message1)).to.equal(true)
   });
 
-  it('Cannot prove prior knowledge of message (not JWT but can be) in one block', async function () {
+  it('Cannot prove prior knowledge of message in one block', async function () {
     await this.vjwt.commitJWTProof(this.proof1)
     await expect(this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message1)).to.be.revertedWith("VM Exception while processing transaction: reverted with reason string 'You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun'");
   });
 
-  it('Cannot prove prior knowledge of different message (not JWT but can be)', async function () {
+  it('Cannot prove prior knowledge of different message', async function () {
     await this.vjwt.commitJWTProof(this.proof1)
     await ethers.provider.send('evm_mine')
     await expect(this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message2)).to.be.revertedWith("VM Exception while processing transaction: reverted with reason string 'Proof not found; it needs to have been submitted to commitJWTProof in a previous block'");
@@ -185,7 +185,7 @@ describe('proof of prior knowledge', function () {
 
 describe('Frontend sandwiching', function(){
   it('Test that correct sandwich is given for a specific ID', async function(){
-    let vjwt = await deployVerifyJWTContract(50,100, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
+    let vjwt = await deployVerifyJWTContract(50,100, 'abcde', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
     expect(await sandwichDataWithBreadFromContract('0000-0002-2308-9517', vjwt, type='id')).to.equal('222c22737562223a22303030302d303030322d323330382d39353137222c22617574685f74696d65223a');
   });
 });
