@@ -1,7 +1,7 @@
-const { expect } = require('chai');
+const { expect, assert } = require('chai');
 const { ethers, upgrades } = require('hardhat');
 const { searchForPlainTextInBase64 } = require('wtfprotocol-helpers');
-
+// const { expectEvent } = require('@openzeppelin/test-helpers'); //this is an amazing library i wish i knew b4 writing all this
 
 const {
   orcidParams,
@@ -90,7 +90,23 @@ describe('handleKeyRotation', function (){
 //   });
 // });
 
-describe('Verify test RSA signatures', function () {
+
+
+
+describe.only('Verify test RSA signatures', function () {
+  // Helper function for these tests -- checks whether the transaction causes a JWTVerification event from *any* contract
+  const emitsJWTVerificationEventWithValue = async (tx, value) => 
+  {
+    assert(typeof value === 'boolean');
+    let val = value ? '0x0000000000000000000000000000000000000000000000000000000000000001' : '0x0000000000000000000000000000000000000000000000000000000000000000'
+    let events = (await tx.wait()).events
+    expect(
+      events.some(e=> (e.topics.includes(keccak256FromString('JWTVerification(bool)')) && (e.data === val)))
+    ).to.equal(true)
+  }
+
+
+
   it('Verify with a real JWT', async function () {
     const orig = 'access_token=117a16aa-f766-4079-ba50-faaf0a09c864&token_type=bearer&expires_in=599&tokenVersion=1&persistent=true&id_token=eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiX1RCT2VPZ2VZNzBPVnBHRWNDTi0zUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY0NDgzMDE5MSwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY0NDkxODUzNywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjQ0ODMyMTM3LCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImp0aSI6IjcxM2RjMGZiLTMwZTAtNDM0Mi05ODFjLTNlYjJiMTRiODM0OCJ9.VXNSFbSJSdOiX7n-hWB6Vh30L1IkOLiNs2hBTuUDZ4oDB-cL6AJ8QjX7wj9Nj_lGcq1kjIfFLhowo8Jy_mzMGIFU8KTZvinSA-A-tJkXOUEvjUNjd0OfQJnVVJ63wvp9gSEj419HZ13Lc2ci9CRY7efQCYeelvQOQvpdrZsRLiQ_XndeDw2hDLAmI7YrYrLMy1zQY9rD4uAlBa56RVD7me6t47jEOOJJMAs3PC8UZ6pYyNc0zAjQ8Vapqz7gxeCN-iya91YI1AIE8Ut19hGgVRa9N7l-aUielPAlzss0Qbeyvl0KTRuZWnLUSrOz8y9oGxVBCUmStEOrVrAhmkMS8A&tokenId=254337461'
     let parsedToJSON = {}
@@ -98,13 +114,23 @@ describe('Verify test RSA signatures', function () {
     let [headerRaw, payloadRaw, signatureRaw] = parsedToJSON['id_token'].split('.');
     let [signature, badSignature] = [Buffer.from(signatureRaw, 'base64url'), Buffer.from(signatureRaw.replace('a','b'), 'base64url')]
 
-    let vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
+    let vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    
+    
+    await emitsJWTVerificationEventWithValue(
+      await vjwt.verifyJWT(ethers.BigNumber.from(signature), headerRaw + '.' + payloadRaw),
+      true
+    );
 
-    await expect(vjwt['verifyJWT(bytes,string)'](ethers.BigNumber.from(signature), headerRaw + '.' + payloadRaw)).to.emit(vjwt, 'JWTVerification').withArgs(true);
     // make sure it doesn't work with wrong JWT or signature:
-    await expect(vjwt['verifyJWT(bytes,string)'](ethers.BigNumber.from(signature), headerRaw + ' : )' + payloadRaw)).to.emit(vjwt, 'JWTVerification').withArgs(false);
-    await expect(vjwt['verifyJWT(bytes,string)'](ethers.BigNumber.from(badSignature), headerRaw + '.' + payloadRaw)).to.emit(vjwt, 'JWTVerification').withArgs(false);
-
+    await emitsJWTVerificationEventWithValue(
+      await vjwt.verifyJWT(ethers.BigNumber.from(signature), headerRaw + ' : )' + payloadRaw),
+      false
+    );
+    await emitsJWTVerificationEventWithValue(
+      await vjwt.verifyJWT(ethers.BigNumber.from(badSignature), headerRaw + '.' + payloadRaw),
+      false
+    );
   });
 })
 
