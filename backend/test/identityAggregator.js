@@ -89,20 +89,13 @@ describe("IdentityAggregator", function () {
       const idAggregator = await deployIdAggregator();
       const [owner] = await ethers.getSigners();
 
-      // get contract address for VerifyJWT
-      const transactionCount = await owner.getTransactionCount();
-      const vjwtAddress = getContractAddress({
-        from: owner.address,
-        nonce: transactionCount
-      });
-
       vjwt = await deployVerifyJWTContract(11, 59, 'abc', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
 
       const keyword = "orcid";
-      await idAggregator.addVerifyJWTContract(keyword, vjwtAddress);
+      await idAggregator.addVerifyJWTContract(keyword, vjwt.address);
 
       const verifyJWTAddress = await idAggregator.callStatic.contractAddrForKeyword(keyword);
-      expect(verifyJWTAddress).to.equal(vjwtAddress);
+      expect(verifyJWTAddress).to.equal(vjwt.address);
     });
   });
 
@@ -135,7 +128,7 @@ describe("IdentityAggregator", function () {
     });
   });
 
-  describe.only("getAllAccounts", function () {
+  describe("getAllAccounts", function () {
     before(async function () {
       this.idAggregator = await deployIdAggregator();
 
@@ -147,15 +140,12 @@ describe("IdentityAggregator", function () {
     });
 
     it("Should return array of supported creds, the first of which is the correct orcid", async function() {
-      //--------------------------- Set up context ---------------------------
+      //--------------------------- Set up context to call commitJWTProof() and verifyMe()---------------------------
       const [owner] = await ethers.getSigners();
-
-      // get contract address for VerifyJWT
-      const transactionCount = await owner.getTransactionCount();
       
       const vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
 
-      // Set up context to call commitJWTProof() and verifyMe()
+
       const idToken = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
       const correctID = '0000-0002-2308-9517';
       const correctExp = '1651375833';
@@ -190,26 +180,26 @@ describe("IdentityAggregator", function () {
     });
 
     it("Should return array of supported creds, the second of which is the correct gmail", async function() {
-      //--------------------------- Set up context ---------------------------
+      //--------------------------- Set up context to call commitJWTProof() and verifyMe()---------------------------
       const [owner] = await ethers.getSigners();
-
       const vjwt = await deployVerifyJWTContract(googleParams.e, googleParams.n, googleParams.kid, googleParams.idBottomBread, googleParams.idTopBread, googleParams.expBottomBread, googleParams.expTopBread);
 
-      // Set up context to call commitJWTProof() and verifyMe()
       const idToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2MTY0OWU0NTAzMTUzODNmNmI5ZDUxMGI3Y2Q0ZTkyMjZjM2NkODgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoidDZqVl9BZ0FyTGpuLXFVSlN5bUxoZyIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjUxMzQ5MjczLCJleHAiOjE2NTEzNTI4NzMsImp0aSI6IjA3NTU4ODdlOTI3MzA1ZTY0Y2E4MWVhMzE3YjYxZGQxYWJjNWFiZjgifQ.PXrelpQdJkTxbQw66p6HaSGT5pR6qhkZ8-04hLnVhmrzOJLBkyYisWHzP1t96IWguswMZ4tafg2uCCnra2zkz6BMiBCPrGJdk0l_Kx06FJMX-QNVdt5hW28qM6il94eb0g_OTHCmI28eUJf1rNY8D5NMrG3kXWPDQ8_EkOyySVbu6ED1XFbYgHzo560Ty1-gkQRQKYCuogqrcDBRPF3tqXyg9itCHawm6Kll_GX1TP5zwnwtr5WVrAFYtLJV1_VAEfKWkdU6v6LkAgq4ZjzunFRWBclLVCS2X1JO8iBeGjl_LVVoycvxwojrlZigplQAUSsxmDjlQ4VLH9vINiid6Q'
       const correctID = 'nanaknihal@gmail.com';
       const correctExp = '1651352873';
 
-     const [headerRaw, payloadRaw, signatureRaw] = idToken.split('.');
+      const [headerRaw, payloadRaw, signatureRaw] = idToken.split('.');
       const signature = Buffer.from(signatureRaw, 'base64url');
       const message = headerRaw + '.' + payloadRaw;
       const payloadIdx = Buffer.from(headerRaw).length + 1; //Buffer.from('.').length == 1
+      
       const idSandwichValue = await sandwichDataWithBreadFromContract(correctID, vjwt, type='id');
       const expSandwichValue = await sandwichDataWithBreadFromContract(correctExp, vjwt, type='exp');
       const [idStart, idEnd] = search64.searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw);
       const [expStart, expEnd] = search64.searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw);
       const proposedIDSandwich = {idxStart: idStart, idxEnd: idEnd, sandwichValue: Buffer.from(idSandwichValue, 'hex')}
       const proposedExpSandwich = {idxStart: expStart, idxEnd: expEnd, sandwichValue: Buffer.from(expSandwichValue, 'hex')}  
+      
       const hashedMessage = sha256FromString(message);
       const proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
                                                   Buffer.from(owner.address.replace('0x', ''), 'hex')))
