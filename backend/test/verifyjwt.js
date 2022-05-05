@@ -272,6 +272,7 @@ for (const params of [
     // });
 
     it('Valid JWT works once but cannot be used twice', async function () {
+      // TODO: somehow test the JWT cannot be used twice in any circumstance, even after many verifications and changes. Otherwise user can be impersonated
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.not.be.reverted
       await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.be.revertedWith('JWT can only be used on-chain once')
     });
@@ -334,7 +335,7 @@ for (const params of [
       expect(registeredAddresses[0] === this.owner.address).to.equal(true);
     });
 
-    // This is not too important to test and is now quite tedious to rewrite so i commented it
+    /* This is not too important to test and is now quite tedious to rewrite so i commented it
     // it('Wrong indices fail', async function () {
     //   let [badIdSandwich0, badIdSandwich1] = [this.proposedIDSandwich, this.proposedIDSandwich]
     //   let [badExpSandwich0, badExpSandwich1] = [this.proposedExpSandwich, this.proposedExpSandwich]
@@ -350,13 +351,12 @@ for (const params of [
     // });
 
     
-      // TODO: add tests for address => creds,  address => JWT,  JWT => address
-  
-  
-  });
-}
+  // TODO: add tests for address => creds,  address => JWT,  JWT => address
+  */
 
-// TODO: Check expired jwt cant be registered, new jwt cant be registered while old one unexpired
+  });
+}   
+
 
 // describe('Anonymous proof commit', function () {
 //   before(async function(){
@@ -390,7 +390,7 @@ for (const params of [
 
 
 // This must be at the end, as it changes EVM time for all tests
-describe.only('JWT Expiration', function (){
+describe('JWT Expiration', function (){
   beforeEach(async function(){
       // -------- Contract setup: deploy contract and submit JWT proof ---------
       
@@ -490,10 +490,5 @@ describe.only('JWT Expiration', function (){
         this.proposedExpSandwich
       )
     ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
-  });
-  
-
-  it('New JWT cannot be commited until old one is expired', async function () {
-    expect(true).to.be.revertedWith('this test needs to be implemented')
   });
 });
