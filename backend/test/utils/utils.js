@@ -1,5 +1,7 @@
 const { ethers, upgrades } = require('hardhat');
 const wtf = require('wtf-lib');
+const { fixedBufferXOR, searchForPlainTextInBase64, parseJWT } = require('wtfprotocol-helpers');
+const xor = fixedBufferXOR
 
 // Converts JWKS RSAkey to e, n, and kid:
 const jwksKeyToPubkey = (jwks) => {
@@ -117,12 +119,15 @@ exports.deployWTFBios = async () => {
 }
 
 // input: x (string); output: keccak256 of string
-exports.sha256FromString = x => ethers.utils.sha256(ethers.utils.toUtf8Bytes(x))
+const sha256FromString = x => ethers.utils.sha256(ethers.utils.toUtf8Bytes(x));
+exports.sha256FromString = sha256FromString;
+
 // input: x (string); output: sha256 of string
-exports.keccak256FromString = x => ethers.utils.keccak256(ethers.utils.toUtf8Bytes(x))
+const keccak256FromString = x => ethers.utils.keccak256(ethers.utils.toUtf8Bytes(x));
+exports.keccak256FromString = keccak256FromString;
 
 // Sandwiches data between contract.bottomBread() and contract.topBread(). By default does ID with id bread. If type='exp' is specified, it will sandwich with the expiration bread
-exports.sandwichDataWithBreadFromContract = async (data, contract, type='id') => {
+const sandwichDataWithBreadFromContract = async (data, contract, type='id') => {
   let bottomBread; 
   let topBread;
   if(type == 'id') {
@@ -140,3 +145,48 @@ exports.sandwichDataWithBreadFromContract = async (data, contract, type='id') =>
   return sandwich
 }
 
+exports.sandwichDataWithBreadFromContract = sandwichDataWithBreadFromContract;
+
+// vjwt is the VerifyJWTContract
+// jwt is JWT with base64url-encoded header, payload, and signature joined by '.'
+// idFieldName is the JWT's claim for the id, likely either 'sub' or 'email'
+exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
+      let params = {}; 
+      const parsed = parseJWT(jwt)
+      params.id = parsed.payload.parsed[idFieldName]
+      params.expTimeInt = parsed.payload.parsed.exp
+      params.expTime = params.expTimeInt.toString()
+      
+      params.message = parsed.header.raw + '.' + parsed.payload.raw
+      params.hashedMessage = sha256FromString(params.message)
+
+      params.payloadIdx = Buffer.from(parsed.header.raw).length + 1 //Buffer.from('.').length == 1
+
+      // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
+      const idSandwichValue = await sandwichDataWithBreadFromContract(params.id, vjwt, type='id');
+      const expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, vjwt, type='exp');
+      // find indices of sandwich in raw payload:
+      const [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), parsed.payload.raw)
+      const [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), parsed.payload.raw)
+      
+      // Generate the actual sandwich struct
+      params.proposedIDSandwich = {
+        idxStart: startIdxID, 
+        idxEnd: endIdxID, 
+        sandwichValue: Buffer.from(idSandwichValue, 'hex')
+      } 
+      params.proposedExpSandwich = {
+        idxStart: startIdxExp, 
+        idxEnd: endIdxExp, 
+        sandwichValue: Buffer.from(expSandwichValue, 'hex')
+      } 
+
+      // Generates a proof to be commited that the entity owning *address* knows the JWT
+      params.generateProof = async (address) => ethers.utils.sha256(
+                                                                      await xor(Buffer.from(params.hashedMessage.replace('0x', ''), 'hex'), 
+                                                                                Buffer.from(address.replace('0x', ''), 'hex')
+                                                                                )
+                                                          )
+      const p = params
+      return p
+}
