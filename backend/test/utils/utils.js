@@ -166,8 +166,18 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       const idSandwichValue = await sandwichDataWithBreadFromContract(params.id, vjwt, type='id');
       const expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, vjwt, type='exp');
       // find indices of sandwich in raw payload:
-      const [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), parsed.payload.raw)
-      const [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), parsed.payload.raw)
+      const idSandwichText = Buffer.from(idSandwichValue, 'hex').toString()
+      const expSandwichText = Buffer.from(expSandwichValue, 'hex').toString()
+
+      let startIdxID; let endIdxID; let startIdxExp; let endIdxExp; 
+      try {
+        [startIdxID, endIdxID] = searchForPlainTextInBase64(idSandwichText, parsed.payload.raw)
+        [startIdxExp, endIdxExp] = searchForPlainTextInBase64(expSandwichText, parsed.payload.raw)
+      } catch(err) {
+        console.error(err)
+        console.error(`There was a problem searching for one of: ${(idSandwichText)} or ${expSandwichText} \n in ${Buffer.from(parsed.payload.raw, 'base64').toString()}`)
+      }
+      
       
       // Generate the actual sandwich struct
       params.proposedIDSandwich = {
