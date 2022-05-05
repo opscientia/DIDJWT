@@ -153,32 +153,44 @@ exports.sandwichDataWithBreadFromContract = sandwichDataWithBreadFromContract;
 exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       let params = {}; 
       const parsed = parseJWT(jwt)
+
       params.id = parsed.payload.parsed[idFieldName]
       params.expTimeInt = parsed.payload.parsed.exp
       params.expTime = params.expTimeInt.toString()
-      
+
+      // Signature of JWT in ethers-compatible format
+      params.signature = ethers.BigNumber.from(parsed.signature.decoded)
+
+      // Message and hashedMessage needed for proof (message is header.payload)
       params.message = parsed.header.raw + '.' + parsed.payload.raw
       params.hashedMessage = sha256FromString(params.message)
 
+      // Where payload starts
       params.payloadIdx = Buffer.from(parsed.header.raw).length + 1 //Buffer.from('.').length == 1
-
+  
       // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
       const idSandwichValue = await sandwichDataWithBreadFromContract(params.id, vjwt, type='id');
       const expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, vjwt, type='exp');
-      // find indices of sandwich in raw payload:
+      // Find indices of sandwich in raw payload:
       const idSandwichText = Buffer.from(idSandwichValue, 'hex').toString()
       const expSandwichText = Buffer.from(expSandwichValue, 'hex').toString()
 
       let startIdxID; let endIdxID; let startIdxExp; let endIdxExp; 
       try {
         [startIdxID, endIdxID] = searchForPlainTextInBase64(idSandwichText, parsed.payload.raw)
+      } catch(err) {
+        console.error(err)
+        console.error(`There was a problem searching for: ${(idSandwichText)} \n in ${Buffer.from(parsed.payload.raw, 'base64').toString()}`)
+      }
+
+      try {
         [startIdxExp, endIdxExp] = searchForPlainTextInBase64(expSandwichText, parsed.payload.raw)
       } catch(err) {
         console.error(err)
-        console.error(`There was a problem searching for one of: ${(idSandwichText)} or ${expSandwichText} \n in ${Buffer.from(parsed.payload.raw, 'base64').toString()}`)
+        console.error(`There was a problem searching for: ${(expSandwichText)} \n in ${Buffer.from(parsed.payload.raw, 'base64').toString()}`)
       }
-      
-      
+
+            
       // Generate the actual sandwich struct
       params.proposedIDSandwich = {
         idxStart: startIdxID, 
