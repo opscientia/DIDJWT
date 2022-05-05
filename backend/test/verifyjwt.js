@@ -91,115 +91,6 @@ describe('handleKeyRotation', function (){
 //   });
 // });
 
-
-describe.only('JWT Expiration', function (){
-  beforeEach(async function(){
-      // -------- Contract setup: deploy contract and submit JWT proof ---------
-      
-      const jwt = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
-      const id = '0000-0002-2308-9517';
-      const expTime = '1651375833';
-      this.expTimeInt = ~~expTime;
-
-      [this.owner, this.addr1] = await ethers.getSigners();
-      let [headerRaw, payloadRaw, signatureRaw] = jwt.split('.');
-      this.signature = Buffer.from(signatureRaw, 'base64url');
-      
-      this.vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
-      // await this.vjwt.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
-      this.message = headerRaw + '.' + payloadRaw
-      this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
-      // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
-      let idSandwichValue = await sandwichDataWithBreadFromContract(id, this.vjwt, type='id');
-      let expSandwichValue = await sandwichDataWithBreadFromContract(expTime, this.vjwt, type='exp');
-      // find indices of sandwich in raw payload:
-      let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
-      let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
-      this.proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
-      this.proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
-
-
-      let hashedMessage = sha256FromString(this.message)
-      let proofOwner = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
-      let proofAddr1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                                Buffer.from(this.addr1.address.replace('0x', ''), 'hex')))
-      await this.vjwt.commitJWTProof(proofOwner)
-      await this.vjwt.connect(this.addr1).commitJWTProof(proofAddr1)
-      await ethers.provider.send('evm_mine')
-  });
-
-  it('Expired JWT is not accepted for an existing user with a credential', async function () {
-    // Verify the original credential
-    await this.vjwt.verifyMe(
-      ethers.BigNumber.from(this.signature), 
-      this.message, 
-      this.payloadIdx, 
-      this.proposedIDSandwich, 
-      this.proposedExpSandwich
-    )
-    
-    // Fast-forward 
-    await ethers.provider.send('evm_setNextBlockTimestamp', [this.expTimeInt + 10000000])
-    await ethers.provider.send('evm_mine')
-    // ---- Set up commit with new credential ---
-
-    const newJWT = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiXzRCMzFzeTJpQWM0ajVvcXEwQ2JVUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMTgtNDQ3NyIsImF1dGhfdGltZSI6MTY1MTI4MTE4NCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM2NzcwNCwiZ2l2ZW5fbmFtZSI6IlNoYWR5IiwiaWF0IjoxNjUxMjgxMzA0LCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJFbCBEYW1hdHkiLCJqdGkiOiI0ZDFjOTA1YS04Y2UyLTQ3ODEtYTYyYy02YzRlOGE5MzljZDQifQ.Lg2Nd95rrNORAJUjb94YJlbf1bi-Sko2Lwlk4zBcGeCnn0hEJPn38GmvQ7qIu0veY3drKbOrlhPn76icBcafa9Yk-GVc80QIfhYPL-aK7FsVBpkPQT6k1pLPnX-pHFBKquIbmKYdcO-PYRZXp2g';
-    const newID = '0000-0002-2318-4477';
-    const newExpTime = '1651367704';
-
-    let [headerRaw, payloadRaw, signatureRaw] = newJWT.split('.');
-    let signature = Buffer.from(signatureRaw, 'base64url');
-
-    let message = headerRaw + '.' + payloadRaw
-    let payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
-    // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
-    let idSandwichValue = await sandwichDataWithBreadFromContract(newID, this.vjwt, type='id');
-    let expSandwichValue = await sandwichDataWithBreadFromContract(newExpTime, this.vjwt, type='exp');
-    // find indices of sandwich in raw payload:
-    let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
-    let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
-    let proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
-    let proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
-
-    let hashedMessage = sha256FromString(message)
-    let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                              Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
-    await this.vjwt.commitJWTProof(proof)
-    await ethers.provider.send('evm_mine')
-
-    // ----- Now, fail the next verification due to timestamp being too early----- 
-    await expect(
-        this.vjwt.verifyMe(
-        ethers.BigNumber.from(signature), 
-        message, 
-        payloadIdx, 
-        proposedIDSandwich, 
-        proposedExpSandwich
-      )
-    ).to.be.revertedWith('a')
-    
-  });
-
-  it('Expired JWT is not accepted for new user without a credential', async function () {
-    // Time is already fast-forwarded -- hardhat can't reset time between it()s
-    await expect(
-        this.vjwt.connect(this.addr1).verifyMe(
-        ethers.BigNumber.from(this.signature), 
-        this.message, 
-        this.payloadIdx, 
-        this.proposedIDSandwich, 
-        this.proposedExpSandwich
-      )
-    ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
-  });
-  
-
-  it('New JWT cannot be commited until old one is expired', async function () {
-  });
-});
-
-
 describe('Verify test RSA signatures', function () {
   // Helper function for these tests -- checks whether the transaction causes a JWTVerification event from *any* contract
   const emitsJWTVerificationEventWithValue = async (tx, value) => 
@@ -496,3 +387,113 @@ for (const params of [
 //   it('jfakjfak', async function (){
 //   })
 // });
+
+
+// This must be at the end, as it changes EVM time for all tests
+describe.only('JWT Expiration', function (){
+  beforeEach(async function(){
+      // -------- Contract setup: deploy contract and submit JWT proof ---------
+      
+      const jwt = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
+      const id = '0000-0002-2308-9517';
+      const expTime = '1651375833';
+      this.expTimeInt = ~~expTime;
+
+      [this.owner, this.addr1] = await ethers.getSigners();
+      let [headerRaw, payloadRaw, signatureRaw] = jwt.split('.');
+      this.signature = Buffer.from(signatureRaw, 'base64url');
+      
+      this.vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
+      // await this.vjwt.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
+      this.message = headerRaw + '.' + payloadRaw
+      this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
+      // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
+      let idSandwichValue = await sandwichDataWithBreadFromContract(id, this.vjwt, type='id');
+      let expSandwichValue = await sandwichDataWithBreadFromContract(expTime, this.vjwt, type='exp');
+      // find indices of sandwich in raw payload:
+      let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
+      let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
+      this.proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
+      this.proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
+
+
+      let hashedMessage = sha256FromString(this.message)
+      let proofOwner = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
+                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
+      let proofAddr1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
+                                                Buffer.from(this.addr1.address.replace('0x', ''), 'hex')))
+      await this.vjwt.commitJWTProof(proofOwner)
+      await this.vjwt.connect(this.addr1).commitJWTProof(proofAddr1)
+      await ethers.provider.send('evm_mine')
+  });
+
+  it('Expired JWT is not accepted for an existing user with a credential', async function () {
+    // Verify the original credential
+    await this.vjwt.verifyMe(
+      ethers.BigNumber.from(this.signature), 
+      this.message, 
+      this.payloadIdx, 
+      this.proposedIDSandwich, 
+      this.proposedExpSandwich
+    )
+    
+    // Fast-forward 
+    await ethers.provider.send('evm_setNextBlockTimestamp', [this.expTimeInt + 10000000])
+    await ethers.provider.send('evm_mine')
+    // ---- Set up commit with new credential ---
+
+    const newJWT = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiXzRCMzFzeTJpQWM0ajVvcXEwQ2JVUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMTgtNDQ3NyIsImF1dGhfdGltZSI6MTY1MTI4MTE4NCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM2NzcwNCwiZ2l2ZW5fbmFtZSI6IlNoYWR5IiwiaWF0IjoxNjUxMjgxMzA0LCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJFbCBEYW1hdHkiLCJqdGkiOiI0ZDFjOTA1YS04Y2UyLTQ3ODEtYTYyYy02YzRlOGE5MzljZDQifQ.Lg2Nd95rrNORAJUjb94YJlbf1bi-Sko2Lwlk4zBcGeCnn0hEJPn38GmvQ7qIu0veY3drKbOrlhPn76icBcafa9Yk-GVc80QIfhYPL-aK7FsVBpkPQT6k1pLPnX-pHFBKquIbmKYdcO-PYRZXp2g';
+    const newID = '0000-0002-2318-4477';
+    const newExpTime = '1651367704';
+
+    let [headerRaw, payloadRaw, signatureRaw] = newJWT.split('.');
+    let signature = Buffer.from(signatureRaw, 'base64url');
+
+    let message = headerRaw + '.' + payloadRaw
+    let payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
+    // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
+    let idSandwichValue = await sandwichDataWithBreadFromContract(newID, this.vjwt, type='id');
+    let expSandwichValue = await sandwichDataWithBreadFromContract(newExpTime, this.vjwt, type='exp');
+    // find indices of sandwich in raw payload:
+    let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
+    let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
+    let proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
+    let proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
+
+    let hashedMessage = sha256FromString(message)
+    let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
+                                              Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
+    await this.vjwt.commitJWTProof(proof)
+    await ethers.provider.send('evm_mine')
+
+    // ----- Now, fail the next verification due to timestamp being too early----- 
+    await expect(
+        this.vjwt.verifyMe(
+        ethers.BigNumber.from(signature), 
+        message, 
+        payloadIdx, 
+        proposedIDSandwich, 
+        proposedExpSandwich
+      )
+    ).to.be.revertedWith('a')
+    
+  });
+
+  it('Expired JWT is not accepted for new user without a credential', async function () {
+    // Time is already fast-forwarded -- hardhat can't reset time between it()s
+    await expect(
+        this.vjwt.connect(this.addr1).verifyMe(
+        ethers.BigNumber.from(this.signature), 
+        this.message, 
+        this.payloadIdx, 
+        this.proposedIDSandwich, 
+        this.proposedExpSandwich
+      )
+    ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
+  });
+  
+
+  it('New JWT cannot be commited until old one is expired', async function () {
+    expect(true).to.be.revertedWith('this test needs to be implemented')
+  });
+});
