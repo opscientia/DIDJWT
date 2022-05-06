@@ -67,7 +67,7 @@ exports.upgradeVerifyJWTContract = async (service) => {
     let wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
     let address = contractAddresses.VerifyJWT.gnosis[service]
     let VJWT = await ethers.getContractFactory('VerifyJWT')
-    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2', {
+    let NewVJWT = await ethers.getContractFactory('VerifyJWTv3', {
       libraries : {
         WTFUtils : wu.address //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
       }, 
@@ -79,15 +79,14 @@ exports.upgradeVerifyJWTContract = async (service) => {
       VJWT, 
       {kind : 'uups'}, 
     )
-
     let vjwt = await upgrades.upgradeProxy(address, NewVJWT, { unsafeAllow: ['external-library-linking'] }) //WARNING: ALLOWING LIBRARIES (but this should be fine as long as lib can't call selfdestruct) https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-external-libraries
-    // Note: owner still needs to set the bottombread and topbread for exp if going from v1 to v2
+    // Note: owner still needs to set the bottombread and topbread for exp if going from v1 to v2 or v3
     return vjwt
 }
 
 exports.deployVerifyJWTContract = async (...args) => {
   let wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
-  const VerifyJWT = await ethers.getContractFactory('VerifyJWTv2', {
+  const VerifyJWT = await ethers.getContractFactory('VerifyJWTv3', {
     libraries : {
       WTFUtils : wu.address //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
     }
@@ -204,11 +203,23 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       } 
 
       // Generates a proof to be commited that the entity owning *address* knows the JWT
-      params.generateProof = async (address) => ethers.utils.sha256(
-                                                                      await xor(Buffer.from(params.hashedMessage.replace('0x', ''), 'hex'), 
-                                                                                Buffer.from(address.replace('0x', ''), 'hex')
-                                                                                )
-                                                          )
+      // params.generateProof = async (address) => ethers.utils.sha256(
+      //                                                                 await xor(Buffer.from(params.hashedMessage.replace('0x', ''), 'hex'), 
+      //                                                                           Buffer.from(address.replace('0x', ''), 'hex')
+      //                                                                           )
+      //                                                     )
+
+      // @param {string} address
+      // Returns two commits: [unbound, bound]. The unbound commit is the hash of the message. The bound commit is the hash of the message concatenated with the address
+      // It is important to use the Keccak256 algorithm or any that doesn't rely on the Merkle-Dagmard transform to prevent length extension attacks
+      params.generateCommitments = (address) => {
+        let addr_ = Buffer.from(address.replace('0x', ''), 'hex')
+        let msg_ = Buffer.from(params.message)
+        let unbound = ethers.utils.keccak256(msg_)
+        let bound = ethers.utils.keccak256(Buffer.concat([msg_, addr_]))
+        console.error('concat', Buffer.concat([msg_, addr_]).toString('hex'), params.message)
+        return [unbound, bound]
+      }
       const p = params
       return p
 }

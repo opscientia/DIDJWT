@@ -125,9 +125,12 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
 
 
-    function commitJWTProof(bytes32 boundCommit, bytes32 unboundCommit) public {
+    function commitJWTProof(bytes32 unboundCommit, bytes32 boundCommit) public {
       require(commitments[unboundCommit].blockNumber == 0, 'JWT has already been commited');
-
+      console.log('COMMIT FOR HAS');
+      console.logBytes32(unboundCommit);
+      console.logBytes32(boundCommit);
+      console.log('BLOCK NUMBER', block.number);
       commitments[unboundCommit] = JWTCommit(boundCommit,block.number);
       // pendingVerification.push(jwtXORPubkey);
     }
@@ -142,10 +145,13 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // Convert pubkey to bytes32
     bytes memory pkBytes = WTFUtils.addressToBytes(a);
     // Find what the bound commit *should* be
+    console.log('CONCAT');
+    console.logBytes(bytes.concat(plaintext, pkBytes));
     bytes32 idealBoundCommit = keccak256(
       bytes.concat(plaintext, pkBytes)
     );
-
+    console.log('IDEAL BOUND COMMIT');
+    console.logBytes32(idealBoundCommit);
 
     // Lookup unbound commit
     JWTCommit memory c = commitments[unboundCommit];
@@ -155,12 +161,12 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return true;
   }
 
-  function _verify(address addr, bytes memory signature, string memory jwt) private returns (bool) { 
+  function _verify(address addr, bytes memory signature, string memory headerAndPayload) private returns (bool) { 
     // bytes32 jwtHash = sha256(WTFUtils.stringToBytes(jwt));
     // check whether JWT is valid 
-    require(verifyJWT(signature, jwt),"Verification of JWT failed");
+    require(verifyJWT(signature, headerAndPayload),"Verification of JWT failed");
     // check whether sender has already proved knowledge of the jwt
-    require(checkCommit(addr, jwt), "Proof of previous knowlege of JWT unsuccessful");
+    require(checkCommit(addr, headerAndPayload), "Proof of previous knowlege of JWT unsuccessful");
     return true;
   }
 
