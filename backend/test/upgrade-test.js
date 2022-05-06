@@ -18,11 +18,14 @@ const {
   } = require('./utils/utils');
 
 
-describe('upgrade-specific tests from v1 to v2', function(){
+describe.only('upgrade-specific tests from v1 to v2', function(){
     before(async function(){
         this.contract = await upgradeVerifyJWTContract('google')
         await this.contract.changeSandwich(googleParams.idBottomBread, googleParams.idTopBread, googleParams.expBottomBread, googleParams.expTopBread)
 
+    });
+    it('Test with Twitter, facebook, etc.', function(){
+        expect(false).to.equal('NOT IMPLEMENTED YET')
     });
 
     
