@@ -223,7 +223,7 @@ for (const params of [
   }
 ]){
 
-  describe.only('Integration tests for after successful proof commit with params ' + params.name, function () {
+  describe('Integration tests for after successful proof commit with params ' + params.name, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
       this.vjwt = await params.createContract();
@@ -365,104 +365,66 @@ for (const params of [
 
 
 // This must be at the end, as it changes EVM time for all tests
-describe('JWT Expiration', function (){
+describe.only('JWT Expiration', function (){
   beforeEach(async function(){
       // -------- Contract setup: deploy contract and submit JWT proof ---------
-      
-      const jwt = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
-      const id = '0000-0002-2308-9517';
-      const expTime = '1651375833';
-      this.expTimeInt = ~~expTime;
-
       [this.owner, this.addr1] = await ethers.getSigners();
-      let [headerRaw, payloadRaw, signatureRaw] = jwt.split('.');
-      this.signature = Buffer.from(signatureRaw, 'base64url');
-      
       this.vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
-      // await this.vjwt.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
-      this.message = headerRaw + '.' + payloadRaw
-      this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
-      // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
-      let idSandwichValue = await sandwichDataWithBreadFromContract(id, this.vjwt, type='id');
-      let expSandwichValue = await sandwichDataWithBreadFromContract(expTime, this.vjwt, type='exp');
-      // find indices of sandwich in raw payload:
-      let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
-      let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
-      this.proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
-      this.proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
+      this.jwt1 = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
+      this.jwt2 = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiXzRCMzFzeTJpQWM0ajVvcXEwQ2JVUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMTgtNDQ3NyIsImF1dGhfdGltZSI6MTY1MTI4MTE4NCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM2NzcwNCwiZ2l2ZW5fbmFtZSI6IlNoYWR5IiwiaWF0IjoxNjUxMjgxMzA0LCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJFbCBEYW1hdHkiLCJqdGkiOiI0ZDFjOTA1YS04Y2UyLTQ3ODEtYTYyYy02YzRlOGE5MzljZDQifQ.Lg2Nd95rrNORAJUjb94YJlbf1bi-Sko2Lwlk4zBcGeCnn0hEJPn38GmvQ7qIu0veY3drKbOrlhPn76icBcafa9Yk-GVc80QIfhYPL-aK7FsVBpkPQT6k1pLPnX-pHFBKquIbmKYdcO-PYRZXp2g_BZIm0GrX9bFNiS8pEm0PhkDKbF7fksuZ5ZpgWARgFip_KU9z5Q9tuaSWljCUr5IN0_-I4g6Qd3SJQ4hF3tA_ekDDaOoDdZHTSvJNsPQEmV9YAC_TDMwsrLwu0tD2A8fIb-ryRpKnJiuAdOmYdjEVVIetGR6CLwew5_GIk_1rYPgKxRCJqTa4T5aP0YVGFvi5sg';
+      this.vp1 = await getParamsForVerifying(this.vjwt, this.jwt1, 'sub')
+      this.vp2 = await getParamsForVerifying(this.vjwt, this.jwt2, 'sub')
 
+      this.ownerCommits = this.vp1.generateCommitments(this.owner.address)
+      this.addr1Commits = this.vp2.generateCommitments(this.addr1.address)
 
-      let hashedMessage = sha256FromString(this.message)
-      let proofOwner = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
-      let proofAddr1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                                Buffer.from(this.addr1.address.replace('0x', ''), 'hex')))
-      await this.vjwt.commitJWTProof(proofOwner)
-      await this.vjwt.connect(this.addr1).commitJWTProof(proofAddr1)
+      await this.vjwt.commitJWTProof(...this.ownerCommits)
+      // await this.vjwt.connect(this.addr1).commitJWTProof(...addr1Commits)
       await ethers.provider.send('evm_mine')
   });
 
   it('Expired JWT is not accepted for an existing user with a credential', async function () {
     // Verify the original credential
     await this.vjwt.verifyMe(
-      ethers.BigNumber.from(this.signature), 
-      this.message, 
-      this.payloadIdx, 
-      this.proposedIDSandwich, 
-      this.proposedExpSandwich
+      this.vp1.signature, 
+      this.vp1.message, 
+      this.vp1.payloadIdx, 
+      this.vp1.proposedIDSandwich, 
+      this.vp1.proposedExpSandwich
     )
     
     // Fast-forward 
-    await ethers.provider.send('evm_setNextBlockTimestamp', [this.expTimeInt + 10000000])
-    await ethers.provider.send('evm_mine')
-    // ---- Set up commit with new credential ---
-
-    const newJWT = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiXzRCMzFzeTJpQWM0ajVvcXEwQ2JVUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMTgtNDQ3NyIsImF1dGhfdGltZSI6MTY1MTI4MTE4NCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM2NzcwNCwiZ2l2ZW5fbmFtZSI6IlNoYWR5IiwiaWF0IjoxNjUxMjgxMzA0LCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJFbCBEYW1hdHkiLCJqdGkiOiI0ZDFjOTA1YS04Y2UyLTQ3ODEtYTYyYy02YzRlOGE5MzljZDQifQ.Lg2Nd95rrNORAJUjb94YJlbf1bi-Sko2Lwlk4zBcGeCnn0hEJPn38GmvQ7qIu0veY3drKbOrlhPn76icBcafa9Yk-GVc80QIfhYPL-aK7FsVBpkPQT6k1pLPnX-pHFBKquIbmKYdcO-PYRZXp2g';
-    const newID = '0000-0002-2318-4477';
-    const newExpTime = '1651367704';
-
-    let [headerRaw, payloadRaw, signatureRaw] = newJWT.split('.');
-    let signature = Buffer.from(signatureRaw, 'base64url');
-
-    let message = headerRaw + '.' + payloadRaw
-    let payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
-    // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
-    let idSandwichValue = await sandwichDataWithBreadFromContract(newID, this.vjwt, type='id');
-    let expSandwichValue = await sandwichDataWithBreadFromContract(newExpTime, this.vjwt, type='exp');
-    // find indices of sandwich in raw payload:
-    let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
-    let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
-    let proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
-    let proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
-
-    let hashedMessage = sha256FromString(message)
-    let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                              Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
-    await this.vjwt.commitJWTProof(proof)
+    await ethers.provider.send('evm_setNextBlockTimestamp', [this.vp1.expTimeInt + 10000000])
     await ethers.provider.send('evm_mine')
 
-    // ----- Now, fail the next verification due to timestamp being too early----- 
+    // Set up commit with new credential 
+    let newOwnerCommit = this.vp2.generateCommitments(this.owner.address)
+    await this.vjwt.commitJWTProof(...newOwnerCommit)
+    await ethers.provider.send('evm_mine')
+    
+    // Now, fail the next verification due to timestamp being too early-
     await expect(
         this.vjwt.verifyMe(
-        ethers.BigNumber.from(signature), 
-        message, 
-        payloadIdx, 
-        proposedIDSandwich, 
-        proposedExpSandwich
+        this.vp2.signature, 
+        this.vp2.message, 
+        this.vp2.payloadIdx, 
+        this.vp2.proposedIDSandwich, 
+        this.vp2.proposedExpSandwich
       )
-    ).to.be.revertedWith('a')
-    
+    ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
+     
   });
 
   it('Expired JWT is not accepted for new user without a credential', async function () {
     // Time is already fast-forwarded -- hardhat can't reset time between it()s
+    await this.vjwt.commitJWTProof(...this.addr1Commits)
     await expect(
         this.vjwt.connect(this.addr1).verifyMe(
-        ethers.BigNumber.from(this.signature), 
-        this.message, 
-        this.payloadIdx, 
-        this.proposedIDSandwich, 
-        this.proposedExpSandwich
+        this.vp2.signature, 
+        this.vp2.message, 
+        this.vp2.payloadIdx, 
+        this.vp2.proposedIDSandwich, 
+        this.vp2.proposedExpSandwich
       )
     ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
   });
