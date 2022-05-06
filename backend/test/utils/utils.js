@@ -146,9 +146,22 @@ const sandwichDataWithBreadFromContract = async (data, contract, type='id') => {
 
 exports.sandwichDataWithBreadFromContract = sandwichDataWithBreadFromContract;
 
-// vjwt is the VerifyJWTContract
-// jwt is JWT with base64url-encoded header, payload, and signature joined by '.'
-// idFieldName is the JWT's claim for the id, likely either 'sub' or 'email'
+// @param {string} address
+// @param {string} message
+      // Returns two commits: [unbound, bound]. The unbound commit is the hash of the message. The bound commit is the hash of the message concatenated with the address
+      // It is important to use the Keccak256 algorithm or any that doesn't rely on the Merkle-Dagmard transform to prevent length extension attacks
+const generateCommitments = (address, message) => {
+  let addr_ = Buffer.from(address.replace('0x', ''), 'hex')
+  let msg_ = Buffer.from(message)
+  let unbound = ethers.utils.keccak256(msg_)
+  let bound = ethers.utils.keccak256(Buffer.concat([msg_, addr_]))
+  return [unbound, bound]
+}
+exports.generateCommitments = generateCommitments;
+
+// @param {VerifyJWT} vjwt is the VerifyJWT
+// @param {string} jwt is the JWT with base64url-encoded header, payload, and signature joined by '.'
+// @param {string} idFieldName is the JWT's claim for the id (likely 'sub' or 'email')
 exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       let params = {}; 
       const parsed = parseJWT(jwt)
@@ -209,16 +222,8 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       //                                                                           )
       //                                                     )
 
-      // @param {string} address
-      // Returns two commits: [unbound, bound]. The unbound commit is the hash of the message. The bound commit is the hash of the message concatenated with the address
-      // It is important to use the Keccak256 algorithm or any that doesn't rely on the Merkle-Dagmard transform to prevent length extension attacks
-      params.generateCommitments = (address) => {
-        let addr_ = Buffer.from(address.replace('0x', ''), 'hex')
-        let msg_ = Buffer.from(params.message)
-        let unbound = ethers.utils.keccak256(msg_)
-        let bound = ethers.utils.keccak256(Buffer.concat([msg_, addr_]))
-        return [unbound, bound]
-      }
+      params.generateCommitments = address => generateCommitments(address, params.message)
+
       const p = params
       return p
 }
