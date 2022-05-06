@@ -245,6 +245,14 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return true;
   }
 
+  
+  function getRegisteredCreds() external view returns (bytes[] memory) {
+      return registeredCreds;
+    }
+
+    function getRegisteredAddresses() external view returns (address[] memory) {
+      return registeredAddresses;
+    }
   /* --Private Credentials--
 
 
@@ -268,14 +276,5 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   // function hasAccess(address owner, address viewer) public view returns (bool result) {
   //   return privateJWTAllowances[owner][viewer];
   // }
-
-
-  function getRegisteredCreds() external view returns (bytes[] memory) {
-    return registeredCreds;
-  }
-
-  function getRegisteredAddresses() external view returns (address[] memory) {
-    return registeredAddresses;
-  }
   */
 }

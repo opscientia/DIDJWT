@@ -15,7 +15,8 @@ const {
   sandwichDataWithBreadFromContract,
   jwksKeyToPubkey,
   vmExceptionStr,
-  generateCommitments
+  generateCommitments,
+  getParamsForVerifying
 } = require('./utils/utils');
 
 const xor = require('wtfprotocol-helpers').fixedBufferXOR;
@@ -133,11 +134,11 @@ describe('Verify test RSA signatures', function () {
   });
 })
 
-describe.only('proof of prior knowledge', function () {
+describe('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
     this.vjwt = await deployVerifyJWTContract(11,230, 'example kid :) :) :)', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
-    this.message1 = 'Hey'
+    this.message1 = 'Hey' 
     this.message2 = 'Hey2'
     
     this.proof1 = generateCommitments(this.owner.address, this.message1)
@@ -185,73 +186,57 @@ for (const params of [
     name : 'orcid',
     expiredToken: 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiX1RCT2VPZ2VZNzBPVnBHRWNDTi0zUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY0NDgzMDE5MSwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY0NDkxODUzNywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjQ0ODMyMTM3LCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImp0aSI6IjcxM2RjMGZiLTMwZTAtNDM0Mi05ODFjLTNlYjJiMTRiODM0OCJ9.VXNSFbSJSdOiX7n-hWB6Vh30L1IkOLiNs2hBTuUDZ4oDB-cL6AJ8QjX7wj9Nj_lGcq1kjIfFLhowo8Jy_mzMGIFU8KTZvinSA-A-tJkXOUEvjUNjd0OfQJnVVJ63wvp9gSEj419HZ13Lc2ci9CRY7efQCYeelvQOQvpdrZsRLiQ_XndeDw2hDLAmI7YrYrLMy1zQY9rD4uAlBa56RVD7me6t47jEOOJJMAs3PC8UZ6pYyNc0zAjQ8Vapqz7gxeCN-iya91YI1AIE8Ut19hGgVRa9N7l-aUielPAlzss0Qbeyvl0KTRuZWnLUSrOz8y9oGxVBCUmStEOrVrAhmkMS8A',
     newToken: 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw',
+    idFieldName : 'sub',
     id : '0000-0002-2308-9517',
     expTime : '1651375833',
     createContract : async() => await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
                        
   },
-  {
-    ...googleParams,
-    name : 'google',
-    expiredToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjcyOTE4OTQ1MGQ0OTAyODU3MDQyNTI2NmYwM2U3MzdmNDVhZjI5MzIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiMDREZXRTaGNSYUE4OWxlcEQzdWRnUSIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjQ3NjYzNDk4LCJleHAiOjE2NDc2NjcwOTgsImp0aSI6IjE4ZmRmMGQ2M2VhYjI4YjRlYmY0NmFiMDMzZTM5OTU3NmE5MTJlZGUifQ.YqmOub03zNmloAcFvZE0E-4Gt2Y5fr_9XQLUYqXQ24X_GJaJh0HSQXouJeSXjnk8PT6E1FnPd89QAgwDvE_qxAoOvW7VKDycVapOeDtKdTQ-QpAn-ExE0Pvqgx1iaGRZFDS4DWESX1ZsQIBAB_MHK_ZFdAnOjeFzImuMkB1PZLY99przSaM8AEyvWn8wfEgdmkdoJERBXF7xJI2dfA9mTRjlQvhSC4K060bTJbUYug4sQLrvo53CsDjvXRnodnCB81EVWZUbf5B9dG__kebI3AjedKUcPb2wofpX_B7uAyVlD7Au3APEbZP7Asle0Bi76hDNGPQbLvR_nGWLoySfCQ',
-    newToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2MTY0OWU0NTAzMTUzODNmNmI5ZDUxMGI3Y2Q0ZTkyMjZjM2NkODgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoidDZqVl9BZ0FyTGpuLXFVSlN5bUxoZyIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjUxMzQ5MjczLCJleHAiOjE2NTEzNTI4NzMsImp0aSI6IjA3NTU4ODdlOTI3MzA1ZTY0Y2E4MWVhMzE3YjYxZGQxYWJjNWFiZjgifQ.PXrelpQdJkTxbQw66p6HaSGT5pR6qhkZ8-04hLnVhmrzOJLBkyYisWHzP1t96IWguswMZ4tafg2uCCnra2zkz6BMiBCPrGJdk0l_Kx06FJMX-QNVdt5hW28qM6il94eb0g_OTHCmI28eUJf1rNY8D5NMrG3kXWPDQ8_EkOyySVbu6ED1XFbYgHzo560Ty1-gkQRQKYCuogqrcDBRPF3tqXyg9itCHawm6Kll_GX1TP5zwnwtr5WVrAFYtLJV1_VAEfKWkdU6v6LkAgq4ZjzunFRWBclLVCS2X1JO8iBeGjl_LVVoycvxwojrlZigplQAUSsxmDjlQ4VLH9vINiid6Q',
-    id : 'nanaknihal@gmail.com',
-    expTime : '1651352873',
-    createContract : async() => await deployVerifyJWTContract(googleParams.e, googleParams.n, googleParams.kid, googleParams.idBottomBread, googleParams.idTopBread, googleParams.expBottomBread, googleParams.expTopBread)
-  },
-  {
-    ...twitterParams,
-    name : 'twitter',
-    newToken : 'eyJraWQiOiJvYWdZIn0.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IlMzS1I3WGtfUkc3R0tBYlVHQ2JiNHQ4all1UkhLVmpnc0FTeFYwME9zY1UiLCJleHAiOiIxNjUxMzY1MjUzIn0.WOUI40Dk4bZKszkgfBHsc3Bc0SAQ_cdB6W3F-oGmmY0FhMLfTiVvAFkNIOES_FAUfQlNqq47Gt-THrr6EMcNkOrC6W0nEYjHYn-VByE7xxRdZtSXS_OYDbw8bLQEeaNjcUnJZQ0HYXA0uy4JDNJKbhJCCcrEcK187vbqazpzSZ_tCgbSeqHCmwnakg5obqjrCslehJI8w_aSjEiewUB-fOtTz6S92KvDoozUzli6MjapNDQ8j-kz6wuDpM3EigRdjU8n60xqY0pOeiC8r-AHqPa6bh0ws7f7xrkki2gE0t4eiKEKjWHHKvjf9bgRKtj9G9PRTQVOS1fqF6BBCrqqHQ==',
-    id : 'ProtocolWtf',
-    expTime : '1651365253',
-    createContract : async() => await deployVerifyJWTContract(twitterParams.e, twitterParams.n, twitterParams.kid, twitterParams.idBottomBread, twitterParams.idTopBread, twitterParams.expBottomBread, twitterParams.expTopBread)
-  },
-  {
-    ...githubParams,
-    name : 'github',
-    newToken : 'eyJraWQiOiJxN3dXIn0.eyJjcmVkcyI6Ind0ZmlzYWhvbG8iLCJhdWQiOiJnbm9zaXMiLCJyYW5kIjoiYUpXWkg1YWNVMG1SVmFxQUlSRklNbkhoRk9SWHFnS3J5a3MyTWE0Z2p5YyIsImV4cCI6IjE2NTEzNjgxNjUifQ.cClFRCWiL5XismMTWV6gvmLeBASalVP1_xQCLhmHC2W6QwRAxb-uiKvZ0KhNykLFsHJGgsblG7pknbHqoty9H2K2ZJy1jmKRRyw1EAI2UEZSHY7KjmNGI5DEoIf8tC_4UEjOl82_VXujGzmK0byXhCRXvV728TQHuhOy_IP1qvUY1Idhe4tEnK-ysx-chimRgzbx5TOGBc9-miuRMR63qZ_W6J2sB-GKGzNregMzD-qRaSzuEE-ItB51zxJo-wK3kLb1VyP94DfgyOmBNg-AI-lb0N1bp1iF0lwUbx9dngkXdgSQhDSjp45DQM1X8aiMdDoyVtpopxSeoV452JvUtw==',
-    id : 'wtfisaholo',
-    expTime : '1651368165',
-    createContract : async() => await deployVerifyJWTContract(githubParams.e, githubParams.n, githubParams.kid, githubParams.idBottomBread, githubParams.idTopBread, githubParams.expBottomBread, githubParams.expTopBread)
-  }
+  // {
+  //   ...googleParams,
+  //   name : 'google',
+  //   expiredToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjcyOTE4OTQ1MGQ0OTAyODU3MDQyNTI2NmYwM2U3MzdmNDVhZjI5MzIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiMDREZXRTaGNSYUE4OWxlcEQzdWRnUSIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjQ3NjYzNDk4LCJleHAiOjE2NDc2NjcwOTgsImp0aSI6IjE4ZmRmMGQ2M2VhYjI4YjRlYmY0NmFiMDMzZTM5OTU3NmE5MTJlZGUifQ.YqmOub03zNmloAcFvZE0E-4Gt2Y5fr_9XQLUYqXQ24X_GJaJh0HSQXouJeSXjnk8PT6E1FnPd89QAgwDvE_qxAoOvW7VKDycVapOeDtKdTQ-QpAn-ExE0Pvqgx1iaGRZFDS4DWESX1ZsQIBAB_MHK_ZFdAnOjeFzImuMkB1PZLY99przSaM8AEyvWn8wfEgdmkdoJERBXF7xJI2dfA9mTRjlQvhSC4K060bTJbUYug4sQLrvo53CsDjvXRnodnCB81EVWZUbf5B9dG__kebI3AjedKUcPb2wofpX_B7uAyVlD7Au3APEbZP7Asle0Bi76hDNGPQbLvR_nGWLoySfCQ',
+  //   newToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2MTY0OWU0NTAzMTUzODNmNmI5ZDUxMGI3Y2Q0ZTkyMjZjM2NkODgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoidDZqVl9BZ0FyTGpuLXFVSlN5bUxoZyIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjUxMzQ5MjczLCJleHAiOjE2NTEzNTI4NzMsImp0aSI6IjA3NTU4ODdlOTI3MzA1ZTY0Y2E4MWVhMzE3YjYxZGQxYWJjNWFiZjgifQ.PXrelpQdJkTxbQw66p6HaSGT5pR6qhkZ8-04hLnVhmrzOJLBkyYisWHzP1t96IWguswMZ4tafg2uCCnra2zkz6BMiBCPrGJdk0l_Kx06FJMX-QNVdt5hW28qM6il94eb0g_OTHCmI28eUJf1rNY8D5NMrG3kXWPDQ8_EkOyySVbu6ED1XFbYgHzo560Ty1-gkQRQKYCuogqrcDBRPF3tqXyg9itCHawm6Kll_GX1TP5zwnwtr5WVrAFYtLJV1_VAEfKWkdU6v6LkAgq4ZjzunFRWBclLVCS2X1JO8iBeGjl_LVVoycvxwojrlZigplQAUSsxmDjlQ4VLH9vINiid6Q',
+  //   idFieldName : 'email',
+  //   id : 'nanaknihal@gmail.com',
+  //   expTime : '1651352873',
+  //   createContract : async() => await deployVerifyJWTContract(googleParams.e, googleParams.n, googleParams.kid, googleParams.idBottomBread, googleParams.idTopBread, googleParams.expBottomBread, googleParams.expTopBread)
+  // },
+  // {
+  //   ...twitterParams,
+  //   name : 'twitter',
+  //   newToken : 'eyJraWQiOiJvYWdZIn0.eyJjcmVkcyI6IlByb3RvY29sV3RmIiwiYXVkIjoiZ25vc2lzIiwicmFuZCI6IlMzS1I3WGtfUkc3R0tBYlVHQ2JiNHQ4all1UkhLVmpnc0FTeFYwME9zY1UiLCJleHAiOiIxNjUxMzY1MjUzIn0.WOUI40Dk4bZKszkgfBHsc3Bc0SAQ_cdB6W3F-oGmmY0FhMLfTiVvAFkNIOES_FAUfQlNqq47Gt-THrr6EMcNkOrC6W0nEYjHYn-VByE7xxRdZtSXS_OYDbw8bLQEeaNjcUnJZQ0HYXA0uy4JDNJKbhJCCcrEcK187vbqazpzSZ_tCgbSeqHCmwnakg5obqjrCslehJI8w_aSjEiewUB-fOtTz6S92KvDoozUzli6MjapNDQ8j-kz6wuDpM3EigRdjU8n60xqY0pOeiC8r-AHqPa6bh0ws7f7xrkki2gE0t4eiKEKjWHHKvjf9bgRKtj9G9PRTQVOS1fqF6BBCrqqHQ==',
+  //   idFieldName : 'nanaknihal@gmail.com',
+  //   idFieldName : 'creds', 
+  //   id : 'ProtocolWtf',
+  //   expTime : '1651365253',
+  //   createContract : async() => await deployVerifyJWTContract(twitterParams.e, twitterParams.n, twitterParams.kid, twitterParams.idBottomBread, twitterParams.idTopBread, twitterParams.expBottomBread, twitterParams.expTopBread)
+  // },
+  // {
+  //   ...githubParams,
+  //   name : 'github',
+  //   newToken : 'eyJraWQiOiJxN3dXIn0.eyJjcmVkcyI6Ind0ZmlzYWhvbG8iLCJhdWQiOiJnbm9zaXMiLCJyYW5kIjoiYUpXWkg1YWNVMG1SVmFxQUlSRklNbkhoRk9SWHFnS3J5a3MyTWE0Z2p5YyIsImV4cCI6IjE2NTEzNjgxNjUifQ.cClFRCWiL5XismMTWV6gvmLeBASalVP1_xQCLhmHC2W6QwRAxb-uiKvZ0KhNykLFsHJGgsblG7pknbHqoty9H2K2ZJy1jmKRRyw1EAI2UEZSHY7KjmNGI5DEoIf8tC_4UEjOl82_VXujGzmK0byXhCRXvV728TQHuhOy_IP1qvUY1Idhe4tEnK-ysx-chimRgzbx5TOGBc9-miuRMR63qZ_W6J2sB-GKGzNregMzD-qRaSzuEE-ItB51zxJo-wK3kLb1VyP94DfgyOmBNg-AI-lb0N1bp1iF0lwUbx9dngkXdgSQhDSjp45DQM1X8aiMdDoyVtpopxSeoV452JvUtw==',
+  //   id : 'wtfisaholo',
+  //   idFieldName : 'creds', 
+  //   expTime : '1651368165',
+  //   createContract : async() => await deployVerifyJWTContract(githubParams.e, githubParams.n, githubParams.kid, githubParams.idBottomBread, githubParams.idTopBread, githubParams.expBottomBread, githubParams.expTopBread)
+  // }
 ]){
 
-  describe('Integration tests for after successful proof commit with params ' + params.name, function () {
+  describe.only('Integration tests for after successful proof commit with params ' + params.name, function () {
     beforeEach(async function(){
       [this.owner, this.addr1] = await ethers.getSigners()
-      let [headerRaw, payloadRaw, signatureRaw] = params.newToken.split('.');
-      // let [header, payload] = [headerRaw, payloadRaw].map(x => JSON.parse(atob(x)));
-      // let payload = atob(payloadRaw);
-      this.signature = Buffer.from(signatureRaw, 'base64url')
       this.vjwt = await params.createContract();
       await this.vjwt.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
-      this.message = headerRaw + '.' + payloadRaw
-      this.payloadIdx = Buffer.from(headerRaw).length + 1 //Buffer.from('.').length == 1
-      // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
-      let idSandwichValue = await sandwichDataWithBreadFromContract(params.id, this.vjwt, type='id');
-      let wrongIDSandwichValue = await sandwichDataWithBreadFromContract('0200-0002-2308-9517', this.vjwt, type='id');
-      let expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, this.vjwt, type='exp');
-      let wrongExpSandwichValue = await sandwichDataWithBreadFromContract('1651375834', this.vjwt, type='exp');
-      // find indices of sandwich in raw payload:
-      let [startIdxID, endIdxID] = searchForPlainTextInBase64(Buffer.from(idSandwichValue, 'hex').toString(), payloadRaw)
-      let [startIdxExp, endIdxExp] = searchForPlainTextInBase64(Buffer.from(expSandwichValue, 'hex').toString(), payloadRaw)
-      this.proposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(idSandwichValue, 'hex')} 
-      this.wrongProposedIDSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(wrongIDSandwichValue, 'hex')}   
-      this.proposedExpSandwich = {idxStart: startIdxExp, idxEnd: endIdxExp, sandwichValue: Buffer.from(expSandwichValue, 'hex')} 
-      this.wrongProposedExpSandwich = {idxStart: startIdxID, idxEnd: endIdxID, sandwichValue: Buffer.from(wrongExpSandwichValue, 'hex')}   
+      this.wrongIDSandwichValue = await sandwichDataWithBreadFromContract('0200-0002-2308-9517', this.vjwt, type='id');
+      this.wrongExpSandwichValue = await sandwichDataWithBreadFromContract('1651375834', this.vjwt, type='exp');
+      this.verificationParams = await getParamsForVerifying(this.vjwt, params.newToken, params.idFieldName)
+      this.vp = this.verificationParams
 
-      // this.startIdxID = startIdxID; this.endIdxID = endIdxID
-      // let publicHashedMessage = keccak256FromString(this.message)
-      // let secretHashedMessage = sha256FromString(this.message)
-      let hashedMessage = sha256FromString(this.message)
-      let proof = ethers.utils.sha256(await xor(Buffer.from(hashedMessage.replace('0x', ''), 'hex'), 
-                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
-
-
-      await this.vjwt.commitJWTProof(proof)
+      await this.vjwt.commitJWTProof(...this.verificationParams.generateCommitments(this.owner.address))
       await ethers.provider.send('evm_mine')
     });
+    
 
     // NOTE should be unit test
     // it('Expired JWT does not work', async function () {
@@ -263,47 +248,47 @@ for (const params of [
 
     it('Valid JWT works once but cannot be used twice', async function () {
       // TODO: somehow test the JWT cannot be used twice in any circumstance, even after many verifications and changes. Otherwise user can be impersonated
-      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.not.be.reverted
-      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.be.revertedWith('JWT can only be used on-chain once')
+      await expect(this.vjwt.verifyMe(this.vp.signature, this.vp.message, this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich)).to.not.be.reverted
+      await expect(this.vjwt.verifyMe(this.vp.signature, this.vp.message, this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich)).to.be.revertedWith('JWT can only be used on-chain once')
     });
 
     it('Wrong message fails', async function () {
-      await expect(this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message.replace('a', 'b'), this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich)).to.be.revertedWith('Verification of JWT failed');
+      await expect(this.vjwt.verifyMe(this.vp.signature, this.vp.message.replace('a', 'b'), this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich)).to.be.revertedWith('Verification of JWT failed');
     });
 
     it('Wrong sandwich fails', async function () {
       await expect(this.vjwt.verifyMe(
-        ethers.BigNumber.from(this.signature), 
-        this.message, 
-        this.payloadIdx, 
-        {...this.proposedIDSandwich, sandwichValue: Buffer.from(this.proposedIDSandwich.sandwichValue+0xabc)}, 
-        this.proposedExpSandwich))
+        this.vp.signature, 
+        this.vp.message, 
+        this.vp.payloadIdx, 
+        {...this.vp.proposedIDSandwich, sandwichValue: Buffer.from(this.vp.proposedIDSandwich.sandwichValue+0xabc)}, 
+        this.vp.proposedExpSandwich))
       .to.be.revertedWith('Failed to find correct top bread in sandwich');
 
       // Yes, this could be more comprehensive but testing for top bread in ID sandwich and bottom bread in exp sandwich is enough IMO...for now.
       await expect(this.vjwt.verifyMe(
-        ethers.BigNumber.from(this.signature), 
-        this.message, 
-        this.payloadIdx, 
-        this.proposedExpSandwich, 
-        {...this.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.proposedExpSandwich.sandwichValue)}))
+        this.vp.signature, 
+        this.vp.message, 
+        this.vp.payloadIdx, 
+        this.vp.proposedIDSandwich, 
+        {...this.vp.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.vp.proposedExpSandwich.sandwichValue)}))
       .to.be.revertedWith('Failed to find correct bottom bread in sandwich');
 
       await expect(this.vjwt.verifyMe(
-        ethers.BigNumber.from(this.signature), 
-        this.message, 
-        this.payloadIdx, 
-        this.wrongProposedIDSandwich, 
-        this.proposedExpSandwich))
-      .to.be.revertedWith('Proposed sandwich not found');
+        this.vp.signature, 
+        this.vp.message, 
+        this.vp.payloadIdx, 
+        {...this.vp.proposedIDSandwich, sandwichValue: Buffer.from(this.wrongIDSandwichValue, 'hex')},
+        this.vp.proposedExpSandwich
+      )).to.be.revertedWith('Proposed sandwich not found');
       
       await expect(this.vjwt.verifyMe(
-        ethers.BigNumber.from(this.signature), 
-        this.message, 
-        this.payloadIdx, 
-        this.proposedIDSandwich, 
-        this.wrongProposedExpSandwich))
-      .to.be.revertedWith('Proposed sandwich not found');
+        this.vp.signature, 
+        this.vp.message, 
+        this.vp.payloadIdx, 
+        this.vp.proposedIDSandwich, 
+        {...this.vp.proposedExpSandwich, sandwichValue: Buffer.from(this.wrongExpSandwichValue, 'hex')}
+      )).to.be.revertedWith('Proposed sandwich not found');
       
     });
 
@@ -315,7 +300,7 @@ for (const params of [
       expect(registeredCreds.length).to.equal(0);
       expect(await this.vjwt.addressForCreds(Buffer.from('0000-0002-2308-9517'))).to.equal(ethers.constants.AddressZero);
   
-      await this.vjwt.verifyMe(ethers.BigNumber.from(this.signature), this.message, this.payloadIdx, this.proposedIDSandwich, this.proposedExpSandwich);
+      await this.vjwt.verifyMe(this.vp.signature, this.vp.message, this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich);
       
       [registeredAddresses, registeredCreds] = [await this.vjwt.getRegisteredAddresses(), await this.vjwt.getRegisteredCreds()];
       expect(registeredAddresses.length).to.equal(1);

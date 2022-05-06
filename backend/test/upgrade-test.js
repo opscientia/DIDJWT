@@ -18,7 +18,7 @@ const {
   } = require('./utils/utils');
 
 
-describe.only('upgrade-specific tests from v1 to v3', function(){
+describe('upgrade-specific tests from v1 to v3', function(){
     before(async function(){
         this.contract = await upgradeVerifyJWTContract('google')
         await this.contract.changeSandwich(googleParams.idBottomBread, googleParams.idTopBread, googleParams.expBottomBread, googleParams.expTopBread)
