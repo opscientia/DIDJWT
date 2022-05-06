@@ -224,6 +224,14 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
 
       params.generateCommitments = address => generateCommitments(address, params.message)
 
+      params.verifyMeContractParams = () => [
+        params.signature, 
+        params.message, 
+        params.payloadIdx, 
+        params.proposedIDSandwich, 
+        params.proposedExpSandwich
+    ]
+
       const p = params
       return p
 }
