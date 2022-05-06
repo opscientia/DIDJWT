@@ -231,7 +231,7 @@ for (const params of [
       this.wrongIDSandwichValue = await sandwichDataWithBreadFromContract('0200-0002-2308-9517', this.vjwt, type='id');
       this.wrongExpSandwichValue = await sandwichDataWithBreadFromContract('1651375834', this.vjwt, type='exp');
       this.verificationParams = await getParamsForVerifying(this.vjwt, params.newToken, params.idFieldName)
-      this.vp = this.verificationParams
+      this.pv = this.verificationParams
 
       await this.vjwt.commitJWTProof(...this.verificationParams.generateCommitments(this.owner.address))
       await ethers.provider.send('evm_mine')
@@ -248,46 +248,54 @@ for (const params of [
 
     it('Valid JWT works once but cannot be used twice', async function () {
       // TODO: somehow test the JWT cannot be used twice in any circumstance, even after many verifications and changes. Otherwise user can be impersonated
-      await expect(this.vjwt.verifyMe(this.vp.signature, this.vp.message, this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich)).to.not.be.reverted
-      await expect(this.vjwt.verifyMe(this.vp.signature, this.vp.message, this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich)).to.be.revertedWith('JWT can only be used on-chain once')
+      await expect(this.vjwt.verifyMe(...this.pv.verifyMeContractParams())).to.not.be.reverted
+      await expect(this.vjwt.verifyMe(...this.pv.verifyMeContractParams())).to.be.revertedWith('JWT can only be used on-chain once')
     });
 
     it('Wrong message fails', async function () {
-      await expect(this.vjwt.verifyMe(this.vp.signature, this.vp.message.replace('a', 'b'), this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich)).to.be.revertedWith('Verification of JWT failed');
+      await expect(
+        this.vjwt.verifyMe(
+          this.pv.signature, 
+          this.pv.message.replace('a', 'b'), 
+          this.pv.payloadIdx, 
+          this.pv.proposedIDSandwich, 
+          this.pv.proposedExpSandwich
+        )
+      ).to.be.revertedWith('Verification of JWT failed');
     });
 
     it('Wrong sandwich fails', async function () {
       await expect(this.vjwt.verifyMe(
-        this.vp.signature, 
-        this.vp.message, 
-        this.vp.payloadIdx, 
-        {...this.vp.proposedIDSandwich, sandwichValue: Buffer.from(this.vp.proposedIDSandwich.sandwichValue+0xabc)}, 
-        this.vp.proposedExpSandwich))
+        this.pv.signature, 
+        this.pv.message, 
+        this.pv.payloadIdx, 
+        {...this.pv.proposedIDSandwich, sandwichValue: Buffer.from(this.pv.proposedIDSandwich.sandwichValue+0xabc)}, 
+        this.pv.proposedExpSandwich))
       .to.be.revertedWith('Failed to find correct top bread in sandwich');
 
       // Yes, this could be more comprehensive but testing for top bread in ID sandwich and bottom bread in exp sandwich is enough IMO...for now.
       await expect(this.vjwt.verifyMe(
-        this.vp.signature, 
-        this.vp.message, 
-        this.vp.payloadIdx, 
-        this.vp.proposedIDSandwich, 
-        {...this.vp.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.vp.proposedExpSandwich.sandwichValue)}))
+        this.pv.signature, 
+        this.pv.message, 
+        this.pv.payloadIdx, 
+        this.pv.proposedIDSandwich, 
+        {...this.pv.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.pv.proposedExpSandwich.sandwichValue)}))
       .to.be.revertedWith('Failed to find correct bottom bread in sandwich');
 
       await expect(this.vjwt.verifyMe(
-        this.vp.signature, 
-        this.vp.message, 
-        this.vp.payloadIdx, 
-        {...this.vp.proposedIDSandwich, sandwichValue: Buffer.from(this.wrongIDSandwichValue, 'hex')},
-        this.vp.proposedExpSandwich
+        this.pv.signature, 
+        this.pv.message, 
+        this.pv.payloadIdx, 
+        {...this.pv.proposedIDSandwich, sandwichValue: Buffer.from(this.wrongIDSandwichValue, 'hex')},
+        this.pv.proposedExpSandwich
       )).to.be.revertedWith('Proposed sandwich not found');
       
       await expect(this.vjwt.verifyMe(
-        this.vp.signature, 
-        this.vp.message, 
-        this.vp.payloadIdx, 
-        this.vp.proposedIDSandwich, 
-        {...this.vp.proposedExpSandwich, sandwichValue: Buffer.from(this.wrongExpSandwichValue, 'hex')}
+        this.pv.signature, 
+        this.pv.message, 
+        this.pv.payloadIdx, 
+        this.pv.proposedIDSandwich, 
+        {...this.pv.proposedExpSandwich, sandwichValue: Buffer.from(this.wrongExpSandwichValue, 'hex')}
       )).to.be.revertedWith('Proposed sandwich not found');
       
     });
@@ -300,7 +308,7 @@ for (const params of [
       expect(registeredCreds.length).to.equal(0);
       expect(await this.vjwt.addressForCreds(Buffer.from('0000-0002-2308-9517'))).to.equal(ethers.constants.AddressZero);
   
-      await this.vjwt.verifyMe(this.vp.signature, this.vp.message, this.vp.payloadIdx, this.vp.proposedIDSandwich, this.vp.proposedExpSandwich);
+      await this.vjwt.verifyMe(...this.pv.verifyMeContractParams());
       
       [registeredAddresses, registeredCreds] = [await this.vjwt.getRegisteredAddresses(), await this.vjwt.getRegisteredCreds()];
       expect(registeredAddresses.length).to.equal(1);
@@ -365,18 +373,18 @@ for (const params of [
 
 
 // This must be at the end, as it changes EVM time for all tests
-describe.only('JWT Expiration', function (){
+describe('JWT Expiration', function (){
   beforeEach(async function(){
       // -------- Contract setup: deploy contract and submit JWT proof ---------
       [this.owner, this.addr1] = await ethers.getSigners();
       this.vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
       this.jwt1 = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
       this.jwt2 = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiXzRCMzFzeTJpQWM0ajVvcXEwQ2JVUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMTgtNDQ3NyIsImF1dGhfdGltZSI6MTY1MTI4MTE4NCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM2NzcwNCwiZ2l2ZW5fbmFtZSI6IlNoYWR5IiwiaWF0IjoxNjUxMjgxMzA0LCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJFbCBEYW1hdHkiLCJqdGkiOiI0ZDFjOTA1YS04Y2UyLTQ3ODEtYTYyYy02YzRlOGE5MzljZDQifQ.Lg2Nd95rrNORAJUjb94YJlbf1bi-Sko2Lwlk4zBcGeCnn0hEJPn38GmvQ7qIu0veY3drKbOrlhPn76icBcafa9Yk-GVc80QIfhYPL-aK7FsVBpkPQT6k1pLPnX-pHFBKquIbmKYdcO-PYRZXp2g_BZIm0GrX9bFNiS8pEm0PhkDKbF7fksuZ5ZpgWARgFip_KU9z5Q9tuaSWljCUr5IN0_-I4g6Qd3SJQ4hF3tA_ekDDaOoDdZHTSvJNsPQEmV9YAC_TDMwsrLwu0tD2A8fIb-ryRpKnJiuAdOmYdjEVVIetGR6CLwew5_GIk_1rYPgKxRCJqTa4T5aP0YVGFvi5sg';
-      this.vp1 = await getParamsForVerifying(this.vjwt, this.jwt1, 'sub')
-      this.vp2 = await getParamsForVerifying(this.vjwt, this.jwt2, 'sub')
+      this.pv1 = await getParamsForVerifying(this.vjwt, this.jwt1, 'sub')
+      this.pv2 = await getParamsForVerifying(this.vjwt, this.jwt2, 'sub')
 
-      this.ownerCommits = this.vp1.generateCommitments(this.owner.address)
-      this.addr1Commits = this.vp2.generateCommitments(this.addr1.address)
+      this.ownerCommits = this.pv1.generateCommitments(this.owner.address)
+      this.addr1Commits = this.pv2.generateCommitments(this.addr1.address)
 
       await this.vjwt.commitJWTProof(...this.ownerCommits)
       // await this.vjwt.connect(this.addr1).commitJWTProof(...addr1Commits)
@@ -385,32 +393,20 @@ describe.only('JWT Expiration', function (){
 
   it('Expired JWT is not accepted for an existing user with a credential', async function () {
     // Verify the original credential
-    await this.vjwt.verifyMe(
-      this.vp1.signature, 
-      this.vp1.message, 
-      this.vp1.payloadIdx, 
-      this.vp1.proposedIDSandwich, 
-      this.vp1.proposedExpSandwich
-    )
+    await this.vjwt.verifyMe(...this.pv1.verifyMeContractParams())
     
     // Fast-forward 
-    await ethers.provider.send('evm_setNextBlockTimestamp', [this.vp1.expTimeInt + 10000000])
+    await ethers.provider.send('evm_setNextBlockTimestamp', [this.pv1.expTimeInt + 10000000])
     await ethers.provider.send('evm_mine')
 
     // Set up commit with new credential 
-    let newOwnerCommit = this.vp2.generateCommitments(this.owner.address)
+    let newOwnerCommit = this.pv2.generateCommitments(this.owner.address)
     await this.vjwt.commitJWTProof(...newOwnerCommit)
     await ethers.provider.send('evm_mine')
     
-    // Now, fail the next verification due to timestamp being too early-
+    // Now, fail the next verification due to timestamp being too early
     await expect(
-        this.vjwt.verifyMe(
-        this.vp2.signature, 
-        this.vp2.message, 
-        this.vp2.payloadIdx, 
-        this.vp2.proposedIDSandwich, 
-        this.vp2.proposedExpSandwich
-      )
+        this.vjwt.verifyMe(...this.pv2.verifyMeContractParams())
     ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
      
   });
@@ -419,13 +415,7 @@ describe.only('JWT Expiration', function (){
     // Time is already fast-forwarded -- hardhat can't reset time between it()s
     await this.vjwt.commitJWTProof(...this.addr1Commits)
     await expect(
-        this.vjwt.connect(this.addr1).verifyMe(
-        this.vp2.signature, 
-        this.vp2.message, 
-        this.vp2.payloadIdx, 
-        this.vp2.proposedIDSandwich, 
-        this.vp2.proposedExpSandwich
-      )
+        this.vjwt.connect(this.addr1).verifyMe(...this.pv2.verifyMeContractParams())
     ).to.be.revertedWith(vmExceptionStr + "'JWT is expired'")
   });
 });

@@ -129,7 +129,7 @@ describe("IdentityAggregator", function () {
     });
   });
 
-  describe.only("getAllAccounts", function () {
+  describe("getAllAccounts", function () {
     before(async function () {
       this.idAggregator = await deployIdAggregator();
 
