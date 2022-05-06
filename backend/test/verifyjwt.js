@@ -14,7 +14,8 @@ const {
   keccak256FromString,
   sandwichDataWithBreadFromContract,
   jwksKeyToPubkey,
-  vmExceptionStr
+  vmExceptionStr,
+  generateCommitments
 } = require('./utils/utils');
 
 const xor = require('wtfprotocol-helpers').fixedBufferXOR;
@@ -132,49 +133,38 @@ describe('Verify test RSA signatures', function () {
   });
 })
 
-describe('proof of prior knowledge', function () {
+describe.only('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
     this.vjwt = await deployVerifyJWTContract(11,230, 'example kid :) :) :)', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
     this.message1 = 'Hey'
     this.message2 = 'Hey2'
-    // Must use two unique hashing algorithms
-    //  If not, hash(JWT) would be known, so then XOR(public key, hash(JWT)) can be replaced with XOR(frontrunner pubkey, hash(JWT)) by a frontrunner
-    // this.publicHashedMessage1 = keccak256FromString(this.message1)
-    // this.secretHashedMessage1 = sha256FromString(this.message1)
     
-    // this.publicHashedMessage2 = keccak256FromString(this.message2)
-    // this.secretHashedMessage2 = sha256FromString(this.message2)
-    let hashedMessage1 = sha256FromString(this.message1)
-    let hashedMessage2 = sha256FromString(this.message1)
-    this.proof1 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage1.replace('0x', ''), 'hex'),
-                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))
-    this.proof2 = ethers.utils.sha256(await xor(Buffer.from(hashedMessage2.replace('0x', ''), 'hex'),
-                                                Buffer.from(this.owner.address.replace('0x', ''), 'hex')))    
+    this.proof1 = generateCommitments(this.owner.address, this.message1)
+    this.proof2 = generateCommitments(this.owner.address, this.message2)
     
   })
   it('Can prove prior knowledge of message', async function () {
-    await this.vjwt.commitJWTProof(this.proof1)
+    await this.vjwt.commitJWTProof(...this.proof1)
     await ethers.provider.send('evm_mine')
-    expect(await this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message1)).to.equal(true)
+    expect(await this.vjwt['checkCommit(address,string)'](this.owner.address, this.message1)).to.equal(true)
   });
 
   it('Cannot prove prior knowledge of message in one block', async function () {
-    await this.vjwt.commitJWTProof(this.proof1)
-    await expect(this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message1)).to.be.revertedWith("VM Exception while processing transaction: reverted with reason string 'You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun'");
+    await this.vjwt.commitJWTProof(...this.proof1)
+    await expect(this.vjwt['checkCommit(address,string)'](this.owner.address, this.message1)).to.be.revertedWith(vmExceptionStr + "'You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun'");
   });
 
   it('Cannot prove prior knowledge of different message', async function () {
-    await this.vjwt.commitJWTProof(this.proof1)
+    await this.vjwt.commitJWTProof(...this.proof1)
     await ethers.provider.send('evm_mine')
-    await expect(this.vjwt['checkJWTProof(address,string)'](this.owner.address, this.message2)).to.be.revertedWith("VM Exception while processing transaction: reverted with reason string 'Proof not found; it needs to have been submitted to commitJWTProof in a previous block'");
+    await expect(this.vjwt['checkCommit(address,string)'](this.owner.address, this.message2)).to.be.revertedWith(vmExceptionStr + "'Proof not found; it needs to have been submitted to commitJWTProof in a previous block'");
   });
 
-  // This is not a great attack vector but good to check that it's impossible 
-  it('Cannot prove prior knowledge of using different public key', async function () {
-    await this.vjwt.commitJWTProof(this.proof1)
+  it('Different address fails commitment check', async function () {
+    await this.vjwt.commitJWTProof(...this.proof1)
     await ethers.provider.send('evm_mine')
-    await expect(this.vjwt['checkJWTProof(address,string)']('0x483293fCB4C2EE29A02D74Ff98C976f9d85b1AAd', this.message1)).to.be.revertedWith("VM Exception while processing transaction: reverted with reason string 'Proof not found; it needs to have been submitted to commitJWTProof in a previous block'");
+    await expect(this.vjwt['checkCommit(address,string)']('0x483293fCB4C2EE29A02D74Ff98C976f9d85b1AAd', this.message1)).to.be.revertedWith(vmExceptionStr + "'Your address was not bound with the original commit'");
   });
 });
 
