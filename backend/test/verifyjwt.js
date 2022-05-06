@@ -114,7 +114,7 @@ describe('Verify test RSA signatures', function () {
     let [headerRaw, payloadRaw, signatureRaw] = parsedToJSON['id_token'].split('.');
     let [signature, badSignature] = [Buffer.from(signatureRaw, 'base64url'), Buffer.from(signatureRaw.replace('a','b'), 'base64url')]
 
-    let vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    let vjwt = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
     
     
     await emitsJWTVerificationEventWithValue(
@@ -189,7 +189,7 @@ for (const params of [
     idFieldName : 'sub',
     id : '0000-0002-2308-9517',
     expTime : '1651375833',
-    createContract : async() => await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    createContract : async() => await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
                        
   },
   {
@@ -200,7 +200,7 @@ for (const params of [
     idFieldName : 'email',
     id : 'nanaknihal@gmail.com',
     expTime : '1651352873',
-    createContract : async() => await deployVerifyJWTContract(googleParams.e, googleParams.n, googleParams.kid, googleParams.idBottomBread, googleParams.idTopBread, googleParams.expBottomBread, googleParams.expTopBread)
+    createContract : async() => await deployVerifyJWTContract(...googleParams.getDeploymentParams())
   },
   {
     ...twitterParams,
@@ -210,7 +210,7 @@ for (const params of [
     idFieldName : 'creds', 
     id : 'ProtocolWtf',
     expTime : '1651365253',
-    createContract : async() => await deployVerifyJWTContract(twitterParams.e, twitterParams.n, twitterParams.kid, twitterParams.idBottomBread, twitterParams.idTopBread, twitterParams.expBottomBread, twitterParams.expTopBread)
+    createContract : async() => await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
   },
   {
     ...githubParams,
@@ -219,7 +219,7 @@ for (const params of [
     id : 'wtfisaholo',
     idFieldName : 'creds', 
     expTime : '1651368165',
-    createContract : async() => await deployVerifyJWTContract(githubParams.e, githubParams.n, githubParams.kid, githubParams.idBottomBread, githubParams.idTopBread, githubParams.expBottomBread, githubParams.expTopBread)
+    createContract : async() => await deployVerifyJWTContract(...githubParams.getDeploymentParams())
   }
 ]){
 
@@ -377,7 +377,7 @@ describe('JWT Expiration', function (){
   beforeEach(async function(){
       // -------- Contract setup: deploy contract and submit JWT proof ---------
       [this.owner, this.addr1] = await ethers.getSigners();
-      this.vjwt = await deployVerifyJWTContract(orcidParams.e, orcidParams.n, orcidParams.kid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
+      this.vjwt = await deployVerifyJWTContract(...orcidParams.getDeploymentParams());
       this.jwt1 = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
       this.jwt2 = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiXzRCMzFzeTJpQWM0ajVvcXEwQ2JVUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMTgtNDQ3NyIsImF1dGhfdGltZSI6MTY1MTI4MTE4NCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM2NzcwNCwiZ2l2ZW5fbmFtZSI6IlNoYWR5IiwiaWF0IjoxNjUxMjgxMzA0LCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJFbCBEYW1hdHkiLCJqdGkiOiI0ZDFjOTA1YS04Y2UyLTQ3ODEtYTYyYy02YzRlOGE5MzljZDQifQ.Lg2Nd95rrNORAJUjb94YJlbf1bi-Sko2Lwlk4zBcGeCnn0hEJPn38GmvQ7qIu0veY3drKbOrlhPn76icBcafa9Yk-GVc80QIfhYPL-aK7FsVBpkPQT6k1pLPnX-pHFBKquIbmKYdcO-PYRZXp2g_BZIm0GrX9bFNiS8pEm0PhkDKbF7fksuZ5ZpgWARgFip_KU9z5Q9tuaSWljCUr5IN0_-I4g6Qd3SJQ4hF3tA_ekDDaOoDdZHTSvJNsPQEmV9YAC_TDMwsrLwu0tD2A8fIb-ryRpKnJiuAdOmYdjEVVIetGR6CLwew5_GIk_1rYPgKxRCJqTa4T5aP0YVGFvi5sg';
       this.pv1 = await getParamsForVerifying(this.vjwt, this.jwt1, 'sub')

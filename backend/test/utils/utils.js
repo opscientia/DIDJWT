@@ -21,7 +21,14 @@ const [eGithub, nGithub, kidGithub] = jwksKeyToPubkey(`{"key_ops":["verify"],"ex
 
 exports.vmExceptionStr = 'VM Exception while processing transaction: reverted with reason string ';
 
-exports.orcidParams = {
+// Wrapper function to add a getDeploymentParams function
+const deployable = (params) => {
+  return {
+    ...params, 
+    getDeploymentParams: ()=> [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread]
+  }
+}
+exports.orcidParams = deployable({
   e : eOrcid,
   n : nOrcid,
   kid : kidOrcid,
@@ -29,9 +36,9 @@ exports.orcidParams = {
   idTopBread : '0x222c22617574685f74696d65223a',
   expBottomBread : '0x222c22657870223a',
   expTopBread : '0x2c22676976656e5f6e616d65223a'
-}
+})
 
-exports.googleParams = {
+exports.googleParams = deployable({
   e : eGoogle,
   n : nGoogle,
   kid : kidGoogle,
@@ -39,9 +46,9 @@ exports.googleParams = {
   idTopBread : '0x222c22656d61696c5f7665726966696564223a',
   expBottomBread : '0x2c22657870223a',
   expTopBread : '0x2c226a7469223a22'
-}
+})
 
-exports.twitterParams = {
+exports.twitterParams = deployable({
   e : eTwitter,
   n : nTwitter,
   kid : kidTwitter,
@@ -49,9 +56,9 @@ exports.twitterParams = {
   idTopBread : '0x222c22617564223a22676e6f736973222c22',
   expBottomBread : '0x222c22657870223a22',
   expTopBread : '0x227d'
-}
+})
 
-exports.githubParams = {
+exports.githubParams = deployable({
   e : eGithub,
   n : nGithub,
   kid : kidGithub,
@@ -59,7 +66,7 @@ exports.githubParams = {
   idTopBread : '0x222c22617564223a22676e6f736973222c22',
   expBottomBread : '0x222c22657870223a22',
   expTopBread : '0x227d'
-}
+})
 
 let contractAddresses = wtf.getContractAddresses()
 
