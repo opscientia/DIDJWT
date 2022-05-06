@@ -217,7 +217,6 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         let msg_ = Buffer.from(params.message)
         let unbound = ethers.utils.keccak256(msg_)
         let bound = ethers.utils.keccak256(Buffer.concat([msg_, addr_]))
-        console.error('concat', Buffer.concat([msg_, addr_]).toString('hex'), params.message)
         return [unbound, bound]
       }
       const p = params
