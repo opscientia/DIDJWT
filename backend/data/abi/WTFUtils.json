@@ -12,5 +12,7 @@
   "function modExp(bytes,uint256,bytes) view returns (bytes)",
   "function parseInt(bytes) pure returns (uint256)",
   "function sliceBytesMemory(bytes,uint256,uint256) view returns (bytes)",
-  "function stringToBytes(string) pure returns (bytes)"
+  "function stringToBytes(string) pure returns (bytes)",
+  "function verifySandwich(bytes,tuple(uint256,uint256,bytes),bytes,bytes) view returns (bool)",
+  "function verifySubstring(bytes,tuple(uint256,uint256,bytes),bytes) view returns (bool)"
 ]

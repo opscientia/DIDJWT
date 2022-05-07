@@ -4,7 +4,14 @@ import 'hardhat/console.sol';
 import "contracts/Base64.sol"; 
 
 library WTFUtils { 
-    
+    // Represents a sandwich that *supposedly* starts at idxStart in a string and ends at idxEnd in a string. These values should *not* be assumed to be correct unless later validated.
+    struct ProposedSandwichAt {
+      uint idxStart;
+      uint idxEnd;
+      bytes sandwichValue;
+    }
+
+
     event JWTVerification(bool result_);
 
     // https://ethereum.stackexchange.com/questions/8346/convert-address-to-string
@@ -171,6 +178,47 @@ library WTFUtils {
         bytes32 unpadded = bytesToLast32BytesAsBytes32Type(encrypted);
         return unpadded;
     }
+
+    function verifySandwich(bytes memory string_, ProposedSandwichAt calldata proposedSandwich_, bytes memory correctBottomBread_, bytes memory correctTopBread_) public view returns (bool validString) {
+      require(bytesAreEqual(
+                            sliceBytesMemory(proposedSandwich_.sandwichValue, 0, correctBottomBread_.length),
+                            correctBottomBread_
+              ),
+              "Failed to find correct bottom bread in sandwich"
+      );
+
+      require(bytesAreEqual(
+                            sliceBytesMemory(proposedSandwich_.sandwichValue, proposedSandwich_.sandwichValue.length-correctTopBread_.length, proposedSandwich_.sandwichValue.length),
+                            correctTopBread_
+              ),
+              "Failed to find correct top bread in sandwich"
+      );
+
+      require(bytesAreEqual(
+                            sliceBytesMemory(string_, proposedSandwich_.idxStart, proposedSandwich_.idxEnd),
+                            proposedSandwich_.sandwichValue
+              ),
+            "Proposed sandwich not found"
+      );
+      return true;
+  }
+
+  // Used for aud claim, where bread is not necessary. substringAt isn't really a sandwich this time, but a ProposedSandwichAt struct works well for it as it can encode string value, idxStart, and idxEnd
+  function verifySubstring(bytes memory str, ProposedSandwichAt calldata substringAt, bytes memory correctSubstring) public view returns (bool validString) {
+      require(bytesAreEqual(
+                            substringAt.sandwichValue,
+                            correctSubstring
+              ),
+            "Substring is incorrect (a likely reason for this error is the JWT's aud claim wasn't correctly supplied)"
+      );
+      require(bytesAreEqual(
+                            sliceBytesMemory(str, substringAt.idxStart, substringAt.idxEnd),
+                            substringAt.sandwichValue
+              ),
+            "Substring not found"
+      );
+      return true;
+  }
 
     // Decodes base64-encoded bytes
     // Base64 Library modified from https://github.com/Brechtpd/base64/blob/main/base64.sol

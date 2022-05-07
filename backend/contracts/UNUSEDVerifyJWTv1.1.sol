@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import { WTFUtils } from "contracts/WTFUtils.sol";
 import "hardhat/console.sol";
@@ -6,7 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
+contract UNUSEDVerifyJWTv11 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // Creds herein are the identifier / index field in the JWT, e.g. ORCID ID is the cred for ORCID JWT and email is the cred for gmail JWT 
     
     // Hashes are used to make sure nobody can re-use someone's old JWT without storing the whole JWT to check for uniqueness. The old JWT is still public (it was in the mempool) but it's not wasting gas by being on-chain.
@@ -56,10 +56,7 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     bytes32 emptyBytesHash;
 
 
-    /* -------------------------------------------------------------------------
-     * New variables after contract upgrade: to check the timestamps of the JWT 
-     * and make sure expired JWTs can't be used 
-     * ------------------------------------------------------------------------- */
+    /* New variables after contract upgrade: to check the timestamps of the JWT and make sure expired JWTs can't be used */
     struct Timestamps {
       uint256 submittedAt; // When the JWT was submitted to the blockchain
       uint256 JWTExpClaim; // Value of the JWT exp claim
@@ -76,16 +73,6 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     
     bytes public expTopBread;
     bytes public expBottomBread;
-
-    /* -------------------------------------------------------------------------
-     * New variables for v3 contract upgrade: to improve JWT commitment 
-     * ------------------------------------------------------------------------- */
-     struct JWTCommit {
-       bytes32 boundCommit; //boundCommit is keccak256(bytes(JWT) || address), where || is concatenation. It binds the commitment to an address
-       uint256 blockNumber; //block number when commitment made
-     }
-
-    mapping(bytes32 => JWTCommit) public commitments; //Should be public so frontend can check that commitment has been successfully made before revealing -- Revealing without a commit enables frontrunners to impersonate
 
     // Initializer rather than constructor so it can be used for proxy pattern
     // exponent and modulus comrpise the RSA public key of the web2 authenticator which signed the JWT. 
@@ -125,40 +112,39 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
 
 
-    function commitJWTProof(bytes32 unboundCommit, bytes32 boundCommit) public {
-      require(commitments[unboundCommit].blockNumber == 0, 'JWT has already been commited');
-
-      commitments[unboundCommit] = JWTCommit(boundCommit,block.number);
+    function commitJWTProof(bytes32 proof) public {
+      proofToBlock[proof] = block.number;
       // pendingVerification.push(jwtXORPubkey);
     }
   // perhaps make private, but need it to be public to test
-  function checkCommit(address a, string memory jwt) public view returns (bool) {
-    bytes memory jwtBytes = WTFUtils.stringToBytes(jwt);
-    return checkCommit(a, keccak256(jwtBytes), jwtBytes);
+  function checkJWTProof(address a, string memory jwt) public view returns (bool) {
+    // bytes32 bytes32Pubkey = WTFUtils.bytesToFirst32BytesAsBytes32Type(WTFUtils.addressToBytes(a));
+    // bytes memory keyXORJWTHash = WTFUtils.bytes32ToBytes(bytes32Pubkey ^ sha256(WTFUtils.stringToBytes(jwt)));
+    // bytes32 k = sha256(keyXORJWTHash);
+    // require(proofToBlock[k] < block.number, "You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun");
+    // require(proofToBlock[k] > 0 , "Proof not found; it needs to have been submitted to commitJWTProof in a previous block");
+    // // require(jp.hashedJWT == keccak256(WTFUtils.stringToBytes(jwt)), "JWT does not match JWT in proof");
+    // return true;
+    return checkJWTProof(a, sha256(WTFUtils.stringToBytes(jwt)));
   }
 
-  // Same as checkCommit but for private (hashed) JWTs.
-  function checkCommit(address a, bytes32 unboundCommit, bytes memory plaintext) public view returns (bool) {
-    // Convert pubkey to bytes32
-    bytes memory pkBytes = WTFUtils.addressToBytes(a);
-    // Find what the bound commit *should* be
-    bytes32 idealBoundCommit = keccak256(
-      bytes.concat(plaintext, pkBytes)
-    );
-    // Lookup unbound commit
-    JWTCommit memory c = commitments[unboundCommit];
-    require(c.blockNumber < block.number, "You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun");
-    require(c.blockNumber > 0 , "Proof not found; it needs to have been submitted to commitJWTProof in a previous block");
-    require(c.boundCommit == idealBoundCommit, "Your address was not bound with the original commit");
+  // Same as checkJWTProof but for private (hashed) JWTs.
+  function checkJWTProof(address a, bytes32 jwtHash) public view returns (bool) {
+    bytes32 bytes32Pubkey = WTFUtils.bytesToFirst32BytesAsBytes32Type(WTFUtils.addressToBytes(a));
+    bytes memory keyXORJWTHash = WTFUtils.bytes32ToBytes(bytes32Pubkey ^ jwtHash);
+    bytes32 k = sha256(keyXORJWTHash);
+    require(proofToBlock[k] < block.number, "You need to prove knowledge of JWT in a previous block, otherwise you can be frontrun");
+    require(proofToBlock[k] > 0 , "Proof not found; it needs to have been submitted to commitJWTProof in a previous block");
+    // require(jp.hashedJWT == keccak256(WTFUtils.stringToBytes(jwt)), "JWT does not match JWT in proof");
     return true;
   }
 
-  function _verify(address addr, bytes memory signature, string memory headerAndPayload) private returns (bool) { 
-    // bytes32 jwtHash = sha256(WTFUtils.stringToBytes(jwt));
+  function _verify(address addr, bytes memory signature, string memory jwt) private returns (bool) { 
+    bytes32 jwtHash = sha256(WTFUtils.stringToBytes(jwt));
     // check whether JWT is valid 
-    require(verifyJWT(signature, headerAndPayload),"Verification of JWT failed");
+    require(verifyJWT(signature, jwt),"Verification of JWT failed");
     // check whether sender has already proved knowledge of the jwt
-    require(checkCommit(addr, headerAndPayload), "Proof of previous knowlege of JWT unsuccessful");
+    require(checkJWTProof(addr, jwtHash), "Proof of previous knowlege of JWT unsuccessful");
     return true;
   }
 
@@ -245,22 +231,11 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return true;
   }
 
-  
-  function getRegisteredCreds() external view returns (bytes[] memory) {
-      return registeredCreds;
-    }
-
-    function getRegisteredAddresses() external view returns (address[] memory) {
-      return registeredAddresses;
-    }
-  /* --Private Credentials--
-
-
   // User can just submit hash of the header and payload, so they do not reveal any sensitive data! But they still prove their ownership of the JWT
-  // Note that this does not check that the headerAndPayloadHash is from a valid JWT -- it just checks that it matches the signature. I believe the validity
-  // Of the hash can be checked by a zkSNARK, but this does not do so
+  // Note that this does not check that the headerAndPayloadHash is from a valid JWT -- it just checks that it matches the signature. To my knowledge,
+  // there is no way to check thath a hash is of a valid JWT. That would violate the purpose of a cryptographic hash function.
   function linkPrivateJWT(bytes memory signature, bytes32 headerAndPayloadHash) public { 
-    require(checkCommit(msg.sender, headerAndPayloadHash));
+    require(checkJWTProof(msg.sender, headerAndPayloadHash));
     bytes32 hashed = WTFUtils.hashFromSignature(e, n, signature);
     require(hashed == headerAndPayloadHash, 'headerAndPayloadHash does not match the hash you proved knowledge of');
     // update hashmaps of addresses, credentials, and JWTs themselves
@@ -276,5 +251,32 @@ contract VerifyJWTv3 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   // function hasAccess(address owner, address viewer) public view returns (bool result) {
   //   return privateJWTAllowances[owner][viewer];
   // }
-  */
+
+
+  function getRegisteredCreds() external view returns (bytes[] memory) {
+    return registeredCreds;
+  }
+
+  function getRegisteredAddresses() external view returns (address[] memory) {
+    return registeredAddresses;
+  }
+
+  // // This function is used for testing purposes and can be deleted later. It's better not to call it from the frontend for security reasons, as the data being XORed is often private. Calling it from the frontend leaks this data to your node provider
+  // function XOR(uint256 x, uint256 y) public pure returns (uint256) {
+  //   return x ^ y;
+  // }
+  
+  // // Testing function, remove later; this seems to give a different result than ethers.js sha256, perhaps because of byte conversion?
+  // function testSHA256OnJWT(string memory jwt) public pure returns (bytes32){
+  //   return sha256(WTFUtils.stringToBytes(jwt));
+  // }
+
+  // Also can be deleted, just to test assumptions about comparing times as strings because Solidity can't easily convert timestamp strings to integers
+  // function testTimeAssumptions() public {
+  //   string memory timestamp = '1647667098';
+  //   string memory anotherTimestamp = '1657667098';
+  //   require(block.timestamp > parseInt(timestamp));
+  //   require(block.timestamp < parseInt(anotherTimestamp));
+  // }
+
 }
