@@ -382,6 +382,35 @@ for (const params of [
 // });
 
 
+describe('Aud claim', function (){
+  beforeEach(async function(){
+      // -------- Contract setup: deploy contract and submit JWT proof ---------
+      [this.owner, this.addr1] = await ethers.getSigners();
+      this.vjwt = await deployVerifyJWTContract(...orcidParams.getDeploymentParams());
+      this.jwt = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
+      this.pv = await getParamsForVerifying(this.vjwt, this.jwt, 'sub')
+
+      await this.vjwt.commitJWTProof(...this.pv.generateCommitments(this.owner.address))
+      await ethers.provider.send('evm_mine')
+  });
+
+  it('Right aud succeeds', async function () {
+    // Verify the original credential
+    await expect(this.vjwt.verifyMe(...this.pv.verifyMeContractParams())).to.not.be.reverted
+  });
+  it('Wrong auds fail', async function () {
+    let expectedError = vmExceptionStr + "'Substring is incorrect (a likely reason for this error is the JWT's aud claim wasn't correctly supplied)'"
+    
+    let params = this.pv.verifyMeContractParams()
+
+    // Change aud (the last parameter)
+    params[params.length-1].sandwichValue = Buffer.from('wrong')
+    await expect(this.vjwt.verifyMe(...params)).to.be.revertedWith(expectedError)
+    params[params.length-1].sandwichValue = Buffer.from('')
+    await expect(this.vjwt.verifyMe(...params)).to.be.revertedWith(expectedError)
+  });
+});
+
 // This must be at the end, as it changes EVM time for all tests
 describe('JWT Expiration', function (){
   beforeEach(async function(){
