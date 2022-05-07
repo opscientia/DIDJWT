@@ -61,7 +61,7 @@ describe('handleKeyRotation', function (){
     this.initialExponent = 9
     this.initialModulus = 37
     this.initialKid = 'someKeyId'
-    this.vjwt = await deployVerifyJWTContract(this.initialExponent, this.initialModulus, this.initialKid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    this.vjwt = await deployVerifyJWTContract(this.initialExponent, this.initialModulus, this.initialKid, orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread, orcidParams.aud)
   });
 
   it('Should update kid, e, and n', async function () {
@@ -137,7 +137,7 @@ describe('Verify test RSA signatures', function () {
 describe('proof of prior knowledge', function () {
   beforeEach(async function(){
     [this.owner, this.addr1] = await ethers.getSigners();
-    this.vjwt = await deployVerifyJWTContract(11,230, 'example kid :) :) :)', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread)
+    this.vjwt = await deployVerifyJWTContract(11,230, 'example kid :) :) :)', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread, orcidParams.aud)
     this.message1 = 'Hey' 
     this.message2 = 'Hey2'
     
@@ -171,7 +171,7 @@ describe('proof of prior knowledge', function () {
 
 describe('Frontend sandwiching', function(){
   it('Test that correct sandwich is given for a specific ID', async function(){
-    let vjwt = await deployVerifyJWTContract(50,100, 'abcde', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
+    let vjwt = await deployVerifyJWTContract(50,100, 'abcde', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread, orcidParams.aud);
     expect(await sandwichDataWithBreadFromContract('0000-0002-2308-9517', vjwt, type='id')).to.equal('222c22737562223a22303030302d303030322d323330382d39353137222c22617574685f74696d65223a');
   });
 });
@@ -228,7 +228,7 @@ for (const params of [
       [this.owner, this.addr1] = await ethers.getSigners()
       this.vjwt = await params.createContract();
       await this.vjwt.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
-      await this.vjwt.changeAud(params.audSandwich)
+      await this.vjwt.changeAud(params.aud)
       this.wrongIDSandwichValue = await sandwichDataWithBreadFromContract('0200-0002-2308-9517', this.vjwt, type='id');
       this.wrongExpSandwichValue = await sandwichDataWithBreadFromContract('1651375834', this.vjwt, type='exp');
       this.verificationParams = await getParamsForVerifying(this.vjwt, params.newToken, params.idFieldName)
@@ -260,44 +260,53 @@ for (const params of [
           this.pv.message.replace('a', 'b'), 
           this.pv.payloadIdx, 
           this.pv.proposedIDSandwich, 
-          this.pv.proposedExpSandwich
+          this.pv.proposedExpSandwich,
+          this.pv.proposedAud
         )
       ).to.be.revertedWith('Verification of JWT failed');
     });
 
     it('Wrong sandwich fails', async function () {
       await expect(this.vjwt.verifyMe(
-        this.pv.signature, 
-        this.pv.message, 
-        this.pv.payloadIdx, 
-        {...this.pv.proposedIDSandwich, sandwichValue: Buffer.from(this.pv.proposedIDSandwich.sandwichValue+0xabc)}, 
-        this.pv.proposedExpSandwich))
-      .to.be.revertedWith('Failed to find correct top bread in sandwich');
+          this.pv.signature, 
+          this.pv.message, 
+          this.pv.payloadIdx, 
+          {...this.pv.proposedIDSandwich, sandwichValue: Buffer.from(this.pv.proposedIDSandwich.sandwichValue+0xabc)}, 
+          this.pv.proposedExpSandwich,
+          this.pv.proposedAud
+        )
+      ).to.be.revertedWith('Failed to find correct top bread in sandwich');
 
       // Yes, this could be more comprehensive but testing for top bread in ID sandwich and bottom bread in exp sandwich is enough IMO...for now.
       await expect(this.vjwt.verifyMe(
-        this.pv.signature, 
-        this.pv.message, 
-        this.pv.payloadIdx, 
-        this.pv.proposedIDSandwich, 
-        {...this.pv.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.pv.proposedExpSandwich.sandwichValue)}))
-      .to.be.revertedWith('Failed to find correct bottom bread in sandwich');
+          this.pv.signature, 
+          this.pv.message, 
+          this.pv.payloadIdx, 
+          this.pv.proposedIDSandwich, 
+          {...this.pv.proposedExpSandwich, sandwichValue: Buffer.from(0xabc+this.pv.proposedExpSandwich.sandwichValue)},
+          this.pv.proposedAud
+        )
+      ).to.be.revertedWith('Failed to find correct bottom bread in sandwich');
 
       await expect(this.vjwt.verifyMe(
-        this.pv.signature, 
-        this.pv.message, 
-        this.pv.payloadIdx, 
-        {...this.pv.proposedIDSandwich, sandwichValue: Buffer.from(this.wrongIDSandwichValue, 'hex')},
-        this.pv.proposedExpSandwich
-      )).to.be.revertedWith('Proposed sandwich not found');
+          this.pv.signature, 
+          this.pv.message, 
+          this.pv.payloadIdx, 
+          {...this.pv.proposedIDSandwich, sandwichValue: Buffer.from(this.wrongIDSandwichValue, 'hex')},
+          this.pv.proposedExpSandwich,
+          this.pv.proposedAud
+        )
+      ).to.be.revertedWith('Proposed sandwich not found');
       
       await expect(this.vjwt.verifyMe(
-        this.pv.signature, 
-        this.pv.message, 
-        this.pv.payloadIdx, 
-        this.pv.proposedIDSandwich, 
-        {...this.pv.proposedExpSandwich, sandwichValue: Buffer.from(this.wrongExpSandwichValue, 'hex')}
-      )).to.be.revertedWith('Proposed sandwich not found');
+          this.pv.signature, 
+          this.pv.message, 
+          this.pv.payloadIdx, 
+          this.pv.proposedIDSandwich, 
+          {...this.pv.proposedExpSandwich, sandwichValue: Buffer.from(this.wrongExpSandwichValue, 'hex')},
+          this.pv.proposedAud
+        )
+      ).to.be.revertedWith('Proposed sandwich not found');
       
     });
 

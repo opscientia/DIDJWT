@@ -50,7 +50,7 @@ for (const service of [{
 
     let {name, params, idFieldName, lookupTest, updateTest} = service;
 
-    describe.only('upgrade-specific tests from v1 to v2 for service: ' + name, function(){
+    describe('upgrade-specific tests from v1 to v2 for service: ' + name, function(){
         before(async function(){
             this.contract = await upgradeVerifyJWTContract(name)
             await this.contract.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
