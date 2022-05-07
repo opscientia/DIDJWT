@@ -7,37 +7,21 @@ const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 // These constants should be shared dependancy with tests so the same code isn't duplicated across them without a shared module
-const orcidBottomBread = '0x222c22737562223a22'
-const orcidTopBread = '0x222c22617574685f74696d65223a'
+const {
+  orcidParams,
+  googleParams,
+  twitterParams,
+  githubParams,
+  getParamsForVerifying,
+  deployVerifyJWTContract,
+  // upgradeVerifyJWTContract,
+  // sha256FromString,
+  // keccak256FromString,
+  // sandwichDataWithBreadFromContract,
+  // jwksKeyToPubkey,
+  // vmExceptionStr,
+} = require('./utils/utils');
 
-const googleBottomBread = '0x222c22656d61696c223a22'
-const googleTopBread = '0x222c22656d61696c5f7665726966696564223a'
-
-const twitterBottomBread = '0x7b226372656473223a22'
-const twitterTopBread = '0x222c22617564223a22676e6f736973222c22'
-
-const githubBottomBread = '0x7b226372656473223a22'
-const githubTopBread = '0x222c22617564223a22676e6f736973222c22'
-
-const discordBottomBread = '0x7b226372656473223a22'
-const discordTopBread = '0x222c22617564223a22676e6f736973222c22'
-
-// Converts JWKS RSAkey to e, n, and kid:
-const jwksKeyToPubkey = (jwks) => {
-  let parsed = JSON.parse(jwks)
-  return [
-    ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
-    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url')),
-    parsed['kid']
-  ]
-}
-
-
-const [eGoogle, nGoogle, kidGoogle] = jwksKeyToPubkey(`{"kid":"f1338ca26835863f671408f41738a7b49e740fc0","n":"vCk1vqT3qTLWsZ0yyO6T5sHBFUMPI9bcjT9yO94cZUfJjttRV_RMxUgvB-c3o-dx7f4WrM3knYoWn5pmGH6_B3vJbvnTzfnjojaBfsqn8Cdof1mI3N6ZKmhFVWz-Sui65ycb9F2MVw-z0DcZxk_DcBEMG6Jxps9I2_hFm7xkCPjiN2Q8T-MLNhJYnoxBe1VtuyCFFEDAtU5VXIyJEdDoz_MXIR7o8TsQTnX1ZpB4SijtShz4oJXaQGeSb8eb9AgwiOuiFKHndiMaemtEfnIkU4EXZ_MXXLdi0Rq-euA7XVFk-j1jVxRtVOhrz0VIMy2B8g6l817zKHqC3ZIv1PbUVQ","kty":"RSA","e":"AQAB","use":"sig","alg":"RS256"}`)
-const [eOrcid, nOrcid, kidOrcid] = jwksKeyToPubkey(`{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}`)
-const [eTwitter, nTwitter, kidTwitter] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"oagYTJtXZclWd8TFevkbI_edfB0YoMsiEHKbEagrB3Ao_6pEUnQtJOuIsRM9w9IVtvwKlJZae8hcksoRhzZm9lyueN7XzOO2f8I8bxf-rapWKpM0p83RWKvwTICVi0I72Ev5fIiWEMKbLA3YXIrDVRvtsLeYEvbVfvstwkA8Rla5uMcsPkcO3fc8ONZgArlpnxUqe-fEqjAHIWmDTUOEbvpitCPtYCSqHR7QmGkZ90RByVp5niOBhoMlUlvTRMqu8M_42peQJZdBzhGvNmY1_NgX7DBAdTXwOgWSVwBdfpq8K8yt_v-4l6I_ydnxaBsI5K69l__UdKlaapUrguNB6w","e":"AQAB","alg":"RS256","kid":"oagY"}`)
-const [eGithub, nGithub, kidGithub] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"q7wWK3dvPtQpzoS1zDFzVgWf08tZH814Bfx50dJuUzQpE-7D-nxXTbSgKw73K6UWSou_jBdnNtushkhxXI5UpTGBSygI59KyjNIC8dh0n8RoqtXZVR1FWX468CEqfXjUnKEoDx-EzWsJTCabHCmgvU7JefiNfb-430J5T_3jxNyeIk8YozsM-Ib0RlIF_Kv2P6e_jVXflaclW2dUa4eVyWCVc-2REavdQD19fkQ-tIYMjbgMz7LUtFJnWvoH-M5U3y3Q8yWsueGDB1n9BrPII9qcHJm8DqrdzmOf00Ywz7-bpvaMpRnHV622tACcvimLxCG1E_9Hfi2jO0orqCCpUw","e":"AQAB","alg":"RS256","kid":"q7wW"}`)
-const [eDiscord, nDiscord, kidDiscord] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"rSA57VMJxdNKprkkzDx869_VzmMcMi_viyXiF_TJpopTeCMqIOSkVeOciyCAIJWX5bMvH4QlpB1ydEO7u9Uu3HMkE1NGuH7_WGd7LVB8Kew4QxBvRu20EgZIFOPT1g161cCp7W4EMBKHTWNCY4qVI2AUFFKfA4atGIlWJHSw4UcULX5xTQN799lGTLP9vStTqeKQFbQZfFAD1IrQbfSSkcRmPsnqHRhFrZ2ccwmzsL4846TSCDjTAEsQGt6jG8gC2Jpqn80SoYLT6PoN6O5gWZfmsBf0RywTE8BU6_umBQBYcZI0OSo6dvYxh_60pNNM5m-ZGbkZNG184PkjA3EzeQ","e":"AQAB","alg":"RS256","kid":"rSA5"}`)
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -55,6 +39,21 @@ async function main() {
   // const github = await deployGithub();
   // const twitter = await deployTwitter();
   // const discord  = await deployDiscord();
+  const orcid = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
+  const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
+  const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
+  const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
+  const discord = await deployVerifyJWTContract(...discordParams.getDeploymentParams())
+  console.log(
+    {
+      'orcid' : orcid.address, 
+      'google' : google.address, 
+      'github' : github.address, 
+      'twitter' : twitter.address, 
+      'discord' : discord.address
+    }
+  )
+
   // idAgg.setBiosContractAddress(bios.address)
 
   // const twitter = (await ethers.getContractFactory('VerifyJWT')).attach('0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB')
@@ -68,7 +67,8 @@ async function main() {
   // await idAgg.addVerifyJWTContract('github', github.address)
   // await idAgg.addVerifyJWTContract('discord', discord.address)
   // await deployFacebook();
-  await deployWTFUtils();
+  // await deployWTFUtils();
+  
 }
 
 async function deployWTFUtils() {
@@ -95,41 +95,41 @@ async function deployIdAggregator() {
   return idAggregator
 }
 
-async function deployGoogle() {
-  let VJWT = await ethers.getContractFactory('VerifyJWT')
-  let google = await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread], {
-    initializer: 'initialize',
-  });
-  console.log('GOOGLE: ' + google.address);
-  return VJWT
-}
+// async function deployGoogle() {
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let google = await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('GOOGLE: ' + google.address);
+//   return VJWT
+// }
 
-async function deployORCID(){
-  let VJWT = await ethers.getContractFactory('VerifyJWT')
-  let orcid = await upgrades.deployProxy(VJWT, [eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread], {
-    initializer: 'initialize',
-  });
-  console.log('ORCID: ' + orcid.address);
-  return VJWT
-}
+// async function deployORCID(){
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let orcid = await upgrades.deployProxy(VJWT, [eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('ORCID: ' + orcid.address);
+//   return VJWT
+// }
 
-async function deployTwitter(){
-  let VJWT = await ethers.getContractFactory('VerifyJWT')
-  let twitter = await upgrades.deployProxy(VJWT, [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread], {
-    initializer: 'initialize',
-  });
-  console.log('TWITTER: ' + twitter.address);
-  return VJWT
-}
+// async function deployTwitter(){
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let twitter = await upgrades.deployProxy(VJWT, [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('TWITTER: ' + twitter.address);
+//   return VJWT
+// }
 
-async function deployGithub(){
-  let VJWT = await ethers.getContractFactory('VerifyJWT')
-  let github = await upgrades.deployProxy(VJWT, [eGithub, nGithub, kidGithub, githubBottomBread, githubTopBread], {
-    initializer: 'initialize',
-  });
-  console.log('GITHUB: ' + github.address);
-  return VJWT
-}
+// async function deployGithub(){
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let github = await upgrades.deployProxy(VJWT, [eGithub, nGithub, kidGithub, githubBottomBread, githubTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('GITHUB: ' + github.address);
+//   return VJWT
+// }
 
 async function deployDiscord(){
   let VJWT = await ethers.getContractFactory('VerifyJWT')

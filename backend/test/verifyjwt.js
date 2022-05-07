@@ -228,6 +228,7 @@ for (const params of [
       [this.owner, this.addr1] = await ethers.getSigners()
       this.vjwt = await params.createContract();
       await this.vjwt.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
+      await this.vjwt.changeAud(params.audSandwich)
       this.wrongIDSandwichValue = await sandwichDataWithBreadFromContract('0200-0002-2308-9517', this.vjwt, type='id');
       this.wrongExpSandwichValue = await sandwichDataWithBreadFromContract('1651375834', this.vjwt, type='exp');
       this.verificationParams = await getParamsForVerifying(this.vjwt, params.newToken, params.idFieldName)

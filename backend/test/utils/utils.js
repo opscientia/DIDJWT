@@ -151,9 +151,6 @@ const sandwichDataWithBreadFromContract = async (data, contract, type='id') => {
   } else if(type == 'exp') {
     bottomBread = await contract.expBottomBread()
     topBread = await contract.expTopBread()
-  } else if(type == 'aud') {
-    bottomBread = ''
-    topBread = ''
   } else {
     throw new Error(`type "${type}" not recognized`)
   }
@@ -187,7 +184,6 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
 
       params.id = parsed.payload.parsed[idFieldName]
       params.expTimeInt = parsed.payload.parsed.exp
-      params.aud = parsed.payload.parsed.aud
       params.expTime = params.expTimeInt.toString()
       
 
@@ -204,7 +200,9 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
       const idSandwichValue = await sandwichDataWithBreadFromContract(params.id, vjwt, type='id');
       const expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, vjwt, type='exp');
-      const audSandwichValue = await sandwichDataWithBreadFromContract(params.aud, vjwt, type='aud');
+      // aud isn't quite a sandwich but is treated similarly
+      const audSandwichValue = (await vjwt.aud()).replace('0x', '');
+
       // Find indices of sandwich in raw payload:
       const idSandwichText = Buffer.from(idSandwichValue, 'hex').toString()
       const expSandwichText = Buffer.from(expSandwichValue, 'hex').toString()
@@ -249,6 +247,7 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         idxEnd: endIdxAud, 
         sandwichValue: Buffer.from(audSandwichValue, 'hex')
       } 
+      console.log('proposed aud sandwich is ' + audSandwichValue + ' ' + idSandwichValue)
 
       // Generates a proof to be commited that the entity owning *address* knows the JWT
       // params.generateProof = async (address) => ethers.utils.sha256(

@@ -60,26 +60,21 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
      * New variables after contract upgrade: to check the timestamps of the JWT 
      * and make sure expired JWTs can't be used 
      * ------------------------------------------------------------------------- */
+
+    struct JWTCommit {
+      bytes32 boundCommit; //boundCommit is keccak256(bytes(JWT) || address), where || is concatenation. It binds the commitment to an address
+      uint256 blockNumber; //block number when commitment made
+    }
     struct Timestamps {
       uint256 submittedAt; // When the JWT was submitted to the blockchain
       uint256 JWTExpClaim; // Value of the JWT exp claim
     }
 
+    mapping(bytes32 => JWTCommit) public commitments; //Should be public so frontend can check that commitment has been successfully made before revealing -- Revealing without a commit enables frontrunners to impersonate
     mapping(bytes => Timestamps) public timestampsForCreds; //JWT expiration and time of on-chain submission
     
     bytes public expTopBread;
     bytes public expBottomBread;
-
-    /* -------------------------------------------------------------------------
-     * New variables for v3 contract upgrade: to improve JWT commitment 
-     * ------------------------------------------------------------------------- */
-     struct JWTCommit {
-       bytes32 boundCommit; //boundCommit is keccak256(bytes(JWT) || address), where || is concatenation. It binds the commitment to an address
-       uint256 blockNumber; //block number when commitment made
-     }
-
-    mapping(bytes32 => JWTCommit) public commitments; //Should be public so frontend can check that commitment has been successfully made before revealing -- Revealing without a commit enables frontrunners to impersonate
-
     bytes public aud;
 
     // Initializer rather than constructor so it can be used for proxy pattern
@@ -114,6 +109,11 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         topBread = newTopBread;
         expBottomBread = newExpBottomBread;
         expTopBread = newExpTopBread;
+    }
+
+    // This is called when old contracts are upgraded to new -- aud need not be changed but it wasn't initialized
+    function changeAud(bytes memory newAud) public onlyOwner {
+        aud = newAud;
     }
     
     function verifyJWT(bytes memory signature, string memory headerAndPayload) public returns (bool) {

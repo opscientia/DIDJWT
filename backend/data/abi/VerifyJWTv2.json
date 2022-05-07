@@ -8,6 +8,7 @@
   "function addressForCreds(bytes) view returns (address)",
   "function aud() view returns (bytes)",
   "function bottomBread() view returns (bytes)",
+  "function changeAud(bytes)",
   "function changeSandwich(bytes,bytes,bytes,bytes)",
   "function checkCommit(address,string) view returns (bool)",
   "function checkCommit(address,bytes32,bytes) view returns (bool)",
