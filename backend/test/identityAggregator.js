@@ -20,7 +20,7 @@ const {
 } = require('./utils/utils');
 
 
-describe('IdentityAggregator', function () {
+describe.only('IdentityAggregator', function () {
 
   describe("keywords", function () {
     before(async function () {
@@ -90,7 +90,7 @@ describe('IdentityAggregator', function () {
       const idAggregator = await deployIdAggregator();
       const [owner] = await ethers.getSigners();
 
-      vjwt = await deployVerifyJWTContract(11, 59, 'abc', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread);
+      vjwt = await deployVerifyJWTContract(11, 59, 'abc', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread, orcidParams.aud);
 
       const keyword = "orcid";
       await idAggregator.addVerifyJWTContract(keyword, vjwt.address);
@@ -129,7 +129,7 @@ describe('IdentityAggregator', function () {
     });
   });
 
-  describe.only('getAllAccounts', function () {
+  describe('getAllAccounts', function () {
     before(async function () {
       this.idAggregator = await deployIdAggregator();
 
