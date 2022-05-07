@@ -50,11 +50,11 @@ for (const service of [{
 
     let {name, params, idFieldName, lookupTest, updateTest} = service;
 
-    describe('upgrade-specific tests from v1 to v3 for service: ' + name, function(){
+    describe.only('upgrade-specific tests from v1 to v2 for service: ' + name, function(){
         before(async function(){
             this.contract = await upgradeVerifyJWTContract(name)
             await this.contract.changeSandwich(params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread)
-    
+            await this.contract.changeAud(params.aud)
         });
     
         
@@ -65,10 +65,6 @@ for (const service of [{
     
     
         describe('Old functions with old data work', function(){
-            before(async function(){
-                this.contract = await upgradeVerifyJWTContract(name)
-            });
-    
             it('Lookup by old credential system still works', async function (){
                 const creds = Buffer.from(lookupTest.creds)
                 const address = lookupTest.address
@@ -89,7 +85,7 @@ for (const service of [{
                 const commitments = params.generateCommitments(owner.address);
                 await this.contract.commitJWTProof(...commitments);
                 await ethers.provider.send('evm_mine');
-                await this.contract.verifyMe(ethers.BigNumber.from(params.signature), params.message, params.payloadIdx, params.proposedIDSandwich, params.proposedExpSandwich)                            
+                await this.contract.verifyMe(ethers.BigNumber.from(params.signature), params.message, params.payloadIdx, params.proposedIDSandwich, params.proposedExpSandwich, params.proposedAud)                            
                 
                 // Check that it's now new creds 
                 expect(await this.contract.credsForAddress(owner.address)).to.equal(newCreds)

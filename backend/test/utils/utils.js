@@ -242,7 +242,7 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         idxEnd: endIdxExp, 
         sandwichValue: Buffer.from(expSandwichValue, 'hex')
       } 
-      params.proposedAudSandwich = {
+      params.proposedAud = {
         idxStart: startIdxAud, 
         idxEnd: endIdxAud, 
         sandwichValue: Buffer.from(audSandwichValue, 'hex')
@@ -263,7 +263,7 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         params.payloadIdx, 
         params.proposedIDSandwich, 
         params.proposedExpSandwich,
-        params.proposedAudSandwich
+        params.proposedAud
     ]
 
       const p = params
