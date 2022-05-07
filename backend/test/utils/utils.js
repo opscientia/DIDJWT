@@ -3,6 +3,11 @@ const wtf = require('wtf-lib');
 const { fixedBufferXOR, searchForPlainTextInBase64, parseJWT } = require('wtfprotocol-helpers');
 const xor = fixedBufferXOR
 
+const hexToString = hx => Buffer.from(hx.replace('0x',''), 'hex').toString()
+const stringToHex = str => '0x' + Buffer.from(str).toString('hex')
+exports.hexToString = hexToString
+exports.stringToHex = stringToHex
+
 // Converts JWKS RSAkey to e, n, and kid:
 const jwksKeyToPubkey = (jwks) => {
   let parsed = JSON.parse(jwks)
@@ -25,47 +30,51 @@ exports.vmExceptionStr = 'VM Exception while processing transaction: reverted wi
 const deployable = (params) => {
   return {
     ...params, 
-    getDeploymentParams: ()=> [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread]
+    getDeploymentParams: ()=> [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread, params.audSandwich]
   }
 }
 exports.orcidParams = deployable({
   e : eOrcid,
   n : nOrcid,
   kid : kidOrcid,
-  idBottomBread : '0x222c22737562223a22',
-  idTopBread : '0x222c22617574685f74696d65223a',
-  expBottomBread : '0x222c22657870223a',
-  expTopBread : '0x2c22676976656e5f6e616d65223a'
+  audSandwich : stringToHex('","aud":"APP-MPLI0FQRUVFEKMYX","'),
+  idBottomBread : stringToHex('","sub":"'),
+  idTopBread : stringToHex('","auth_time":'),
+  expBottomBread : stringToHex('","exp":'),
+  expTopBread : stringToHex(',"given_name":'),
 })
 
 exports.googleParams = deployable({
   e : eGoogle,
   n : nGoogle,
   kid : kidGoogle,
-  idBottomBread : '0x222c22656d61696c223a22',
-  idTopBread : '0x222c22656d61696c5f7665726966696564223a',
-  expBottomBread : '0x2c22657870223a',
-  expTopBread : '0x2c226a7469223a22'
+  aud : stringToHex('","aud":"254984500566-3qis54mofeg5edogaujrp8rb7pbp9qtn.apps.googleusercontent.com","'),
+  idBottomBread : stringToHex('","email":"'),
+  idTopBread : stringToHex('","email_verified":'),
+  expBottomBread : stringToHex(',"exp":'),
+  expTopBread : stringToHex(',"jti":"')
 })
 
 exports.twitterParams = deployable({
   e : eTwitter,
   n : nTwitter,
   kid : kidTwitter,
-  idBottomBread : '0x226372656473223a22',
-  idTopBread : '0x222c22617564223a22676e6f736973222c22',
-  expBottomBread : '0x222c22657870223a22',
-  expTopBread : '0x227d'
+  aud : stringToHex('","aud":"gnosis","'),
+  idBottomBread : stringToHex('"creds":"'),
+  idTopBread : stringToHex('","aud":"'),
+  expBottomBread : stringToHex('","exp":"'),
+  expTopBread : stringToHex('"}')
 })
 
 exports.githubParams = deployable({
   e : eGithub,
   n : nGithub,
   kid : kidGithub,
-  idBottomBread : '0x226372656473223a22',
-  idTopBread : '0x222c22617564223a22676e6f736973222c22',
-  expBottomBread : '0x222c22657870223a22',
-  expTopBread : '0x227d'
+  aud : stringToHex('","aud":"gnosis","'),
+  idBottomBread : stringToHex('"creds":"'),
+  idTopBread : stringToHex('","aud":"'),
+  expBottomBread : stringToHex('","exp":"'),
+  expTopBread : stringToHex('"}')
 })
 
 let contractAddresses = wtf.getContractAddresses()
@@ -74,7 +83,7 @@ exports.upgradeVerifyJWTContract = async (service) => {
     let wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
     let address = contractAddresses.VerifyJWT.gnosis[service]
     let VJWT = await ethers.getContractFactory('VerifyJWT')
-    let NewVJWT = await ethers.getContractFactory('VerifyJWTv3', {
+    let NewVJWT = await ethers.getContractFactory('VerifyJWTv2', {
       libraries : {
         WTFUtils : wu.address //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
       }, 
@@ -93,7 +102,7 @@ exports.upgradeVerifyJWTContract = async (service) => {
 
 exports.deployVerifyJWTContract = async (...args) => {
   let wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
-  const VerifyJWT = await ethers.getContractFactory('VerifyJWTv3', {
+  const VerifyJWT = await ethers.getContractFactory('VerifyJWTv2', {
     libraries : {
       WTFUtils : wu.address //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
     }
@@ -142,6 +151,9 @@ const sandwichDataWithBreadFromContract = async (data, contract, type='id') => {
   } else if(type == 'exp') {
     bottomBread = await contract.expBottomBread()
     topBread = await contract.expTopBread()
+  } else if(type == 'aud') {
+    bottomBread = ''
+    topBread = ''
   } else {
     throw new Error(`type "${type}" not recognized`)
   }
@@ -175,7 +187,9 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
 
       params.id = parsed.payload.parsed[idFieldName]
       params.expTimeInt = parsed.payload.parsed.exp
+      params.aud = parsed.payload.parsed.aud
       params.expTime = params.expTimeInt.toString()
+      
 
       // Signature of JWT in ethers-compatible format
       params.signature = ethers.BigNumber.from(parsed.signature.decoded)
@@ -190,9 +204,11 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
       // Find ID and exp sandwiches (and make a bad one for testing purposes to make sure it fails)
       const idSandwichValue = await sandwichDataWithBreadFromContract(params.id, vjwt, type='id');
       const expSandwichValue = await sandwichDataWithBreadFromContract(params.expTime, vjwt, type='exp');
+      const audSandwichValue = await sandwichDataWithBreadFromContract(params.aud, vjwt, type='aud');
       // Find indices of sandwich in raw payload:
       const idSandwichText = Buffer.from(idSandwichValue, 'hex').toString()
       const expSandwichText = Buffer.from(expSandwichValue, 'hex').toString()
+      const audSandwichText = Buffer.from(audSandwichValue, 'hex').toString()
 
       let startIdxID; let endIdxID; let startIdxExp; let endIdxExp; 
       try {
@@ -209,6 +225,13 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         console.error(`There was a problem searching for: ${(expSandwichText)} \n in ${Buffer.from(parsed.payload.raw, 'base64').toString()}`)
       }
 
+      try {
+        [startIdxAud, endIdxAud] = searchForPlainTextInBase64(audSandwichText, parsed.payload.raw)
+      } catch(err) {
+        console.error(err)
+        console.error(`There was a problem searching for: ${(audSandwichText)} \n in ${Buffer.from(parsed.payload.raw, 'base64').toString()}`)
+      }
+      
             
       // Generate the actual sandwich struct
       params.proposedIDSandwich = {
@@ -220,6 +243,11 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         idxStart: startIdxExp, 
         idxEnd: endIdxExp, 
         sandwichValue: Buffer.from(expSandwichValue, 'hex')
+      } 
+      params.proposedAudSandwich = {
+        idxStart: startIdxAud, 
+        idxEnd: endIdxAud, 
+        sandwichValue: Buffer.from(audSandwichValue, 'hex')
       } 
 
       // Generates a proof to be commited that the entity owning *address* knows the JWT
@@ -236,7 +264,8 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         params.message, 
         params.payloadIdx, 
         params.proposedIDSandwich, 
-        params.proposedExpSandwich
+        params.proposedExpSandwich,
+        params.proposedAudSandwich
     ]
 
       const p = params
