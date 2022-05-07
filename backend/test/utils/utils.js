@@ -30,14 +30,14 @@ exports.vmExceptionStr = 'VM Exception while processing transaction: reverted wi
 const deployable = (params) => {
   return {
     ...params, 
-    getDeploymentParams: ()=> [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread, params.audSandwich]
+    getDeploymentParams: ()=> [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread, params.aud]
   }
 }
 exports.orcidParams = deployable({
   e : eOrcid,
   n : nOrcid,
   kid : kidOrcid,
-  audSandwich : stringToHex('","aud":"APP-MPLI0FQRUVFEKMYX","'),
+  aud : stringToHex('","aud":"APP-MPLI0FQRUVFEKMYX","'),
   idBottomBread : stringToHex('","sub":"'),
   idTopBread : stringToHex('","auth_time":'),
   expBottomBread : stringToHex('","exp":'),
@@ -247,7 +247,6 @@ exports.getParamsForVerifying = async (vjwt, jwt, idFieldName) => {
         idxEnd: endIdxAud, 
         sandwichValue: Buffer.from(audSandwichValue, 'hex')
       } 
-      console.log('proposed aud sandwich is ' + audSandwichValue + ' ' + idSandwichValue)
 
       // Generates a proof to be commited that the entity owning *address* knows the JWT
       // params.generateProof = async (address) => ethers.utils.sha256(
