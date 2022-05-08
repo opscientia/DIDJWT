@@ -1,6 +1,10 @@
 // Forks current VJWT contract(s) onto local hardhat network, upgrades them, and runs existing tests on them
 const { expect } = require('chai');
 const { network, ethers, upgrades } = require('hardhat');
+const { 
+    getParamsForVerifying,
+} = require('wtfprotocol-helpers');
+
 const wtf = require('wtf-lib');
 const {
     orcidParams,
@@ -8,7 +12,6 @@ const {
     twitterParams,
     githubParams,
     upgradeVerifyJWTContract,
-    getParamsForVerifying,
     // deployVerifyJWTContract,
     // sha256FromString,
     // keccak256FromString,

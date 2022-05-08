@@ -1,6 +1,13 @@
 const { expect, assert } = require('chai');
 const { ethers, upgrades } = require('hardhat');
-const { searchForPlainTextInBase64 } = require('wtfprotocol-helpers');
+const {   
+  generateCommitments,
+  getParamsForVerifying,
+  sha256FromString,
+  keccak256FromString,
+  sandwichDataWithBreadFromContract,
+  fixedBufferXOR
+ } = require('wtfprotocol-helpers');
 // const { expectEvent } = require('@openzeppelin/test-helpers'); //this is an amazing library i wish i knew b4 writing all this
 
 const {
@@ -10,18 +17,13 @@ const {
   githubParams,
   deployVerifyJWTContract,
   upgradeVerifyJWTContract,
-  sha256FromString,
-  keccak256FromString,
-  sandwichDataWithBreadFromContract,
   jwksKeyToPubkey,
   vmExceptionStr,
-  generateCommitments,
-  getParamsForVerifying
+
 } = require('../utils');
 
-const xor = require('wtfprotocol-helpers').fixedBufferXOR;
-
-const upgradeMode = true//(process.argv.length > 3) && (process.argv[3] == '--upgrade')
+const xor = fixedBufferXOR;
+// const upgradeMode = true//(process.argv.length > 3) && (process.argv[3] == '--upgrade')
 
 // describe('Integration test 2', function () {
 //   it('Go through full process and make sure it success with a correct JWT', async function () {

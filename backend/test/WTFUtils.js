@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { deployVerifyJWTContract, orcidParams } = require('./utils/utils');
+// const { deployVerifyJWTContract, orcidParams } = require('../utils');
 
 describe('slicing of byte array', function (){
     before(async function(){

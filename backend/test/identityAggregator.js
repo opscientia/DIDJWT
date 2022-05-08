@@ -1,10 +1,11 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { getContractAddress } = require('@ethersproject/address')
-const { solidity } = require("ethereum-waffle");
-const search64 = require('../../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
-// import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
-const { hexToString, fixedBufferXOR } = require('wtfprotocol-helpers');
+const { hexToString, 
+  fixedBufferXOR, 
+  getParamsForVerifying,
+  sha256FromString,
+  sandwichDataWithBreadFromContract, 
+} = require('wtfprotocol-helpers'); 
 const xor = fixedBufferXOR;
 
 const {
@@ -13,12 +14,8 @@ const {
   deployVerifyJWTContract,
   deployIdAggregator,
   deployWTFBios,
-  getParamsForVerifying,
-  sha256FromString,
-  sandwichDataWithBreadFromContract,
   jwksKeyToPubkey,
 } = require('../utils');
-
 
 describe('IdentityAggregator', function () {
 
