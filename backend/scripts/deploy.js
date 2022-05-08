@@ -22,6 +22,16 @@ const {
   // vmExceptionStr,
 } = require('../utils.js');
 
+const testAddresses = {
+  "IdentityAggregator" : "0x7f78Cdd0bAB95979F2d0699fF549bb2A79830f93",
+  "WTFBios" : "0xe1e0533f082308C8e4AA817E617dAA984A8986d5",
+  "VerifyJWT" : {
+    "orcid" : "0xAd7C2C3B9487e87A0699385C9a617eAb488e95BF",
+    "google" : "0xc21eB7f6321ADcF0945f93362072901A18288f8A",
+    "twitter" : "0x97093De07A0Bab1a92a5d885a5E0A561F719C919",
+    "github" : "0x25F1886A0a40EF216A04e165c096ee1286A24B8F"
+  }
+}
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -31,26 +41,19 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach('0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079')
+  // const idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach('0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079')
   // const idAgg = await deployIdAggregator();
+
   // const bios = await deployWTFBios();
   // const orcid = await deployORCID();
   // const google = await deployGoogle();
   // const github = await deployGithub();
   // const twitter = await deployTwitter();
   // const discord  = await deployDiscord();
-  const orcid = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
-  const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
-  const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
-  const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
-  console.log(
-    {
-      'orcid' : orcid.address, 
-      'google' : google.address, 
-      'github' : github.address, 
-      'twitter' : twitter.address, 
-    }
-  )
+  // const orcid = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
+  // const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
+  // const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
+  // const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
 
   // idAgg.setBiosContractAddress(bios.address)
 
@@ -66,7 +69,15 @@ async function main() {
   // await idAgg.addVerifyJWTContract('discord', discord.address)
   // await deployFacebook();
   // await deployWTFUtils();
-  
+  // await deployWTFBios()
+
+  let idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach(testAddresses.IdentityAggregator)
+  // let contracts = {}
+  // for(const c of Object.keys(testAddresses.VerifyJWT)){
+  //   contracts[c] = (await ethers.getContractFactory('VerifyJWT')).attach(testAddresses.VerifyJWT[c])
+  //   await idAgg.addVerifyJWTContract(c, contracts[c].address)
+  // }
+  // await idAgg.setBiosContractAddress(testAddresses.WTFBios)
 }
 
 async function deployWTFUtils() {
