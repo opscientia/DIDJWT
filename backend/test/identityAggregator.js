@@ -17,7 +17,7 @@ const {
   sha256FromString,
   sandwichDataWithBreadFromContract,
   jwksKeyToPubkey,
-} = require('./utils/utils');
+} = require('../utils');
 
 
 describe('IdentityAggregator', function () {

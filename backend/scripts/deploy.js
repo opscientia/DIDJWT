@@ -20,7 +20,7 @@ const {
   // sandwichDataWithBreadFromContract,
   // jwksKeyToPubkey,
   // vmExceptionStr,
-} = require('./utils/utils');
+} = require('../utils.js');
 
 
 async function main() {
@@ -43,14 +43,12 @@ async function main() {
   const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
   const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
   const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
-  const discord = await deployVerifyJWTContract(...discordParams.getDeploymentParams())
   console.log(
     {
       'orcid' : orcid.address, 
       'google' : google.address, 
       'github' : github.address, 
       'twitter' : twitter.address, 
-      'discord' : discord.address
     }
   )
 

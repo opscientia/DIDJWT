@@ -17,7 +17,7 @@ const {
   vmExceptionStr,
   generateCommitments,
   getParamsForVerifying
-} = require('./utils/utils');
+} = require('../utils');
 
 const xor = require('wtfprotocol-helpers').fixedBufferXOR;
 

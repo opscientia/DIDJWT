@@ -15,7 +15,7 @@ const {
     // sandwichDataWithBreadFromContract,
     // jwksKeyToPubkey,
     // vmExceptionStr,
-  } = require('./utils/utils');
+  } = require('../utils');
 
 for (const service of [{
     name: 'google', 
