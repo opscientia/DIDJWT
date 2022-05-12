@@ -1,24 +1,23 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { getContractAddress } = require('@ethersproject/address')
-const { solidity } = require("ethereum-waffle");
-const search64 = require('../../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
-// import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
-const { hexToString } = require('wtfprotocol-helpers');
+const { hexToString, 
+  fixedBufferXOR, 
+  getParamsForVerifying,
+  sha256FromString,
+  sandwichDataWithBreadFromContract, 
+} = require('wtfprotocol-helpers'); 
+const xor = fixedBufferXOR;
+
 const {
   vmExceptionStr,
-  orcidKid, orcidBottomBread, orcidTopBread,
-  googleKid, googleBottomBread, googleTopBread,
+  orcidParams, googleParams,
   deployVerifyJWTContract,
   deployIdAggregator,
   deployWTFBios,
-  sha256FromString,
-  sandwichIDWithBreadFromContract,
   jwksKeyToPubkey,
-} = require('./utils/utils');
+} = require('../utils');
 
-
-describe("IdentityAggregator", function () {
+describe('IdentityAggregator', function () {
 
   describe("keywords", function () {
     before(async function () {
@@ -88,20 +87,13 @@ describe("IdentityAggregator", function () {
       const idAggregator = await deployIdAggregator();
       const [owner] = await ethers.getSigners();
 
-      // get contract address for VerifyJWT
-      const transactionCount = await owner.getTransactionCount();
-      const vjwtAddress = getContractAddress({
-        from: owner.address,
-        nonce: transactionCount
-      });
-
-      vjwt = await deployVerifyJWTContract(11, 59, orcidKid, orcidBottomBread, orcidTopBread);
+      vjwt = await deployVerifyJWTContract(11, 59, 'abc', orcidParams.idBottomBread, orcidParams.idTopBread, orcidParams.expBottomBread, orcidParams.expTopBread, orcidParams.aud);
 
       const keyword = "orcid";
-      await idAggregator.addVerifyJWTContract(keyword, vjwtAddress);
+      await idAggregator.addVerifyJWTContract(keyword, vjwt.address);
 
       const verifyJWTAddress = await idAggregator.callStatic.contractAddrForKeyword(keyword);
-      expect(verifyJWTAddress).to.equal(vjwtAddress);
+      expect(verifyJWTAddress).to.equal(vjwt.address);
     });
   });
 
@@ -120,9 +112,9 @@ describe("IdentityAggregator", function () {
     });
   });
 
-  describe("removeSupportFor", async function () {
+  describe('removeSupportFor', async function () {
     // Try to remove an unsupported contract
-    it("Should revert ", async function () {
+    it('Should revert ', async function () {
       const idAggregator = await deployIdAggregator()
       keyword = 'twitter';
       await idAggregator.addVerifyJWTContract(keyword, "0x100DEF1234567890ABCDEF1234567890ABCDE001");
@@ -134,7 +126,7 @@ describe("IdentityAggregator", function () {
     });
   });
 
-  describe("getAllAccounts", function () {
+  describe('getAllAccounts', function () {
     before(async function () {
       this.idAggregator = await deployIdAggregator();
 
@@ -146,85 +138,47 @@ describe("IdentityAggregator", function () {
     });
 
     it("Should return array of supported creds, the first of which is the correct orcid", async function() {
-      //--------------------------- Set up context ---------------------------
+      //--------------------------- Set up context to call commitJWTProof() and verifyMe()---------------------------
       const [owner] = await ethers.getSigners();
+      const vjwt = await deployVerifyJWTContract(...orcidParams.getDeploymentParams());
+      const idToken = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoibG9lOGFqMjFpTXEzMVFnV1NEOXJxZyIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY1MTI3NzIxOCwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY1MTM3NTgzMywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjUxMjg5NDMzLCJub25jZSI6IndoYXRldmVyIiwiZmFtaWx5X25hbWUiOiJLaGFsc2EiLCJqdGkiOiI1YmEwYTkxNC1kNWYxLTQ2NzUtOGI5MS1lMjkwZjc0OTI3ZDQifQ.Q8B5cmh_VpaZaQ-gHIIAtmh1RlOHmmxbCanVIxbkNU-FJk8SH7JxsWzyhj1q5S2sYWfiee3eT6tZJdnSPInGYdN4gcjCApJAk2eZasm4VHeiPCBHeMyjNQ0w_TZJFhY0BOe7rES23pwdrueEqMp0O5qqFV0F0VTJswyy-XMuaXwoSB9pkHFBDS9OUDAiNnwYakaE_lpVbrUHzclak_P7NRxZgKlCl-eY_q7y0F2uCfT2_WY9_TV2BrN960c9zAMQ7IGPbWNwnvx1jsuLFYnUSgLK1x_TkHOD2fS9dIwCboB-pNn8B7OSI5oW7A-aIXYJ07wjHMiKYyBu_RwSnxniFw';
+      const pv = await getParamsForVerifying(vjwt, idToken, 'sub')
 
-      // get contract address for VerifyJWT
-      const transactionCount = await owner.getTransactionCount();
-      const vjwtAddress = getContractAddress({
-        from: owner.address,
-        nonce: transactionCount
-      });
-
-      const [eOrcid, nOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}');
-      const vjwt = await deployVerifyJWTContract(eOrcid, nOrcid, orcidKid, orcidBottomBread, orcidTopBread);
-
-      // Set up context to call commitJWTProof() and verifyMe()
-      const idToken = 'eyJraWQiOiJwcm9kdWN0aW9uLW9yY2lkLW9yZy03aGRtZHN3YXJvc2czZ2p1am84YWd3dGF6Z2twMW9qcyIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiX1RCT2VPZ2VZNzBPVnBHRWNDTi0zUSIsImF1ZCI6IkFQUC1NUExJMEZRUlVWRkVLTVlYIiwic3ViIjoiMDAwMC0wMDAyLTIzMDgtOTUxNyIsImF1dGhfdGltZSI6MTY0NDgzMDE5MSwiaXNzIjoiaHR0cHM6XC9cL29yY2lkLm9yZyIsImV4cCI6MTY0NDkxODUzNywiZ2l2ZW5fbmFtZSI6Ik5hbmFrIE5paGFsIiwiaWF0IjoxNjQ0ODMyMTM3LCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImp0aSI6IjcxM2RjMGZiLTMwZTAtNDM0Mi05ODFjLTNlYjJiMTRiODM0OCJ9.VXNSFbSJSdOiX7n-hWB6Vh30L1IkOLiNs2hBTuUDZ4oDB-cL6AJ8QjX7wj9Nj_lGcq1kjIfFLhowo8Jy_mzMGIFU8KTZvinSA-A-tJkXOUEvjUNjd0OfQJnVVJ63wvp9gSEj419HZ13Lc2ci9CRY7efQCYeelvQOQvpdrZsRLiQ_XndeDw2hDLAmI7YrYrLMy1zQY9rD4uAlBa56RVD7me6t47jEOOJJMAs3PC8UZ6pYyNc0zAjQ8Vapqz7gxeCN-iya91YI1AIE8Ut19hGgVRa9N7l-aUielPAlzss0Qbeyvl0KTRuZWnLUSrOz8y9oGxVBCUmStEOrVrAhmkMS8A';
-      const correctID = '0000-0002-2308-9517';
-      const [headerRaw, payloadRaw, signatureRaw] = idToken.split('.');
-      const signature = Buffer.from(signatureRaw, 'base64url');
-      const message = headerRaw + '.' + payloadRaw;
-      const payloadIdx = Buffer.from(headerRaw).length + 1; //Buffer.from('.').length == 1
-      const sandwich = await sandwichIDWithBreadFromContract(correctID, vjwt);
-      const [startIdx, endIdx] = search64.searchForPlainTextInBase64(Buffer.from(sandwich, 'hex').toString(), payloadRaw);
-      const hashedMessage = sha256FromString(message);
-      const proof = ethers.utils.sha256(await vjwt.XOR(hashedMessage, owner.address));
-
-      await vjwt.commitJWTProof(proof);
+      await vjwt.commitJWTProof(...pv.generateCommitments(owner.address));
       await ethers.provider.send('evm_mine');
-      await vjwt.verifyMe(ethers.BigNumber.from(signature), message, payloadIdx, startIdx, endIdx, '0x'+sandwich);
-      
+
+      await vjwt.verifyMe(...pv.verifyMeContractParams());
+
       const keyword = "orcid";
-      await this.idAggregator.addVerifyJWTContract(keyword, vjwtAddress);
+      await this.idAggregator.addVerifyJWTContract(keyword, vjwt.address);
 
       const allAccounts = await this.idAggregator.callStatic.getAllAccounts(owner.address);
       const creds = hexToString(allAccounts['creds'][0]);
 
+
       //--------------------------- Run test ---------------------------
 
-      expect(creds).to.equal(correctID);
+      expect(creds).to.equal(pv.id);
     });
 
     it("Should return array of supported creds, the second of which is the correct gmail", async function() {
-      //--------------------------- Set up context ---------------------------
+      //--------------------------- Set up context to call commitJWTProof() and verifyMe()---------------------------
       const [owner] = await ethers.getSigners();
-
-      // get contract address for VerifyJWT
-      const transactionCount = await owner.getTransactionCount();
-      const vjwtAddress = getContractAddress({
-        from: owner.address,
-        nonce: transactionCount
-      });
-
-      const [eGoogle, nGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
-      const vjwt = await deployVerifyJWTContract(eGoogle, nGoogle, googleKid, googleBottomBread, googleTopBread);
-
-      // Set up context to call commitJWTProof() and verifyMe()
-      const idToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjcyOTE4OTQ1MGQ0OTAyODU3MDQyNTI2NmYwM2U3MzdmNDVhZjI5MzIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiMDREZXRTaGNSYUE4OWxlcEQzdWRnUSIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjQ3NjYzNDk4LCJleHAiOjE2NDc2NjcwOTgsImp0aSI6IjE4ZmRmMGQ2M2VhYjI4YjRlYmY0NmFiMDMzZTM5OTU3NmE5MTJlZGUifQ.YqmOub03zNmloAcFvZE0E-4Gt2Y5fr_9XQLUYqXQ24X_GJaJh0HSQXouJeSXjnk8PT6E1FnPd89QAgwDvE_qxAoOvW7VKDycVapOeDtKdTQ-QpAn-ExE0Pvqgx1iaGRZFDS4DWESX1ZsQIBAB_MHK_ZFdAnOjeFzImuMkB1PZLY99przSaM8AEyvWn8wfEgdmkdoJERBXF7xJI2dfA9mTRjlQvhSC4K060bTJbUYug4sQLrvo53CsDjvXRnodnCB81EVWZUbf5B9dG__kebI3AjedKUcPb2wofpX_B7uAyVlD7Au3APEbZP7Asle0Bi76hDNGPQbLvR_nGWLoySfCQ';
-      const correctID = 'nanaknihal@gmail.com';
-      const [headerRaw, payloadRaw, signatureRaw] = idToken.split('.');
-      const signature = Buffer.from(signatureRaw, 'base64url');
-      const message = headerRaw + '.' + payloadRaw;
-      const payloadIdx = Buffer.from(headerRaw).length + 1; //Buffer.from('.').length == 1
-      const sandwich = await sandwichIDWithBreadFromContract(correctID, vjwt);
-      const [startIdx, endIdx] = search64.searchForPlainTextInBase64(Buffer.from(sandwich, 'hex').toString(), payloadRaw);
-      const hashedMessage = sha256FromString(message);
-      const proof = ethers.utils.sha256(await vjwt.XOR(hashedMessage, owner.address));
-
-      await vjwt.commitJWTProof(proof);
+      const vjwt = await deployVerifyJWTContract(...googleParams.getDeploymentParams());
+      const idToken = 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2MTY0OWU0NTAzMTUzODNmNmI5ZDUxMGI3Y2Q0ZTkyMjZjM2NkODgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjU0OTg0NTAwNTY2LTNxaXM1NG1vZmVnNWVkb2dhdWpycDhyYjdwYnA5cXRuLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzg3ODQ0NDczMTcyMjk4NTQzIiwiZW1haWwiOiJuYW5ha25paGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoidDZqVl9BZ0FyTGpuLXFVSlN5bUxoZyIsIm5hbWUiOiJOYW5hayBOaWhhbCBLaGFsc2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFUWEFKdzRnMVA3UFZUS2ZWUU1ldFdtUVgxQlNvWjlPWTRVUWtLcjdsTDQ9czk2LWMiLCJnaXZlbl9uYW1lIjoiTmFuYWsgTmloYWwiLCJmYW1pbHlfbmFtZSI6IktoYWxzYSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjUxMzQ5MjczLCJleHAiOjE2NTEzNTI4NzMsImp0aSI6IjA3NTU4ODdlOTI3MzA1ZTY0Y2E4MWVhMzE3YjYxZGQxYWJjNWFiZjgifQ.PXrelpQdJkTxbQw66p6HaSGT5pR6qhkZ8-04hLnVhmrzOJLBkyYisWHzP1t96IWguswMZ4tafg2uCCnra2zkz6BMiBCPrGJdk0l_Kx06FJMX-QNVdt5hW28qM6il94eb0g_OTHCmI28eUJf1rNY8D5NMrG3kXWPDQ8_EkOyySVbu6ED1XFbYgHzo560Ty1-gkQRQKYCuogqrcDBRPF3tqXyg9itCHawm6Kll_GX1TP5zwnwtr5WVrAFYtLJV1_VAEfKWkdU6v6LkAgq4ZjzunFRWBclLVCS2X1JO8iBeGjl_LVVoycvxwojrlZigplQAUSsxmDjlQ4VLH9vINiid6Q'
+      const pv = await getParamsForVerifying(vjwt, idToken, 'email')
+      await vjwt.commitJWTProof(...pv.generateCommitments(owner.address));
       await ethers.provider.send('evm_mine');
-      await vjwt.verifyMe(ethers.BigNumber.from(signature), message, payloadIdx, startIdx, endIdx, '0x'+sandwich);
-      
+      await vjwt.verifyMe(...pv.verifyMeContractParams());
       const keyword = "google";
-      await this.idAggregator.addVerifyJWTContract(keyword, vjwtAddress);
+      await this.idAggregator.addVerifyJWTContract(keyword, vjwt.address);
 
       const allAccounts = await this.idAggregator.callStatic.getAllAccounts(owner.address);
       const creds = hexToString(allAccounts['creds'][1]);
 
       //--------------------------- Run test ---------------------------
 
-      expect(creds).to.equal(correctID);
+      expect(creds).to.equal(pv.id);
     });
 
     it("Should return the correct array of supported creds", async function() {

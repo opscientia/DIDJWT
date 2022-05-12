@@ -1,10 +1,8 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { getContractAddress } = require('@ethersproject/address')
-const { solidity } = require("ethereum-waffle");
 const {
   deployWTFBios,
-} = require('./utils/utils');
+} = require('../utils');
 
 
 describe("WTFBios", function () {

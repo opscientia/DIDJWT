@@ -1,8 +1,8 @@
 # WTF Protocol
 Web Token Forwarding Protocol
 
-## Unpublished rough docs (needs access to OpSci Githbook)
-https://app.gitbook.com/s/IfVTwJ7AVeydbhSfhssq/quick-start. These are for functions that are not built yet, mostly intended for documentation driven development
+## Docs
+https://docs.holonym.id/
 
 ## Summary
 *Goal*:
@@ -46,6 +46,7 @@ Once block 1 is finalized,
 4. Link the username in the JWT to users public key in a final hashmap for verified username.
 
 
+<<<<<<< HEAD
 ## testnet addresses of JWT verifiers
 ### Polygon
 ORCID: 0x2779550E47349711d3CD895aFd8aE315ee9BC597
@@ -63,3 +64,5 @@ ORCID: 0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f
 0xc45857b71223b6154f6bc488c8c32bD19c21f791
 
 (Deprecated: 0x61786552CD82F41ECf9bA160Ac48616064A70aF8)
+=======
+>>>>>>> 998d10a644a13e7a6ee5f221511ce113ba56e27f

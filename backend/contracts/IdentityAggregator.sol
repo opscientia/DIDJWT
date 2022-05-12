@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
@@ -71,9 +71,9 @@ contract IdentityAggregator is Ownable  {
         }
         if (biosContract != address(0)) {
             WTFBios wtfBios = WTFBios(biosContract);
-            string memory name = wtfBios.nameForAddress(user);
-            string memory bio = wtfBios.bioForAddress(user);
-            return (allCreds, name, bio);
+            string memory name_ = wtfBios.nameForAddress(user);
+            string memory bio_ = wtfBios.bioForAddress(user);
+            return (allCreds, name_, bio_);
         }
         return (allCreds, "", "");
     }

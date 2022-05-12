@@ -7,26 +7,31 @@ const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 // These constants should be shared dependancy with tests so the same code isn't duplicated across them without a shared module
-const orcidKid = '7hdmdswarosg3gjujo8agwtazgkp1ojs'
-const orcidBottomBread = '0x222c22737562223a22'
-const orcidTopBread = '0x222c22617574685f74696d65223a'
+const {
+  orcidParams,
+  googleParams,
+  twitterParams,
+  githubParams,
+  getParamsForVerifying,
+  deployVerifyJWTContract,
+  // upgradeVerifyJWTContract,
+  // sha256FromString,
+  // keccak256FromString,
+  // sandwichDataWithBreadFromContract,
+  // jwksKeyToPubkey,
+  // vmExceptionStr,
+} = require('../utils.js');
 
-const googleKid = '729189450d49028570425266f03e737f45af2932'
-const googleBottomBread = '0x222c22656d61696c223a22'
-const googleTopBread = '0x222c22656d61696c5f7665726966696564223a'
-
-// Converts JWKS RSAkey to e and n:
-const jwksKeyToPubkey = (jwks) => {
-  let parsed = JSON.parse(jwks)
-  return [
-    ethers.BigNumber.from(Buffer.from(parsed['e'], 'base64url')), 
-    ethers.BigNumber.from(Buffer.from(parsed['n'], 'base64url'))
-  ]
+const testAddresses = {
+  "IdentityAggregator" : "0x7f78Cdd0bAB95979F2d0699fF549bb2A79830f93",
+  "WTFBios" : "0xe1e0533f082308C8e4AA817E617dAA984A8986d5",
+  "VerifyJWT" : {
+    "orcid" : "0xAd7C2C3B9487e87A0699385C9a617eAb488e95BF",
+    "google" : "0xc21eB7f6321ADcF0945f93362072901A18288f8A",
+    "twitter" : "0x97093De07A0Bab1a92a5d885a5E0A561F719C919",
+    "github" : "0x25F1886A0a40EF216A04e165c096ee1286A24B8F"
+  }
 }
-
-const [eOrcid, nOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use":"sig","kid":"production-orcid-org-7hdmdswarosg3gjujo8agwtazgkp1ojs","n":"jxTIntA7YvdfnYkLSN4wk__E2zf_wbb0SV_HLHFvh6a9ENVRD1_rHK0EijlBzikb-1rgDQihJETcgBLsMoZVQqGj8fDUUuxnVHsuGav_bf41PA7E_58HXKPrB2C0cON41f7K3o9TStKpVJOSXBrRWURmNQ64qnSSryn1nCxMzXpaw7VUo409ohybbvN6ngxVy4QR2NCC7Fr0QVdtapxD7zdlwx6lEwGemuqs_oG5oDtrRuRgeOHmRps2R6gG5oc-JqVMrVRv6F9h4ja3UgxCDBQjOVT1BFPWmMHnHCsVYLqbbXkZUfvP2sO1dJiYd_zrQhi-FtNth9qrLLv3gkgtwQ"}')
-const [eGoogle, nGoogle] = jwksKeyToPubkey('{"alg":"RS256","use":"sig","n":"pFcwF2goSItvLhMJR1u0iPu2HO3wy6SSppmzgISWkRItInbuf2lWdQBt3x45mZsS9eXn6t9lUYnnduO5MrVtA1KoeZhHfSJZysIPh9S7vbU7_mV9SaHSyFPOOZr5jpU2LhNJehWqek7MTJ7FfUp1sgxtnUu-ffrFvMpodUW5eiNMcRmdIrd1O1--WlMpQ8sNk-KVTb8M8KPD0SYz-8kJLAwInUKK0EmxXjnYPfvB9RO8_GLAU7jodmTcVMD25PeA1NRvYqwzpJUYfhAUhPtE_rZX-wxn0udWddDQqihU7T_pTxiZe9R0rI0iAg--pV0f1dYnNfrZaB7veQq_XFfvKw","e":"AQAB","kty":"RSA","kid":"729189450d49028570425266f03e737f45af2932"}')
-
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -35,11 +40,52 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
-  // await deployIdAggregator();
-  await deployWTFBios();
-  // await deployORCID();
-  // await deployGoogle();
+
+  // const idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach('0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079')
+  // const idAgg = await deployIdAggregator();
+
+  // const bios = await deployWTFBios();
+  // const orcid = await deployORCID();
+  // const google = await deployGoogle();
+  // const github = await deployGithub();
+  // const twitter = await deployTwitter();
+  // const discord  = await deployDiscord();
+  // const orcid = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
+  // const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
+  // const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
+  // const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
+
+  // idAgg.setBiosContractAddress(bios.address)
+
+  // const twitter = (await ethers.getContractFactory('VerifyJWT')).attach('0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB')
+  // const github = (await ethers.getContractFactory('VerifyJWT')).attach('0x6029BD948942c7b355149087c47462c66Ea147ba')
+  // const discord = (await ethers.getContractFactory('VerifyJWT')).attach('0xca6d00d3f78AD5a9B386824227BBe442c84344EA')
+  // const google = (await ethers.getContractFactory('VerifyJWT')).attach('0xC334b3465790bC77299D42635B25D77E3e46A78b')
+  // const orcid = (await ethers.getContractFactory('VerifyJWT')).attach('0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29')
+  // await idAgg.addVerifyJWTContract('orcid', orcid.address)
+  // await idAgg.addVerifyJWTContract('google', google.address)
+  // await idAgg.addVerifyJWTContract('twitter', twitter.address)
+  // await idAgg.addVerifyJWTContract('github', github.address)
+  // await idAgg.addVerifyJWTContract('discord', discord.address)
   // await deployFacebook();
+  // await deployWTFUtils();
+  // await deployWTFBios()
+
+  let idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach(testAddresses.IdentityAggregator)
+  // let contracts = {}
+  // for(const c of Object.keys(testAddresses.VerifyJWT)){
+  //   contracts[c] = (await ethers.getContractFactory('VerifyJWT')).attach(testAddresses.VerifyJWT[c])
+  //   await idAgg.addVerifyJWTContract(c, contracts[c].address)
+  // }
+  // await idAgg.setBiosContractAddress(testAddresses.WTFBios)
+}
+
+async function deployWTFUtils() {
+  const WTFUtils = await ethers.getContractFactory('WTFUtils')
+  const wu = await WTFUtils.deploy();
+  await wu.deployed();
+  console.log('WTFUtils: ', wu.address);
+  return wu
 }
 
 async function deployWTFBios() {
@@ -47,31 +93,61 @@ async function deployWTFBios() {
   const wtfBios = await WTFBios.deploy();
   await wtfBios.deployed();
   console.log('WTFBios: ', wtfBios.address);
+  return wtfBios
 }
 
 async function deployIdAggregator() {
   const IdentityAggregator = await ethers.getContractFactory('IdentityAggregator')
-  const idAggregator = await IdentityAggregator.deploy('0x2779550E47349711d3CD895aFd8aE315ee9BC597', 'orcid');
+  const idAggregator = await IdentityAggregator.deploy();
   await idAggregator.deployed();
   console.log('IdentityAggregator: ', idAggregator.address);
+  return idAggregator
 }
 
-async function deployGoogle() {
+// async function deployGoogle() {
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let google = await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('GOOGLE: ' + google.address);
+//   return VJWT
+// }
+
+// async function deployORCID(){
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let orcid = await upgrades.deployProxy(VJWT, [eOrcid, nOrcid, kidOrcid, orcidBottomBread, orcidTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('ORCID: ' + orcid.address);
+//   return VJWT
+// }
+
+// async function deployTwitter(){
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let twitter = await upgrades.deployProxy(VJWT, [eTwitter, nTwitter, kidTwitter, twitterBottomBread, twitterTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('TWITTER: ' + twitter.address);
+//   return VJWT
+// }
+
+// async function deployGithub(){
+//   let VJWT = await ethers.getContractFactory('VerifyJWT')
+//   let github = await upgrades.deployProxy(VJWT, [eGithub, nGithub, kidGithub, githubBottomBread, githubTopBread], {
+//     initializer: 'initialize',
+//   });
+//   console.log('GITHUB: ' + github.address);
+//   return VJWT
+// }
+
+async function deployDiscord(){
   let VJWT = await ethers.getContractFactory('VerifyJWT')
-  await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, googleKid, googleBottomBread, googleTopBread], {
+  let discord = await upgrades.deployProxy(VJWT, [eDiscord, nDiscord, kidDiscord, discordBottomBread, discordTopBread], {
     initializer: 'initialize',
   });
-  console.log('GOOGLE: ' + VJWT.address);
+  console.log('DISCORD: ' + discord.address);
+  return VJWT
 }
-
-async function deployORCID(){
-  let VJWT = await ethers.getContractFactory('VerifyJWT')
-  await upgrades.deployProxy(VJWT, [eOrcid, nOrcid, orcidKid, orcidBotomBread, orcidTopBread], {
-    initializer: 'initialize',
-  });
-  console.log('ORCID: ' + VJWT.address);
-}
-
 // async function deployGoogle(){
 //   let vjwt = await (await hre.ethers.getContractFactory('VerifyJWT')).deploy(eGoogle, nGoogle, googleKid, googleBottomBread, googleTopBread);
 //   await vjwt.deployed();
