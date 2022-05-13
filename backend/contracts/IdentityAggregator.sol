@@ -3,10 +3,16 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import '@ensdomains/ens-contracts/contracts/registry/ENS.sol';
+import '@ensdomains/ens-contracts/contracts/resolvers/Resolver.sol';
+import '@ensdomains/ens-contracts/contracts/registry/ReverseRegistrar.sol';
 
 import "./VerifyJWT.sol";
 import "./WTFBios.sol";
 
+abstract interface PoHProxy {
+    function isRegistered(address _submissionID) external view returns (bool);
+}
 
 contract IdentityAggregator is Ownable  {
 
@@ -17,6 +23,9 @@ contract IdentityAggregator is Ownable  {
     string[] private keywords; // e.g., "orcid"
 
     address private biosContract;
+
+    ENS ens = ENS(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e);
+    PoHProxy pohProxy = PoHProxy(0x1dAD862095d40d43c2109370121cf087632874dB);
 
 
     event AddSupportForContract(string contractKeyword);
@@ -69,6 +78,24 @@ contract IdentityAggregator is Ownable  {
                 }
             }
         }
+        // TODO: The following section has a bunch of mismatched types. Might be incorrect in other ways too.
+        // ENS: reverse resolution
+        // 1. Perform namehash (i.e., get <address>.addr.reverse)
+        bytes32 addrNode = node(user);
+        // 2. Get resolver for <addrNode>
+        address resolverAddr = ens.resolver(addrNode);
+        Resolver resolver = Resolver(resolverAddr);
+        // 3. Call name() on that resolver
+        string memory name = resolver.name(addrNode);
+        // 4. Perform forward resolution to verify
+        bytes32 nameNode = node(user);
+        bytes32 addr = resolver.addr(nameNode);
+        if (addr == addrNode) {
+            // Retrieved correct ENS. Add name to return value
+        }
+
+        bool pohRegistered = pohProxy.isRegistered(user); // Add to return value
+        
         if (biosContract != address(0)) {
             WTFBios wtfBios = WTFBios(biosContract);
             string memory name_ = wtfBios.nameForAddress(user);
@@ -88,6 +115,58 @@ contract IdentityAggregator is Ownable  {
     
     function getBiosContractAddress() public view returns (address) {
         return biosContract;
+    }
+
+    //
+    // https://github.com/ensdomains/ens/blob/master/contracts/ReverseRegistrar.sol
+    //
+    bytes32 public constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
+    /**
+     * @dev Returns the node hash for a given account's reverse records.
+     * @param addr The address to hash
+     * @return The ENS node hash.
+     */
+    function node(address addr) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(ADDR_REVERSE_NODE, sha3HexAddress(addr)));
+    }
+    /**
+     * @dev An optimised function to compute the sha3 of the lower-case
+     *      hexadecimal representation of an Ethereum address.
+     * @param addr The address to hash
+     * @return ret The SHA3 hash of the lower-case hexadecimal encoding of the
+     *         input address.
+     */
+    function sha3HexAddress(address addr) private pure returns (bytes32 ret) {
+        addr;
+        ret; // Stop warning us about unused variables
+        assembly {
+            // let lookup := 0x3031323334353637383961626364656600000000000000000000000000000000
+
+            for { let i := 40 } gt(i, 0) { } {
+                i := sub(i, 1)
+                mstore8(i, byte(and(addr, 0xf), lookup))
+                addr := div(addr, 0x10)
+                i := sub(i, 1)
+                mstore8(i, byte(and(addr, 0xf), lookup))
+                addr := div(addr, 0x10)
+            }
+
+            ret := keccak256(0, 40)
+        }
+    }
+
+
+    //
+    // https://ethereum.stackexchange.com/questions/54550/ens-how-to-compute-namehash-from-name-in-a-smart-contract
+    //
+    function computeNamehash(string _name) public pure returns (bytes32 namehash) {
+    namehash = 0x0000000000000000000000000000000000000000000000000000000000000000;
+    namehash = keccak256(
+    abi.encodePacked(namehash, keccak256(abi.encodePacked('eth')))
+    );
+    namehash = keccak256(
+    abi.encodePacked(namehash, keccak256(abi.encodePacked(_name)))
+    );
     }
 
 }
