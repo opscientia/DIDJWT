@@ -161,6 +161,12 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   // This is the endpoint a frontend should call. It takes a signature, JWT, sandwich (see comments), which has start/end index of where the sandwich can be found. It also takes a payload index start, as it must know the where the payload is to decode the Base64 JWT
   function verifyMe(bytes memory signature, string memory jwt, uint payloadIdxStart, WTFUtils.ProposedSandwichAt calldata proposedIDSandwich, WTFUtils.ProposedSandwichAt calldata proposedExpSandwich, WTFUtils.ProposedSandwichAt calldata proposedAud) public { //also add  to verify that proposedId exists at jwt[idxStart:idxEnd]. If so, also verify that it starts with &id= and ends with &. So that we know it's a whole field and was actually the ID given
     bytes memory jwtBytes = WTFUtils.stringToBytes(jwt);
+    // make sure there is no previous entry for this JWT - it should only be usable once!
+    bytes32 jwtHash = keccak256(jwtBytes);
+
+    // First invalidate the JWT so nobody else can use it
+    require(JWTHashUsed[jwtHash] == false, "JWT can only be used on-chain once");
+    JWTHashUsed[jwtHash] = true;
 
     require(_verify(msg.sender, signature, jwt), "JWT Verification failed");
 
@@ -196,12 +202,6 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // The contract will forget old JWTs to save space. There's a security concern with this: if user submits a a new JWT before the first one expires, hacker can submit the old one. This is mitigated by enforcing the submission of new JWTs only when the old one is invalid
     // require(timestampsForCreds[creds].JWTExpclaim < block.timestamp, "Old JWT needs to be expired before new submission"); 
     // ^^ commented out because JWTHashUsed prevents this concern
-
-    // make sure there is no previous entry for this JWT - it should only be usable once!
-    bytes32 jwtHash = keccak256(WTFUtils.stringToBytes(jwt));
-
-    require(JWTHashUsed[jwtHash] == false, "JWT can only be used on-chain once");
-    JWTHashUsed[jwtHash] = true;
     
 
     // update list of registered address and credentials (to keep track of who's registered), iff the address is not already registered
