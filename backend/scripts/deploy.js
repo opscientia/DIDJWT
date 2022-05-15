@@ -14,7 +14,7 @@ const {
   githubParams,
   getParamsForVerifying,
   deployVerifyJWTContract,
-  // upgradeVerifyJWTContract,
+  upgradeVerifyJWTContract,
   // sha256FromString,
   // keccak256FromString,
   // sandwichDataWithBreadFromContract,
@@ -83,9 +83,11 @@ async function main() {
   // }
   // await idAgg.setBiosContractAddress(testAddresses.WTFBios)
 
-  console.log(await (await (await ethers.getContractFactory('VerifyJWT')).attach('0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443')).credsForAddress('0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388'))
-  console.log(await (await (await ethers.getContractFactory('VerifyJWT')).attach('0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443')).addressForCreds(Buffer.from('0000-0002-2308-9517')))
+  // console.log(await (await (await ethers.getContractFactory('VerifyJWT')).attach('0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443')).credsForAddress('0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388'))
+  // console.log(githubParams)
 
+  // Upgrade orcid, with WTFUtils address 0x1DEae05441acd0C48A3Dc0272E24Cd9D5AcE32Af
+  await upgradeService('orcid', '0x1DEae05441acd0C48A3Dc0272E24Cd9D5AcE32Af')
 }
 
 async function deployWTFUtils() {
@@ -112,6 +114,12 @@ async function deployIdAggregator() {
   return idAggregator
 }
 
+// Upgrades to V2 and changes appropriate parameters (top bread, bottom bread, and aud)
+async function upgradeService(name, newParams) {
+  let contract = await upgradeVerifyJWTContract(name)
+  contract.changeSandwich(newParams.idBottomBread, newParams.idTopBread, newParams.expBottomBread, newParams.expTopBread)
+  contract.changeAud(newParams.aud)
+}
 // async function deployGoogle() {
 //   let VJWT = await ethers.getContractFactory('VerifyJWT')
 //   let google = await upgrades.deployProxy(VJWT, [eGoogle, nGoogle, kidGoogle, googleBottomBread, googleTopBread], {

@@ -79,8 +79,15 @@ exports.githubParams = deployable({
 
 let contractAddresses = wtf.getContractAddresses()
 
-exports.upgradeVerifyJWTContract = async (service) => {
-    let wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
+exports.upgradeVerifyJWTContract = async (service, forceImport=false, wtfutilsAddress=null) => {
+    let wu;
+    if(!wtfutilsAddress){
+      wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
+    } else
+    {
+      wu = await (await ethers.getContractFactory('WTFUtils')).attach(wtfutilsAddress)
+    }
+    console.log('utils @', wu.address)
     let address = contractAddresses.VerifyJWT.gnosis[service]
     let VJWT = await ethers.getContractFactory('VerifyJWT')
     let NewVJWT = await ethers.getContractFactory('VerifyJWTv2', {
@@ -90,11 +97,14 @@ exports.upgradeVerifyJWTContract = async (service) => {
     })
 
     // Import the implementation if it's not already loaded:
-    await upgrades.forceImport(
-      address,
-      VJWT, 
-      {kind : 'uups'}, 
-    )
+    if(forceImport) {
+      await upgrades.forceImport(
+        address,
+        VJWT, 
+        {kind : 'uups'}, 
+      )
+    }
+
     let vjwt = await upgrades.upgradeProxy(address, NewVJWT, { unsafeAllow: ['external-library-linking'] }) //WARNING: ALLOWING LIBRARIES (but this should be fine as long as lib can't call selfdestruct) https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-external-libraries
     // Note: owner still needs to set the bottombread and topbread for exp if going from v1 to v2 or v3
     return vjwt

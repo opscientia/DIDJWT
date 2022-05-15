@@ -80,8 +80,8 @@ module.exports = {
     gnosis: {
       url: "https://rpc.gnosischain.com",
       accounts: [process.env.PRIVATE_KEY],
-      gas: 10000000000,
-      gasPrice: 10000000000
+      // gas: 10000000000,
+      // gasPrice: 10000000000
     },
     arbitrumOne : {   
       url: "https://arb1.arbitrum.io/rpc",
