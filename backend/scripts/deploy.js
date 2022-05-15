@@ -23,13 +23,13 @@ const {
 } = require('../utils.js');
 
 const testAddresses = {
-  "IdentityAggregator" : "0x7f78Cdd0bAB95979F2d0699fF549bb2A79830f93",
-  "WTFBios" : "0xe1e0533f082308C8e4AA817E617dAA984A8986d5",
+  "IdentityAggregator" : "0xE15Cb9bd333beCfB835184574ADE3Ad8BD4be49b",
+  "WTFBios" : "0x0897bBfA5d0A6c604b672c253D96c04b9194C991",
   "VerifyJWT" : {
-    "orcid" : "0xAd7C2C3B9487e87A0699385C9a617eAb488e95BF",
-    "google" : "0xc21eB7f6321ADcF0945f93362072901A18288f8A",
-    "twitter" : "0x97093De07A0Bab1a92a5d885a5E0A561F719C919",
-    "github" : "0x25F1886A0a40EF216A04e165c096ee1286A24B8F"
+    "orcid" : "0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443",
+    "google" : "0x60E93fa7c44151B0b5568625DBB5Cf2F33223D56",
+    "twitter" : "0x0c68aD479884ed4034a0FEf1C276B982E6d1D48B",
+    "github" : "0xb09aba6c32F095934AcadAcd6Ac02BB8F9249c31"
   }
 }
 
@@ -51,9 +51,13 @@ async function main() {
   // const twitter = await deployTwitter();
   // const discord  = await deployDiscord();
   // const orcid = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
+  // console.log(orcid.address)
   // const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
+  // console.log(google.address)
   // const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
+  // console.log(github.address)
   // const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
+  // console.log(twitter.address)
 
   // idAgg.setBiosContractAddress(bios.address)
 
@@ -71,13 +75,17 @@ async function main() {
   // await deployWTFUtils();
   // await deployWTFBios()
 
-  let idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach(testAddresses.IdentityAggregator)
+  // let idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach(testAddresses.IdentityAggregator)
   // let contracts = {}
   // for(const c of Object.keys(testAddresses.VerifyJWT)){
   //   contracts[c] = (await ethers.getContractFactory('VerifyJWT')).attach(testAddresses.VerifyJWT[c])
   //   await idAgg.addVerifyJWTContract(c, contracts[c].address)
   // }
   // await idAgg.setBiosContractAddress(testAddresses.WTFBios)
+
+  console.log(await (await (await ethers.getContractFactory('VerifyJWT')).attach('0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443')).credsForAddress('0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388'))
+  console.log(await (await (await ethers.getContractFactory('VerifyJWT')).attach('0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443')).addressForCreds(Buffer.from('0000-0002-2308-9517')))
+
 }
 
 async function deployWTFUtils() {
