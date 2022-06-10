@@ -27,7 +27,7 @@
     "@openzeppelin/contracts-upgradeable": "^4.5.2",
     "base64-sol": "^1.0.1",
     "dotenv": "^16.0.0",
-    "hardhat-abi-exporter": "^2.8.0",
+    "hardhat-abi-exporter": "^2.9.0",
     "i": "^0.3.7",
     "npm": "^8.5.1",
     "solc": "^0.8.13",

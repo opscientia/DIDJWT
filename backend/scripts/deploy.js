@@ -12,8 +12,10 @@ const {
   googleParams,
   twitterParams,
   githubParams,
+  discordParams,
   getParamsForVerifying,
   deployVerifyJWTContract,
+  deployVerifyJWTContractWithCustomFactory,
   upgradeVerifyJWTContract,
   // sha256FromString,
   // keccak256FromString,
@@ -22,16 +24,6 @@ const {
   // vmExceptionStr,
 } = require('../utils.js');
 
-const testAddresses = {
-  "IdentityAggregator" : "0xE15Cb9bd333beCfB835184574ADE3Ad8BD4be49b",
-  "WTFBios" : "0x0897bBfA5d0A6c604b672c253D96c04b9194C991",
-  "VerifyJWT" : {
-    "orcid" : "0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443",
-    "google" : "0x60E93fa7c44151B0b5568625DBB5Cf2F33223D56",
-    "twitter" : "0x0c68aD479884ed4034a0FEf1C276B982E6d1D48B",
-    "github" : "0xb09aba6c32F095934AcadAcd6Ac02BB8F9249c31"
-  }
-}
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -41,53 +33,45 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
+  const wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
+  console.log('WTFUtils', wu.address)
+
+  const idAgg = await deployIdAggregator();
+  console.log('idagg', idAgg.address)
+
+  const bios = await deployWTFBios();
+  console.log('bios', bios.address)
+
+  const VerifyJWT = await ethers.getContractFactory('VerifyJWTv2', {
+    libraries : {
+      WTFUtils : wu.address //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
+    }
+  })
+
+
+  for(const s of [
+    {name:'twitter', args:await orcidParams.getDeploymentParams()},
+    {name:'discord', args:await orcidParams.getDeploymentParams()},
+    {name:'github', args:await orcidParams.getDeploymentParams()},
+    {name:'orcid', args:await orcidParams.getDeploymentParams()}
+  ]){
+    const vjwt = await deployVerifyJWTContractWithCustomFactory({factory:VerifyJWT, args: s.args})
+    await vjwt.deployed();
+    let tx = await idAgg.addVerifyJWTContract(s.name, vjwt.address)
+    await tx.wait()
+    console.log(s.name, vjwt.address);
+  }
+  console.log('Done: ', await idAgg.getKeywords())
   // const idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach('0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079')
-  // const idAgg = await deployIdAggregator();
+  // console.log(await idAgg.getAllAccounts('0xb1d534a8836fB0d276A211653AeEA41C6E11361E'))
 
-  // const bios = await deployWTFBios();
-  // const orcid = await deployORCID();
-  // const google = await deployGoogle();
-  // const github = await deployGithub();
-  // const twitter = await deployTwitter();
-  // const discord  = await deployDiscord();
-  // const orcid = await deployVerifyJWTContract(...orcidParams.getDeploymentParams())
-  // console.log(orcid.address)
-  // const google = await deployVerifyJWTContract(...googleParams.getDeploymentParams())
-  // console.log(google.address)
-  // const github = await deployVerifyJWTContract(...githubParams.getDeploymentParams())
-  // console.log(github.address)
-  // const twitter = await deployVerifyJWTContract(...twitterParams.getDeploymentParams())
-  // console.log(twitter.address)
 
-  // idAgg.setBiosContractAddress(bios.address)
+  // await upgradeService('orcid', orcidParams)
+  // await upgradeService('google', googleParams)
+  // await upgradeService('twitter', twitterParams, true)
+  // await upgradeService('github', githubParams, true)
+  // await upgradeService('discord', discordParams, true)
 
-  // const twitter = (await ethers.getContractFactory('VerifyJWT')).attach('0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB')
-  // const github = (await ethers.getContractFactory('VerifyJWT')).attach('0x6029BD948942c7b355149087c47462c66Ea147ba')
-  // const discord = (await ethers.getContractFactory('VerifyJWT')).attach('0xca6d00d3f78AD5a9B386824227BBe442c84344EA')
-  // const google = (await ethers.getContractFactory('VerifyJWT')).attach('0xC334b3465790bC77299D42635B25D77E3e46A78b')
-  // const orcid = (await ethers.getContractFactory('VerifyJWT')).attach('0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29')
-  // await idAgg.addVerifyJWTContract('orcid', orcid.address)
-  // await idAgg.addVerifyJWTContract('google', google.address)
-  // await idAgg.addVerifyJWTContract('twitter', twitter.address)
-  // await idAgg.addVerifyJWTContract('github', github.address)
-  // await idAgg.addVerifyJWTContract('discord', discord.address)
-  // await deployFacebook();
-  // await deployWTFUtils();
-  // await deployWTFBios()
-
-  // let idAgg = (await ethers.getContractFactory('IdentityAggregator')).attach(testAddresses.IdentityAggregator)
-  // let contracts = {}
-  // for(const c of Object.keys(testAddresses.VerifyJWT)){
-  //   contracts[c] = (await ethers.getContractFactory('VerifyJWT')).attach(testAddresses.VerifyJWT[c])
-  //   await idAgg.addVerifyJWTContract(c, contracts[c].address)
-  // }
-  // await idAgg.setBiosContractAddress(testAddresses.WTFBios)
-
-  // console.log(await (await (await ethers.getContractFactory('VerifyJWT')).attach('0xd476A40ecc1231DC8cD54B25Ad2a27299Ac23443')).credsForAddress('0xC8834C1FcF0Df6623Fc8C8eD25064A4148D99388'))
-  // console.log(githubParams)
-
-  // Upgrade orcid, with WTFUtils address 0x1DEae05441acd0C48A3Dc0272E24Cd9D5AcE32Af
-  await upgradeService('orcid', '0x1DEae05441acd0C48A3Dc0272E24Cd9D5AcE32Af')
 }
 
 async function deployWTFUtils() {
@@ -115,10 +99,16 @@ async function deployIdAggregator() {
 }
 
 // Upgrades to V2 and changes appropriate parameters (top bread, bottom bread, and aud)
-async function upgradeService(name, newParams) {
-  let contract = await upgradeVerifyJWTContract(name)
-  contract.changeSandwich(newParams.idBottomBread, newParams.idTopBread, newParams.expBottomBread, newParams.expTopBread)
-  contract.changeAud(newParams.aud)
+async function upgradeService(name, newParams, forceImport=false) {
+  // Upgrade VJWT, with WTFUtils address 0x1DEae05441acd0C48A3Dc0272E24Cd9D5AcE32Af
+  let contract = await upgradeVerifyJWTContract(name, '0x1DEae05441acd0C48A3Dc0272E24Cd9D5AcE32Af', forceImport)
+  console.log('upgraded ', contract.address)
+  let tx = await contract.changeSandwich(newParams.idBottomBread, newParams.idTopBread, newParams.expBottomBread, newParams.expTopBread)
+  await tx.wait()
+  tx = await contract.changeAud(newParams.aud)
+  console.log('changed aud', tx)
+  await tx.wait()
+  console.log('new aud', await contract.aud())
 }
 // async function deployGoogle() {
 //   let VJWT = await ethers.getContractFactory('VerifyJWT')

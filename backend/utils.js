@@ -22,6 +22,7 @@ const [eOrcid, nOrcid, kidOrcid] = jwksKeyToPubkey('{"kty":"RSA","e":"AQAB","use
 const [eGoogle, nGoogle, kidGoogle] = jwksKeyToPubkey('{"n":"qR7fa5Gb2rhy-RJCJwSFn7J2KiKs_WgMXVR-23Z6OfX89_utHGkM-Qk27abDGPXa0u9OKzwOU2JZx7yNye7LH4kKX1PEAEz0p9XGbfF3yFyiD5JkziOfQyYj9ERKWfxKatpk-oi9D_p2leQKzTfEZWIfLVZkgNXFkUdhzCG68j5kFhZ1Ys9bRRDo3Q1BkLXmP_Y6PW1g74_rvAYCiQ6hJVvyyXYnqHcoawedgO6_MQihaSeAW25AhY8MXVo4-MdNvboahOlJg280YuxkCZiRqxyQEqd5HKCPzP49TDQbdAxDa900ewCQK9gkbHiNKFbOBv_b94YfMh93NUoEa-jCnw","use":"sig","e":"AQAB","kty":"RSA","alg":"RS256","kid":"861649e450315383f6b9d510b7cd4e9226c3cd88"}')
 const [eTwitter, nTwitter, kidTwitter] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"oagYTJtXZclWd8TFevkbI_edfB0YoMsiEHKbEagrB3Ao_6pEUnQtJOuIsRM9w9IVtvwKlJZae8hcksoRhzZm9lyueN7XzOO2f8I8bxf-rapWKpM0p83RWKvwTICVi0I72Ev5fIiWEMKbLA3YXIrDVRvtsLeYEvbVfvstwkA8Rla5uMcsPkcO3fc8ONZgArlpnxUqe-fEqjAHIWmDTUOEbvpitCPtYCSqHR7QmGkZ90RByVp5niOBhoMlUlvTRMqu8M_42peQJZdBzhGvNmY1_NgX7DBAdTXwOgWSVwBdfpq8K8yt_v-4l6I_ydnxaBsI5K69l__UdKlaapUrguNB6w","e":"AQAB","alg":"RS256","kid":"oagY"}`)
 const [eGithub, nGithub, kidGithub] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"q7wWK3dvPtQpzoS1zDFzVgWf08tZH814Bfx50dJuUzQpE-7D-nxXTbSgKw73K6UWSou_jBdnNtushkhxXI5UpTGBSygI59KyjNIC8dh0n8RoqtXZVR1FWX468CEqfXjUnKEoDx-EzWsJTCabHCmgvU7JefiNfb-430J5T_3jxNyeIk8YozsM-Ib0RlIF_Kv2P6e_jVXflaclW2dUa4eVyWCVc-2REavdQD19fkQ-tIYMjbgMz7LUtFJnWvoH-M5U3y3Q8yWsueGDB1n9BrPII9qcHJm8DqrdzmOf00Ywz7-bpvaMpRnHV622tACcvimLxCG1E_9Hfi2jO0orqCCpUw","e":"AQAB","alg":"RS256","kid":"q7wW"}`)
+const [eDiscord, nDiscord, kidDiscord] = jwksKeyToPubkey(`{"key_ops":["verify"],"ext":true,"kty":"RSA","n":"rSA57VMJxdNKprkkzDx869_VzmMcMi_viyXiF_TJpopTeCMqIOSkVeOciyCAIJWX5bMvH4QlpB1ydEO7u9Uu3HMkE1NGuH7_WGd7LVB8Kew4QxBvRu20EgZIFOPT1g161cCp7W4EMBKHTWNCY4qVI2AUFFKfA4atGIlWJHSw4UcULX5xTQN799lGTLP9vStTqeKQFbQZfFAD1IrQbfSSkcRmPsnqHRhFrZ2ccwmzsL4846TSCDjTAEsQGt6jG8gC2Jpqn80SoYLT6PoN6O5gWZfmsBf0RywTE8BU6_umBQBYcZI0OSo6dvYxh_60pNNM5m-ZGbkZNG184PkjA3EzeQ","e":"AQAB","alg":"RS256","kid":"rSA5"}`)
 
 
 exports.vmExceptionStr = 'VM Exception while processing transaction: reverted with reason string ';
@@ -30,7 +31,8 @@ exports.vmExceptionStr = 'VM Exception while processing transaction: reverted wi
 const deployable = (params) => {
   return {
     ...params, 
-    getDeploymentParams: ()=> [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread, params.aud]
+    getDeploymentParams: () => [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread, params.aud],
+    getDeploymentParamsCustomAud: (aud) => [params.e, params.n, params.kid, params.idBottomBread, params.idTopBread, params.expBottomBread, params.expTopBread, stringToHex(`","aud":"${aud}","`)]
   }
 }
 exports.orcidParams = deployable({
@@ -77,9 +79,20 @@ exports.githubParams = deployable({
   expTopBread : stringToHex('"}')
 })
 
+exports.discordParams = deployable({
+  e : eDiscord,
+  n : nDiscord,
+  kid : kidDiscord,
+  aud : stringToHex('","aud":"gnosis","'),
+  idBottomBread : stringToHex('"creds":"'),
+  idTopBread : stringToHex('","aud":"'),
+  expBottomBread : stringToHex('","exp":"'),
+  expTopBread : stringToHex('"}')
+})
+
 let contractAddresses = wtf.getContractAddresses()
 
-exports.upgradeVerifyJWTContract = async (service, forceImport=false, wtfutilsAddress=null) => {
+exports.upgradeVerifyJWTContract = async (service, wtfutilsAddress=null, forceImport=false) => {
     let wu;
     if(!wtfutilsAddress){
       wu = await (await ethers.getContractFactory('WTFUtils')).deploy()
@@ -117,6 +130,21 @@ exports.deployVerifyJWTContract = async (...args) => {
       WTFUtils : wu.address //https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html#library-linking for more info on this argument
     }
   })
+  const vjwt = await upgrades.deployProxy(
+    VerifyJWT, 
+    args, {
+      kind: 'uups',
+      initializer: 'initialize', 
+      unsafeAllow: ['external-library-linking']    //WARNING: ALLOWING LIBRARIES (but this should be fine as long as lib can't call selfdestruct) https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-external-libraries
+    },
+  );
+  await vjwt.deployed();
+  return vjwt;
+}
+
+exports.deployVerifyJWTContractWithCustomFactory = async (obj) => {
+  let VerifyJWT = obj.factory
+  let args = obj.args //arguments for deploying
   const vjwt = await upgrades.deployProxy(
     VerifyJWT, 
     args, {

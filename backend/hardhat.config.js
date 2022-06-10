@@ -47,7 +47,7 @@ module.exports = {
         blockNumber: 21908151
       }
     },
-    matic: {
+    mumbai: {
       url: "https://speedy-nodes-nyc.moralis.io/a1167200f0a0e81dd757304e/polygon/mumbai",
       accounts: [process.env.PRIVATE_KEY],
       gas: 2100000,
@@ -78,10 +78,11 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
     },
     gnosis: {
-      url: "https://rpc.gnosischain.com",
+      // url: "https://rpc.gnosischain.com",
+      url: "https://poa-xdai.gateway.pokt.network/v1/lb/60b13899d3279c22da2a444d",
       accounts: [process.env.PRIVATE_KEY],
       // gas: 10000000000,
-      // gasPrice: 10000000000
+      gasPrice: 1500000000
     },
     arbitrumOne : {   
       url: "https://arb1.arbitrum.io/rpc",

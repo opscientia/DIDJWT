@@ -135,11 +135,11 @@ contract VerifyJWTv2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
   // Same as checkCommit but for private (hashed) JWTs.
   function checkCommit(address a, bytes32 unboundCommit, bytes memory plaintext) public view returns (bool) {
-    // Convert pubkey to bytes32
-    bytes memory pkBytes = WTFUtils.addressToBytes(a);
+    // Convert address to bytes32
+    bytes memory addressBytes = WTFUtils.addressToBytes(a);
     // Find what the bound commit *should* be
     bytes32 idealBoundCommit = keccak256(
-      bytes.concat(plaintext, pkBytes)
+      bytes.concat(plaintext, addressBytes)
     );
     // Lookup unbound commit
     JWTCommit memory c = commitments[unboundCommit];
