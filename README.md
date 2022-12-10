@@ -4,6 +4,11 @@ Web Token Forwarding Protocol
 ## Docs
 https://docs.holonym.id/
 
+### Build Instructions
+
+go to [Backend ReadMe](https://github.com/opscientia/DIDJWT/tree/main/backend)
+
+
 ## Summary
 *Goal*:
 Link a public key to an online account with OpenID
